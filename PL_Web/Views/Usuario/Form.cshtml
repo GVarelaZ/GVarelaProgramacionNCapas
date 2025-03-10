@@ -23,7 +23,7 @@
 <h2 style="font-style: oblique; color:white; font-size:50px;" class="text-decoration-underline fw-bold text-lg-center">FORMULARIO PARA NUEVOS REGISTROS</h2>
 <p class="p-2"></p>
 
-@using (Html.BeginForm("Form", "Usuario", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Form", "Usuario", FormMethod.Post, new { @enctype = "multipart/form-data", @onSubmit= "validarFormulario(event)" }))
 {
     @Html.HiddenFor(Model => Model.idUsuario)
     @Html.HiddenFor(Model => Model.Direccion.IdDireccion)
@@ -38,31 +38,34 @@
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Nombre, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Nombre, new
-                    {
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(event)"
-                    })
+               {@id="nombre",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)", @onBlur= "campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.ApellidoPaterno, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.ApellidoPaterno, new
-                    {
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(event)"
-                    })
+               {@id="apellidoPaterno",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)",
+                   @onBlur = "campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.ApellidoMaterno, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.ApellidoMaterno, new
-                    {
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(event)"
-                    })
+               {
+                   @id = "apellidoMaterno",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)",
+                   @onBlur = "campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4 ">
@@ -109,12 +112,14 @@
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Telefono, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Telefono, new
-                    {
-                        @maxlength = "10",
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarNumeros(event)"
-                    })
+               {
+                   @id = "telefono",
+                   @maxlength = "10",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarNumeros(event)",
+                   @onBlur = "campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -125,17 +130,19 @@
                    @class = "form-select rounded-pill",
                    @type = "text",
                    @id = "datepicker",
-                   @onChange = "cambiarColor(event)"
+                   @onChange = "cambiarColor(event)", @onBlur= "campoVacio(event)"
                })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Celular, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Celular, new
                {
+                   @id = "celular",
                    @maxlength = "10",
                    @class = "form-control rounded-pill",
                    @style = "border-width:3px",
-                   @onKeypress = "validarNumeros(event)"
+                   @onKeypress = "validarNumeros(event)",
+                   @onBlur = "campoVacio(event)"
                })
                     <span class="notificacion"></span>
                 </div>
@@ -148,12 +155,13 @@
                     @Html.LabelFor(Model => Model.Curp, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(m => m.Curp, new
                {
-                        @id = "curp_input",
+                   @id = "curp_input",
                    @class = "form-control rounded-pill",
                    @style = "border-width:3px",
-                   @oninput = "validarInput(this)"
+                   @oninput = "validarInput(this)",
+                   @onBlur = "campoVacio(event)"
                })
-                    <span id="resultado"></span>
+                    <span id="resultado" class="notificacion"></span>
                 </div>
             </div>
         </div>
@@ -164,21 +172,25 @@
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Direccion.Calle, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Direccion.Calle, new
-                    {
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(event)"
-                    })
+               {
+                   @id = "calle",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)",
+                   @onBlur = "campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Direccion.NumeroExterior, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Direccion.NumeroExterior, new
                {
+                   @id = "numeroExterior",
                    @maxlength = "5",
-                        @class = "form-control rounded-pill",
+                   @class = "form-control rounded-pill",
                    @style = "border-width:3px",
-                   @onKeypress = "validarNumeros(event)"
+                   @onKeypress = "validarNumeros(event)",
+                   @onBlur = "campoVacio(event)"
                })
                     <span class="notificacion"></span>
                 </div>
@@ -186,10 +198,12 @@
                     @Html.LabelFor(Model => Model.Direccion.NumeroInterior, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Direccion.NumeroInterior, new
                {
+                   @id = "numeroInterior",
                    @maxlength = "5",
-                        @class = "form-control rounded-pill",
+                   @class = "form-control rounded-pill",
                    @style = "border-width:3px",
-                   @onKeypress = "validarNumeros(event)"
+                   @onKeypress = "validarNumeros(event)",
+                   @onBlur = "campoVacio(event)"
                })
                     <span class="notificacion"></span>
                 </div>
@@ -273,34 +287,37 @@
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Email, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(m => m.Email, new
-                    {
-                        @type = "text",
-                        @id = "emailInput",
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onBlur = "validarEmail(event)"
-                    })
+               {
+                   @type = "text",
+                   @id = "emailInput",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onBlur = "validarEmail(event), campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.UserName, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.UserName, new
                {
+                   @id = "UserName",
                    @class = "form-control rounded-pill",
                    @style = "border-width:3px",
-                   @onKeypress = "userNameValid(event)"
+                   @onKeypress = "userNameValid(event)",
+                   @onBlur = "campoVacio(event) campoVacio(event)"
                })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Password, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Password, new
-                    {
-                        @Type = "password",
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(this)"
-                    })
+               {   
+                   @id="inptContraseña",
+                   @Type = "password",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onBlur = "validarPassword(event), campoVacio(event)"
+               })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -312,7 +329,8 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <label class="control-label fw-bold">Confirmar password</label>
-                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onblur="contraseñasIguales(this), campoVacio(event)" id="inptValidar" />
+                    <span class="notificacion"></span>
                 </div>
                 <div class="col-md-12 text-md-center">
                     @if (Model.Imagen == null)
@@ -581,6 +599,74 @@
         }
     }
 
+    function validarPassword(evento) {
+        var input = evento.target
+        var passwordInput = input.value
+        var errorMessage = input.parentNode.querySelector('.notificacion') // recupera el span asociado
+        //console.log(errorMessage)
+        errorMessage.textContent = ''
+
+        if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(passwordInput))) {
+            evento.preventDefault()
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'red'
+            errorMessage.textContent = 'contraseña invalida: debe contener  + 8 caracteres, 1 caracter mayuscula, un simbolo y numeros '
+        } else {
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'green'
+        }
+    }
+
+    function contraseñasIguales(inputHelper) {
+        var contraseñaHelper = $('#inptContraseña').val()
+        var contraseñaValida = $('#inptValidar').val()
+        $('.notificacion')[12].textContent = ''
+
+        if (contraseñaHelper != contraseñaValida) {
+            inputHelper.style.borderWidth = "3px";
+            inputHelper.style.borderColor = 'red'
+            $('.notificacion')[12].textContent = 'las contraseñas no coinciden favor de revisar'
+        } else {
+            inputHelper.style.borderWidth = "3px";
+            inputHelper.style.borderColor = 'green'
+        }
+    }
+
+    function campoVacio(evento) {
+        var input = evento.target.value
+        var errorMessage = evento.target.parentNode.querySelector('.notificacion')
+        if (input == '') {
+            evento.target.style.borderColor = ''
+            errorMessage.textContent = ''
+        } else {
+           console.log("")
+        }
+    }
+
+    function validarFormulario(evento) {
+        var inptNombre = $('#nombre').val()
+        var inptApellidoPaterno = $('#apellidoPaterno').val()
+        var inptApellidoMaterno = $('#apellidoMaterno').val()
+        var inptTelefono = $('#Telefono').val()
+        var inptFecha = $('#datepicker').val()
+        var inptCelular = $('#Celular').val()
+        var inptCurp = $('#curp_input').val()
+        var inptCalle = $('#Calle').val()
+        var inptnExterior = $('#numeroExterior').val()
+        var inptnInterior = $('#numeroInterior').val()
+        var inptEmail = $('#emailInput').val()
+        var inptUserName = $('#UserName').val()
+        var inptPassword = $('#inptContraseña').val()
+        var inptConfirmPassword = $('#inptValidar').val()
+        console.log(evento)
+        if (inptNombre == '' || inptApellidoPaterno == '' || inptApellidoMaterno == '' || inptTelefono == '' || inptFecha == '' || inptCelular == '' || inptCurp == '' ||
+            inptCalle == '' || inptnExterior == '' || inptnInterior == '' || inptEmail == '' || inptUserName == '' || inptPassword == '' || inptConfirmPassword == '') {
+            evento.preventDefault()
+            alert("No se puede mandar el formulario, todos los campos deben de estar llenos")
+        } else {
+            alert("Formulario enviado correctamente")
+        }
+   }
 
    /* function VisualizarImagen(input) {
         console.log(input)
