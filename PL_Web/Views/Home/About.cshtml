@@ -1,0 +1,124 @@
+﻿<head>
+    <style>
+
+        .body {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            background: yellow;
+            border-radius: 20%;
+        }
+
+        .rostro {
+            display: grid;
+            place-items: center;
+            --size: 300px;
+            --half-size: calc(var(--size)/2);
+            width: var(--size);
+            height: var(--half-size);
+            background: yellow;
+            border-radius: 50% 50% / var(--half-size) var(--half-size) 0 0;
+            position: relative;
+            top: auto;
+        }
+
+        .lens {
+            display: grid;
+            place-items: center;
+            width: 300px;
+            height: 50px;
+            position: static;
+            background: black;
+        }
+
+        .ojo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: absolute;
+            background: white;
+        }
+
+        .retina {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            position: absolute;
+            background: brown;
+        }
+
+        .iris {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            position: absolute;
+            background: black;
+        }
+
+        .pants {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background:darkcyan;
+            border-radius: 20%;
+            top: 50%;
+        }
+
+        .boca {
+            width: 100px;
+            height: 70px;
+            border-radius: 75%;
+            position: relative;
+            background: black;
+            left: 150px;
+            top: 55px;
+        }
+
+        .brazo-izq {
+            width: 50px;
+            height: 150px;
+            background-color: blue;
+            margin: 50px;
+            position: absolute;
+            top: 100px;
+            left: 250px;
+            transition: transform 1s ease;
+        }
+
+            .brazo-izq:hover{
+                transform: rotate(45deg); /* Rota 45 grados desde el centro */
+            }
+        .brazo-der {
+            width: 50px;
+            height: 150px;
+            position: absolute;
+            background-color: blue;
+            margin: 50px;
+            left: -100px;
+            top:100px;
+            transition: transform 1s ease;
+        }
+
+            .brazo-der:hover {
+                transform: rotate(-45deg); /* Rota 45 grados desde el centro */
+            }
+    </style>
+</head>
+<body>
+    <div>
+        <!-- Espacio invisible donde se coloca el modelo -->
+        <div class="rostro"></div>
+        <div class="body">
+            <div class="brazo-izq"></div>
+            <div class="brazo-der"></div>
+            <!--clase donde se coloca la primer figura -->
+            <div class="lens">
+                <div class="ojo"></div>
+                <div class="retina"></div>
+                <div class="iris"></div>
+            </div>
+            <div class="boca"></div>
+            <div class="pants"></div>
+        </div>
+    </div>
+</body>

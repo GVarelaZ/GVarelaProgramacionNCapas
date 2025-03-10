@@ -1,0 +1,628 @@
+﻿@model ML.Usuario
+
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    body {
+        background-image: url("https://cdn.pixabay.com/photo/2015/06/20/07/24/color-815552_640.png");
+        background-size: cover;
+    }
+
+    .avatar {
+        border-radius: 30%;
+        object-fit: cover;
+        object-position: center;
+        height: 200px;
+        width: 200px;
+    }
+</style>
+
+<h2 style="font-style: oblique; color:white; font-size:50px;" class="text-decoration-underline fw-bold text-lg-center">FORMULARIO PARA NUEVOS REGISTROS</h2>
+<p class="p-2"></p>
+
+@using (Html.BeginForm("Form", "Usuario", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(Model => Model.idUsuario)
+    @Html.HiddenFor(Model => Model.Direccion.IdDireccion)
+    @Html.HiddenFor(Model => Model.Imagen)
+
+    <div class="container">
+        <div class=" col-md-6">
+            <h3 style="font-style:italic; color:white;" class="text-decoration-underline fw-bold text-lg-start">Datos personales</h3>
+        </div>
+        <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Nombre, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Nombre, new
+                    {
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.ApellidoPaterno, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.ApellidoPaterno, new
+                    {
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.ApellidoMaterno, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.ApellidoMaterno, new
+                    {
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4 ">
+                    @Html.LabelFor(Model => Model.Sexo, new { @class = "control-label fw-bold" })
+                    <p></p>
+                    @if (Model.Sexo != null)
+                    {
+                        if (Model.Sexo == "H ")
+                        {
+                            <div class="form-check form-check-inline">
+                                @Html.Label("Hombre", new { @class = " control-label fw-bold" })
+                                @Html.RadioButtonFor(Model => Model.Sexo, "H", new { @class = "form-check form-check-input", @checked = "true" })
+                            </div>
+                            <div class="form-check form-check-inline">
+                                @Html.Label("Mujer", new { @class = "control-label fw-bold" })
+                                @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-check form-check-inline">
+                                @Html.Label("Hombre", new { @class = "control-label fw-bold" })
+                                @Html.RadioButtonFor(Model => Model.Sexo, "H", new { @class = "form-check form-check-input" })
+                            </div>
+                            <div class="form-check form-check-inline">
+                                @Html.Label("Mujer", new { @class = "control-label fw-bold" })
+                                @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input", @checked = "true" })
+                            </div>
+                        }
+                    }
+                    else
+                    {
+
+                        <div class="form-check form-check-inline">
+                            @Html.Label("  Hombre", new { @class = "control-label fw-bold" })
+                            @Html.RadioButtonFor(Model => Model.Sexo, "H", new { @class = "form-check form-check-input" })
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.Label("  Mujer", new { @class = "control-label fw-bold" })
+                            @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input" })
+                        </div>
+                    }
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Telefono, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Telefono, new
+                    {
+                        @maxlength = "10",
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarNumeros(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.FechaNacimiento, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.FechaNacimiento, new
+               {
+                   @style = "border-width:3px",
+                   @class = "form-select rounded-pill",
+                   @type = "text",
+                   @id = "datepicker",
+                   @onChange = "cambiarColor(event)"
+               })
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Celular, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Celular, new
+               {
+                   @maxlength = "10",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarNumeros(event)"
+               })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Rol, new { @class = "control-label fw-bold" })
+                    @Html.DropDownListFor(Model => Model.Rol.IdRol, new SelectList(Model.Rol.Roles, "IdRol", "Nombre"), "Seleccione una opcion", new
+               { @style = "border-width:3px", @class = "form-select rounded-pill", @onChange = "cambiarColor(event)" })
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Curp, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Curp, new
+               {
+                        @id = "curp_input",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @oninput = "validarInput(this)"
+               })
+                    <span id="resultado"></span>
+                </div>
+            </div>
+        </div>
+        <p class="p-2"></p>
+        <h3 style="color:white;" class="text-decoration-underline fw-bold text-lg-start">Direccion</h3>
+        <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Direccion.Calle, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Direccion.Calle, new
+                    {
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarCampo(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Direccion.NumeroExterior, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Direccion.NumeroExterior, new
+               {
+                   @maxlength = "5",
+                        @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarNumeros(event)"
+               })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Direccion.NumeroInterior, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Direccion.NumeroInterior, new
+               {
+                   @maxlength = "5",
+                        @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "validarNumeros(event)"
+               })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.Label("Estado", new { @class = "control-label fw-bold" })
+                    @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(
+                   Model.Direccion.Colonia.Municipio.Estado.Estados, "IdEstado", "Nombre"), "Selecciona un estado", new
+                   {
+                       @id = "ddlEstado",
+                       @class = "form-select rounded-pill",
+                       @style = "border-width:3px",
+                       onChange = "MunicipioGetByIdEstado(), cambiarColor(event)"
+                   })
+                </div>
+                @if (Model.Direccion.Colonia.Municipio.Municipios != null || Model.Direccion.Colonia.Municipio.Municipios.Count > 0)
+                {
+                    <div class="col-md-4">
+                        @Html.Label("Municipio", new { @class = "control-label fw-bold" })
+                        @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(
+                        Model.Direccion.Colonia.Municipio.Municipios, "IdMunicipio", "Nombre"), "Selecciona un municipio", new
+                        {
+                            @id = "ddlMunicipio",
+                            @class = "form-select rounded-pill",
+                            @style = "border-width:3px",
+                            @onChange = "ColoniaGetByIdMunicipio(), cambiarColor(event)"
+                        })
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+                        @Html.Label("Municipio", new { @class = "control-label fw-bold" })
+                        @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(
+                       String.Empty), "Selecciona un municipio", new
+                       {
+                           @id = "ddlMunicipio",
+                           @class = "form-select rounded-pill",
+                           @style = "border-width:3px",
+                           @onChange = "ColoniaGetByIdMunicipio(), cambiarColor(event)"
+                       })
+                    </div>
+
+                }
+                @if (Model.Direccion.Colonia.Colonias != null || Model.Direccion.Colonia.Colonias.Count > 0)
+                {
+                    <div class="col-md-4">
+                        @Html.Label("Colonia", new { @class = "control-label fw-bold" })
+                        @Html.DropDownListFor(Model => Model.Direccion.Colonia.IdColonia, new SelectList(
+                        Model.Direccion.Colonia.Colonias, "IdColonia", "Nombre"), "Selecciona una colonia", new
+                        {
+                            @id = "ddlColonia",
+                            @class = "form-select rounded-pill",
+                            @style = "border-width:3px",
+                                 @onChange = "cambiarColor(event)"
+
+                        })
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+                        @Html.Label("Colonia", new { @class = "control-label fw-bold" })
+                        @Html.DropDownListFor(Model => Model.Direccion.Colonia.IdColonia, new SelectList(
+                       String.Empty), "Selecciona una colonia", new
+                       {
+                           @id = "ddlColonia",
+                           @class = "form-select rounded-pill",
+                           @style = "border-width:3px",
+                           @onChange = "cambiarColor(event)"
+
+                       })
+                    </div>
+
+                }
+            </div>
+        </div>
+        <p class="p-2"></p>
+        <h3 style="color:white;" class="text-decoration-underline fw-bold text-lg-start">Datos inicio de sesion</h3>
+        <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Email, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Email, new
+                    {
+                        @type = "text",
+                        @id = "emailInput",
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onBlur = "validarEmail(event)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.UserName, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.UserName, new
+               {
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   @onKeypress = "userNameValid(event)"
+               })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Password, new { @class = "control-label fw-bold" })
+                    @Html.TextBoxFor(Model => Model.Password, new
+                    {
+                        @Type = "password",
+                        @class = "form-control rounded-pill",
+                        @style = "border-width:3px",
+                   @onKeypress = "validarCampo(this)"
+                    })
+                    <span class="notificacion"></span>
+                </div>
+                <div class="col-md-4">
+                    @Html.LabelFor(Model => Model.Imagen, new { @class = "control-label fw-bold" })
+
+                    <input name="imagenCargada" id="imagenInput" type="file" class="form-control rounded-pill" style="border-width:3px"
+                           onChange="ValidarImagen(), cambiarColor(event)" />
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <label class="control-label fw-bold">Confirmar password</label>
+                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                </div>
+                <div class="col-md-12 text-md-center">
+                    @if (Model.Imagen == null)
+                    {
+                        <img id="fotoPerfil" class="avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
+                             width="60px" height="60px">
+                    }
+                    else
+                    {
+                        <img id="fotoPerfil" src="data:image/*;base64,@Convert.ToBase64String(Model.Imagen)" class="avatar" alt="Sin foto"
+                             width="60px" height="60px">
+                    }
+                </div>
+                <div class="col-12 text-end">
+                    <button class=" btn btn-success fw-bold btn-lg text-center" type="submit">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" src="/resources/demos/style.css">
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+
+<script>
+
+    $(document).ready(
+        $("#datepicker").datepicker({
+            dateFormat: "dd/mm/yy",
+            showAnim: "fold",
+            changeMonth: true,
+            changeYear: true
+        })
+    )
+
+
+    function MunicipioGetByIdEstado() {
+        let idEstado = $('#ddlEstado').val() // Alojar el Id del estado seleccionado
+        //console.log(idEstado)
+        $.ajax({
+            url: `@Url.Action("MunicipioGetByIdEstado", "Usuario")?idEstado=${idEstado}`, //mandar un unicio dato cadena interpolada
+            type: "GET",
+            dataType: "JSON",
+            //data : Modelo enviar
+            success: function (result) {
+                //console.log(result) //Envia el result que viene del BL
+                if (result.Correct) {
+                    //console.log(result.Correct)
+                    $('#ddlMunicipio').empty();
+                    $('#ddlMunicipio').append("<option value=0>Selecciona un municìpio</option>")
+                    $('#ddlColonia').empty();
+                    $('#ddlColonia').append("<option value=0>Selecciona una colonia</option>")
+
+                    let ddlMunicipio = $('#ddlMunicipio') //Asignamos la variable del ddl a llenar
+
+                    $.each(result.Objects, function (i, valor) {
+                        //console.log(i)
+                        //console.log(valor)
+                        let opcion = `<option value=${valor.IdMunicipio}> ${valor.Nombre} </option>` //Llenamos la etiqueta select con opcion
+                        ddlMunicipio.append(opcion) //se insertan los opcion
+                    })
+                } else {
+
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr)
+            }
+        })
+    }
+
+    function ColoniaGetByIdMunicipio() {
+        let ddlMunicipio = $('#ddlMunicipio').val()
+        //console.log(ddlMunicipio)
+
+        $.ajax({
+            url: `@Url.Action("ColoniaGetByIdMunicipio", "Usuario")?idMunicipio=${ddlMunicipio}`,
+            type: "GET",
+            dataType: "JSON",
+            success: function (result) {
+                //console.log(result)
+                if (result.Correct) {
+                    $('#ddlColonia').empty();
+                    $('#ddlColonia').append("<option value=0>Selecciona una colonia</option>")
+                    let ddlColonia = $('#ddlColonia')
+
+                    $.each(result.Objects, function (i, colonia) {
+                        let opcion = `<option value=${colonia.IdColonia}>${colonia.Nombre}</option>`
+                        //console.log(opcion)
+                        ddlColonia.append(opcion)
+                    })
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr)
+            }
+        })
+    }
+
+    function ValidarImagen() { //validacion para saber si el usuario ingreso una imagen exclusivamente
+        let imagen = $('#imagenInput')
+        let nombreImagen = imagen[0].files[0].name //accede a la propiedad para el nombre del archivo
+        let imagenSize = imagen[0].files[0].size
+        var sizeKileByte = parseInt(imagenSize / 1024)
+        console.log(sizeKileByte)
+
+        //let extensionImg = nombreImagen.split(".")
+        let extension = nombreImagen.split(".").pop() //elimina el primer arreglo
+
+        //var extension = extensionImg[1]
+        const validImagenExtension = ['jpeg', 'png', 'jpg', 'webp']; //arreglo para la validacion con el tipo de dato seleccionado
+        banderaImg = false;
+
+        for (var i = 0; i <= validImagenExtension.length; i++) {
+            if (extension == validImagenExtension[i]) {
+                banderaImg = true
+            }
+        }
+
+        if (!banderaImg) {
+            console.log("es otro archivo")
+            alert(`Esta no es una imagen, solo formatos ${validImagenExtension}`)
+            $('#imagenInput').val('')
+            $('#fotoPerfil').attr('src', 'https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740');
+        } else if (sizeKileByte > 2000) {
+            alert("La imagen es muy pesada, debe ser de menos de 2MB")
+            $('#imagenInput').val('')
+            $('#fotoPerfil').attr('src', 'https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740');
+            return false;
+        } else {
+            console.log("es una imagen")
+            //console.log(`es una imagen, solo formatos ${validImagenExtension}`)
+            const [file] = imagen[0].files
+            if (file) {
+                fotoPerfil.src = URL.createObjectURL(file)
+                //VisualizarImagen(imagenVisual)
+            }
+        }
+    }
+
+    function validarCampo(eventoPress) {  //Recibe el evento del onkeypress
+        var keypress = String.fromCharCode(eventoPress.which) //conversion del codigo de la tecla presionada para ser string
+        var inputField = eventoPress.target //prop target para conocer en donde se encuentra mi input o cual es
+        var errorMessage = inputField.parentNode.querySelector('.notificacion') //recupera la etiqueta que esta asociada con el input donde se hace el evento (dentro del div)
+        console.log(keypress)
+        errorMessage.textContent = '' //limpiar el span
+
+        if ((/[^a-zA-Z\s]+/.test(keypress))) { //verifica si lo ingresado concuerda con la expresion regular
+            //console.log("no es letra")
+            eventoPress.preventDefault()
+            inputField.style.borderWidth = "3px";
+            inputField.style.borderColor = 'red'
+            errorMessage.textContent = 'solo ingresar letras'
+        } else {
+            inputField.style.borderWidth = "3px";
+            inputField.style.borderColor = 'green'
+
+            //console.log("es letra")
+
+        }
+    }
+
+    function validarNumeros(eventoPress) {
+        var entrada = String.fromCharCode(eventoPress.which)
+        var inputField = eventoPress.target
+        var errorMessage = inputField.parentNode.querySelector('.notificacion')
+        errorMessage.textContent = ''
+
+        if (!(/^[0-9]{1,10}$/.test(entrada))) {
+            eventoPress.preventDefault()
+            inputField.style.borderWidth = "3px";
+            inputField.style.borderColor = 'red'
+            errorMessage.textContent = 'Solo ingresa numeros'
+        } else {
+            inputField.style.borderWidth = "3px";
+            inputField.style.borderColor = 'green'
+        }
+    }
+
+    function cambiarColor(eventoPress) {
+        eventoPress.target.style.borderColor = 'green'
+        eventoPress.target.style.borderWidth = '3px'
+    }
+
+    function validarEmail(evento) {
+        var input = evento.target
+        var emailInput = evento.target.value //nos trae el valor ingresado en el input
+        //console.log(emailInput)
+        var errorMessage = evento.target.parentNode.querySelector('.notificacion') // recupera el span asociado
+        //console.log(errorMessage)
+        errorMessage.textContent = ''
+
+        if (!(/^\w+@@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(emailInput))) {
+            evento.preventDefault()
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'red'
+            errorMessage.textContent = 'Email no valido'
+        } else {
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'green'
+        }
+    }
+
+    function validarInput(input) {
+        var curp = input.value.toUpperCase(),
+            resultado = document.getElementById("resultado"),
+            valido = "Curp no válido"
+
+        if (curpValida(curp)) {
+            valido = "Curp válido"
+            resultado.classList.add("ok")
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'green'
+        } else {
+            resultado.classList.remove("ok")
+            input.style.borderWidth = "3px";
+            input.style.borderColor = 'red'
+        }
+
+        resultado.innerText = valido
+    }
+
+
+    function curpValida(curp) {
+        var re =
+            /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,
+            validado = curp.match(re)
+
+        if (!validado)
+           return false
+
+        //Validar que coincida el dígito verificador
+        function digitoVerificador(curp17) {
+            //Fuente https://consultas.curp.gob.mx/CurpSP/
+            var diccionario = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",
+                lngSuma = 0.0,
+                lngDigito = 0.0
+            for (var i = 0; i < 17; i++)
+                lngSuma = lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i)
+            lngDigito = 10 - (lngSuma % 10)
+            if (lngDigito == 10) return 0
+            return lngDigito
+        }
+        if (validado[2] != digitoVerificador(validado[1])) return false
+
+        return true
+
+    }
+
+    function userNameValid(eventoPress) {
+        var letra = String.fromCharCode(eventoPress.which)
+        var inputError = eventoPress.target
+        var errorMessage = inputError.parentNode.querySelector('.notificacion')
+        errorMessage.textContent = ''
+
+        if (!(/^[a-zA-Z0-9]+$/.test(letra))){
+            eventoPress.preventDefault()
+            inputError.style.borderWidth = "3px";
+            inputError.style.borderColor = 'red'
+            errorMessage.textContent = 'Solo numeros y letras'
+        } else {
+            inputError.style.borderWidth = "3px";
+            inputError.style.borderColor = 'green'
+        }
+    }
+
+
+   /* function VisualizarImagen(input) {
+        console.log(input)
+        if (input.files) { //si hay archivos
+            var reader = new FileReader() // objeto para leer archivo de blob o file
+            reader.onload = function (elemento) { //si el objeto se a leido correctamente hace esa funcion
+                $('#fotoPerfil').attr('src', elemento.target.result)
+                console.log(elemento)
+            }
+            reader.readAsDataURL(input.files)
+        }
+    }
+
+    function ValidarImagen() {
+        let imagen = $('#imagenInput')
+        let nombreImagen = imagen[0].files[0].name
+        let extension = nombreImagen.split(".").pop().toLowerCase() //elimina el primer arreglo
+
+        $('#imagenInput').val('')
+        $('#fotoPerfil').empty()
+
+        console.log(extension)
+        const validImagenExtension = ['jpeg', 'png', 'jpg', 'webp'];
+
+        banderaImg = false;
+
+        for (var i = 0; i <= validImagenExtension.length; i++) {
+            if (extension == validImagenExtension[i]) {
+                banderaImg = true
+            }
+        }
+
+        if (!banderaImg) {
+            console.log("es otro archivo")
+            alert(`No es una imagen valida, solo extensiones ${validImagenExtension}`)
+            $('#imagenInput').val('')
+            $('#fotoPerfil').empty()
+        } else {
+            console.log("es una imagen")
+            //VisualizarImagen(imagenVisual)
+        }
+    }*/
+
+</script>
+
