@@ -39,7 +39,7 @@ namespace PL // PL = Presentation Layout
             usuario.Curp = Console.ReadLine();
             Console.WriteLine("Ingresa una foto de perfil:");
             usuario.Imagen = Encoding.ASCII.GetBytes(Console.ReadLine());
-            usuario.IdRol = 1;
+            usuario.Rol.IdRol = 1;
             Console.WriteLine("Ingresa un correo electronico:");
             usuario.Email = Console.ReadLine();
 
@@ -89,7 +89,7 @@ namespace PL // PL = Presentation Layout
                 Console.WriteLine("Celular: " + usuario.Celular);
                 Console.WriteLine("CURP: " + usuario.Curp);
                 Console.WriteLine("Imagen: " + usuario.Imagen);
-                Console.WriteLine("IdRol: " + usuario.IdRol);
+                Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                 Console.WriteLine("Email: " + usuario.Email);
 
                 if (usuario.Estatus)
@@ -157,7 +157,7 @@ namespace PL // PL = Presentation Layout
             usuario.Curp = Console.ReadLine();
             Console.WriteLine("Ingresa una foto de perfil:");
             usuario.Imagen = Encoding.ASCII.GetBytes(Console.ReadLine());
-            usuario.IdRol = 1;
+            usuario.Rol.IdRol = 1;
             Console.WriteLine("Ingresa un correo electronico:");
             usuario.Email = Console.ReadLine();
 
@@ -193,7 +193,7 @@ namespace PL // PL = Presentation Layout
             switch (opcion)
             {
                 case 1:
-                    ML.Result result = BL.Usuario.GetAllEF(); //Regresa todos los registros de la tabla
+                    ML.Result result = new Result(); //Regresa todos los registros de la tabla
                     //ML.Result result = BL.Usuario.GetAllLINQ();
 
                     if (result.Correct)
@@ -213,7 +213,7 @@ namespace PL // PL = Presentation Layout
                             Console.WriteLine("Celular: " + usuario.Celular);
                             Console.WriteLine("CURP: " + usuario.Curp);
                             Console.WriteLine("Imagen: " + usuario.Imagen);
-                            Console.WriteLine("IdRol: " + usuario.IdRol);
+                            Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                             Console.WriteLine("Email: " + usuario.Email);
 
                             if (usuario.Estatus)
@@ -257,7 +257,7 @@ namespace PL // PL = Presentation Layout
                         Console.WriteLine("Celular: " + usuario.Celular);
                         Console.WriteLine("CURP: " + usuario.Curp);
                         Console.WriteLine("Imagen: " + usuario.Imagen);
-                        Console.WriteLine("IdRol: " + usuario.IdRol);
+                        Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                         Console.WriteLine("Email: " + usuario.Email);
 
                         if (usuario.Estatus)
@@ -282,5 +282,24 @@ namespace PL // PL = Presentation Layout
                     break;
             }
         }
+
+        public static void cargaMasiva()
+        {
+            ML.Result result = new ML.Result();
+
+            Console.WriteLine("Entrando a carga masiva");
+            string ruta = @"C:\Users\digis\Downloads\pruebaCargaMasiva.txt"; //Se coloca la ruta absoluta del txt que deseamos leer
+            try
+            {
+                StreamReader sr = new StreamReader(ruta); //Instanciamos un objeto de tipo StreamReader para poder leer el archivo
+                string fila = ""; 
+                while((fila =  sr.ReadLine()) != null){ //condicional while, para que vaya iterando fila por fila hasta que se encuentre con alguna que no contenga nada o este vacia
+                    Console.WriteLine(fila);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        } 
     }
 }
