@@ -89,7 +89,8 @@
                     <div class="row g-1">
                         <div class="col-8">
                             <label>Selecciona un archivo</label>
-                            <input name="archivoCargado" id="archivoInput" type="file" class="form-control rounded-pill" style="border-width:3px" />
+                            <input name="archivoCargado" id="archivoInput" type="file" class="form-control rounded-pill" style="border-width:3px" 
+                                   onchange="validarArchivo()"/>
                         </div>
                         <div class="col-md-4 text-lg-center">
                             <br>
@@ -286,5 +287,16 @@ else
                 console.log(xhr)
             }  //ERROR solo cuando existe un error en la comunicacion del metodo
         })
+    }
+
+    function validarArchivo() {
+        var archivo = $('#archivoInput')[0].files[0].name
+        var extensionPermitida = 'xlsx'
+        var extensionArchivo = archivo.split('.').pop()
+
+        if (extensionArchivo != extensionPermitida) {
+            alert(`Esta no es un archivo permitido, solo formato ${extensionPermitida}`)
+            $('#archivoInput').val('')
+        }
     }
 </script>

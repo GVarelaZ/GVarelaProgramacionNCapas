@@ -390,7 +390,7 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                 {
                     OleDbCommand cmd = new OleDbCommand(); //OLEDBCommand para leer el archivo
 
-                    cmd.CommandText = "SELECT * FROM [cargaMasiva$]"; // vamos a consultar la hoja1
+                    cmd.CommandText = "SELECT * FROM [Hoja1$]"; // vamos a consultar la hoja1
                     cmd.Connection = context;
 
                     context.Open();
@@ -406,6 +406,10 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                         foreach (DataRow valores in tabla.Rows)
                         {
                             ML.Usuario usuario = new ML.Usuario();
+                            usuario.Rol = new ML.Rol();
+                            usuario.Direccion = new ML.Direccion();
+                            usuario.Direccion.Colonia = new ML.Colonia();
+
                             usuario.Nombre = valores[0].ToString();
                             usuario.ApellidoPaterno = valores[1].ToString();
                             usuario.ApellidoMaterno = valores[2].ToString();
@@ -434,9 +438,14 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                             result.Objects.Add(usuario);
 
                         }
+
+                        result.Correct = true;
                     }
+                    else
+                    {
+                        result.Correct = false;
 
-
+                    }
                 }
             }
             catch (Exception ex)
