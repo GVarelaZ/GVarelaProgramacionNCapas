@@ -3,6 +3,7 @@ using ML;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -376,6 +377,75 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                 result.ErrorMessage = ex.Message;
                 result.ex = ex;
             }
+            return result;
+        }
+        
+        public static Result LeerExcel(string cadenaConexion)
+        {
+            Result result = new Result();
+
+            try
+            {
+                using (OleDbConnection context = new OleDbConnection(cadenaConexion)) //se crea la conexion con el proveedor OLEDB
+                {
+                    OleDbCommand cmd = new OleDbCommand(); //OLEDBCommand para leer el archivo
+
+                    cmd.CommandText = "SELECT * FROM [cargaMasiva$]"; // vamos a consultar la hoja1
+                    cmd.Connection = context;
+
+                    context.Open();
+
+                    OleDbDataAdapter adapter = new OleDbDataAdapter();
+                    adapter.SelectCommand = cmd;
+                    DataTable tabla = new DataTable();
+                    adapter.Fill(tabla);
+
+                    if(tabla.Rows.Count > 0) {
+                        result.Objects = new List<object>();
+
+                        foreach (DataRow valores in tabla.Rows)
+                        {
+                            ML.Usuario usuario = new ML.Usuario();
+                            usuario.Nombre = valores[0].ToString();
+                            usuario.ApellidoPaterno = valores[1].ToString();
+                            usuario.ApellidoMaterno = valores[2].ToString();
+                            usuario.Telefono = valores[3].ToString();
+                            usuario.UserName = valores[4].ToString();
+                            usuario.Password = valores[5].ToString();
+                            usuario.FechaNacimiento = valores[6].ToString();
+                            usuario.Sexo = valores[7].ToString();
+                            usuario.Celular = valores[8].ToString();
+                            int estatus = int.Parse(valores[9].ToString()); //el tipo booleano se convierte en int para guardarlo en el modelo
+                            if (estatus == 1)
+                            {
+                                usuario.Estatus = Convert.ToBoolean(estatus); //si es 1 el valor se convierte a booleano
+                            }
+                            else
+                            {
+                                usuario.Estatus = Convert.ToBoolean(estatus); //si no el 0 se convierte en booleano
+                            }
+                            usuario.Curp = valores[10].ToString();
+                            usuario.Rol.IdRol = int.Parse(valores[12].ToString());
+                            usuario.Email = valores[13].ToString();
+                            usuario.Direccion.Calle = valores[14].ToString();
+                            usuario.Direccion.NumeroInterior = valores[15].ToString();
+                            usuario.Direccion.NumeroExterior = valores[16].ToString();
+                            usuario.Direccion.Colonia.IdColonia = int.Parse(valores[17].ToString());
+                            result.Objects.Add(usuario);
+
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct=false;
+                result.ErrorMessage = ex.Message;
+                result.ex = ex;
+            }
+
             return result;
         }
         /*  

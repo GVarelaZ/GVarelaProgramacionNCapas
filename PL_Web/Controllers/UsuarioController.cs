@@ -1,6 +1,10 @@
 ﻿using ML;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -197,6 +201,65 @@ namespace PL_Web.Controllers
             byte[] data = reader.ReadBytes((int)foto.ContentLength);
 
             return data;
+        }
+
+        [HttpPost]
+
+        public ActionResult CargaMasiva()
+        {
+            HttpPostedFileBase archivo = Request.Files["archivoCargado"]; //recibe la peticion del input del formulario
+
+            string extensionAceptada = ".xlsx"; //formato de excel, solo permitido
+
+            if(archivo.ContentLength > 0) //si el usuario si ingreso un archivo correcto
+            {
+                string extensionArchivo = Path.GetExtension(archivo.FileName);  //path.getExtension obtiene la extension del archivo cargado
+
+                if(extensionAceptada == extensionArchivo)  // evalua si coinciden las extensiones del archivo
+                {
+                    //se hace una ruta para guardar una copia del archivo que el usuario ingreso para manipularlo
+                    string ruta = Server.MapPath("~/CargaMasiva/") + Path.GetFileNameWithoutExtension(archivo.FileName) + "-" +  //~ crea una ruta relativa con restricciones para mayor seguridad
+                        DateTime.Now.ToString("ddMMyyyyHmmssff") + extensionAceptada; //Se crea la ruta donde se va a guardar el archivo con el nombre y extension
+
+                    if (!System.IO.File.Exists(ruta)){ //si la ruta y archivo no existen entonces se va a guardar archivo
+                        
+                        archivo.SaveAs(ruta); //Se guarda el archivo en la ruta designada
+
+                        //se usara el proveedor de OLEDB para leer y manipular el excel
+                        string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + ruta; //Cadena de conexion para usar OLEDB
+
+                        ML.Result resultExcel = BL.Usuario.LeerExcel(cadenaConexion);
+
+                        if (resultExcel.Correct)
+                        {
+                            //El excel se a leido correctamente
+
+                            //hacer validaciones
+                        }
+                        else
+                        {
+                            //No se pudo acceder al excel
+                            //mostrar vista parcial de error
+                        }
+                    }
+                    else
+                    {
+                        //Vista parcial
+                        //El archivo ya existe
+                    }
+                }
+                else
+                {
+                    //vista parcial
+                    //el archivo no es un excel
+                }
+            }
+            else
+            {
+                //vista parcial
+                //No existe ningun archivo cargado
+            }
+            return View();
         }
     }
 }
