@@ -11,7 +11,7 @@
 <style>
     body {
         //background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&w=600");
-        background-color: floralwhite;
+        background-color:white;
         background-size: cover;
     }
 
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-1 text-lg-center">
                             <br>
-                            <button class="btn btn-success fw-bold btn-lg text-center" type="submit">Buscar</button>
+                            <button class="btn btn-success fw-bold btn-lg text-center" type="submit"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
 
@@ -113,6 +113,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div>
+                                            <div style="margin-left: 4px">@usuario.Nombre @usuario.ApellidoPaterno @usuario.ApellidoMaterno</div>
                                             @if (usuario.Imagen == null)
                                             {
                                                 <img id="fotoPerfil" class="avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
@@ -123,9 +124,8 @@
                                                 <img src="data:image/*;base64,@Convert.ToBase64String(usuario.Imagen)" class="avatar" alt="Sin foto"
                                                      width="60px" height="60px">
                                             }
-                                            <div style="margin-left: 4px">@usuario.Nombre @usuario.ApellidoPaterno @usuario.ApellidoMaterno</div>
-                                            <br>
-                                            <span class="badge text-bg-primary">
+                                            
+                                            <span class="badge text-bg-info">
                                                 @usuario.Rol.Nombre
                                             </span>
                                             <br>
@@ -134,15 +134,17 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <span class="badge text-bg-primary">
+                                        <span class="badge text-bg-success">
                                             <i class="bi bi-telephone-fill"></i>
                                             @usuario.Telefono
                                         </span>
+                                        <br>
                                         <span class="badge text-bg-primary">
                                             <i class="bi bi-telephone-fill"></i>
                                             @usuario.Celular
                                         </span>
-                                        <span class="badge text-bg-primary">
+                                        <br>
+                                        <span class="badge text-bg-dark">
                                             <i class="bi bi-envelope-at-fill"></i>
                                             @usuario.Email
                                         </span>
@@ -165,7 +167,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div>
-                                            calle @usuario.Direccion.Calle, Int. #@usuario.Direccion.NumeroInterior, Ext. #@usuario.Direccion.NumeroExterior, colonia @usuario.Direccion.Colonia.Nombre, C.P.  @usuario.Direccion.Colonia.CodigoPostal,<br />
+                                            calle @usuario.Direccion.Calle, Int.#@usuario.Direccion.NumeroInterior, Ext.#@usuario.Direccion.NumeroExterior, colonia @usuario.Direccion.Colonia.Nombre, C.P.@usuario.Direccion.Colonia.CodigoPostal,
                                             @usuario.Direccion.Colonia.Municipio.Nombre, @usuario.Direccion.Colonia.Municipio.Estado.Nombre
                                         </div>
                                     </td>
