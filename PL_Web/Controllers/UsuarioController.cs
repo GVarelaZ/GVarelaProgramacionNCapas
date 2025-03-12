@@ -232,8 +232,7 @@ namespace PL_Web.Controllers
 
                         if (resultExcel.Correct)
                         {
-                            //El excel se a leido correctamente
-
+                            //El excel se a leido correctamente                           
                             //hacer validaciones
                         }
                         else
