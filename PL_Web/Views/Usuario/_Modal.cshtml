@@ -3,50 +3,67 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="http://bootboxjs.com/bootbox.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
-<div class="modal" tabindex="-1" role="dialog" id="Modal">
-    <div class="modal-dialog" role="document">
+<style>
+    .modal-body {
+        overflow: auto;
+    }
+</style>
+<div class="modal" id="Modal">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Aviso</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h4 class="modal-title">AVISO</h4>
             </div>
             <div class="modal-body">
-                @if (ViewBag.MensajesError.Count > 0)
+                @if (ViewBag.MensajesError != null)
                 {
                     <div class="container">
                         <div class="row">
-                            <div class="col">
-                                <div class="table-responsive">
-                                    <table id="errores" class="table table-striped table-bordered table-light">
-                                        <thead>
+                            <div class="col-md-6 ">
+
+                                <table id="errores" class="table table-responsive table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Num. registro</th>
+                                            <th scope="col">Errores</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var error in ViewBag.MensajesError)
+                                        {
                                             <tr>
-                                                <th class="text-center" scope="col">#</th>
-                                                <th class="text-center" scope="col">Nombre completo</th>
+                                                <td style=" text-align:center;">
+                                                    @error.NumeroRegistro
+                                                </td>
+                                                <td>
+
+                                                    @{
+
+                                                        var temp = error.ErrorMessage.Split('|');
+
+                                                        foreach (var mensaje in temp)
+                                                        {
+                                                            @mensaje <br>
+
+
+                                                        }
+                                                    }
+                                                </td>
                                             </tr>
+                                        }
+                                    </tbody>
+                                </table>
 
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var error in ViewBag.MensajesError)
-                                            {
-                                                <tr>
-                                                    <td style=" text-align:center;">
-                                                        @error.NumeroRegistro
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @error.ErrorMessage
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
 
-                                </div>
                             </div>
                         </div>
                     </div>
+                }
+
+                @if (ViewBag.mensajeError != null)
+                {
+                    <h4>@ViewBag.MensajeError</h4>
                 }
             </div>
             <div class="modal-footer">
@@ -55,4 +72,9 @@
         </div>
     </div>
 </div>
-<script>$('#Modal').modal();</script>
+<script>
+    $('#Modal').modal();
+
+
+
+</script>

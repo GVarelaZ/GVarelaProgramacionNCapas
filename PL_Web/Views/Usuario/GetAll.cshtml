@@ -84,19 +84,34 @@
             @using (Html.BeginForm("CargaMasiva", "Usuario", FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
                 <div class="row g-1">
-                    <div class="col-8">
-                        <label>Selecciona un archivo</label>
-                        <input name="archivoCargado" id="archivoInput" type="file" class="form-control rounded-pill" style="border-width:3px"
-                               onchange="validarArchivo()" />
-                    </div>
-                    <div class="col-md-4 text-lg-center">
-                        <br>
-                        <button class="btn btn-success fw-bold btn-lg text-center" type="submit">Cargar</button>
-                    </div>
+                    @if (Session["RutaExcel"] == null)
+                    {
+                        <div class="col-7">
+                            <label>Selecciona un archivo</label>
+                            <input name="archivoCargado" id="archivoInput" type="file" class="form-control rounded-pill" style="border-width:3px"
+                                   onchange="validarArchivo()" />
+                        </div>
+                        <div class="col-md-5 text-lg-center">
+                            <br>
+                            <button class="btn btn-success fw-bold btn-lg text-center" type="submit">Cargar archivo</button>
+                        </div>
+                    }
+                    else
+                    { 
+                        <div class="col-6">
+                            <i style=" font-size: 4em;" class="bi bi-filetype-xlsx"></i>
+                            <h4>@Session["nombreArchivo"]</h4>
+                        </div>
+                        <div class="col-md-6 text-lg-center">
+                            <br>
+                            <button class="btn btn-success fw-bold btn-lg text-center" type="submit">Insertar archivo</button>
+                        </div>
+                        
+                    }
                 </div>
             }
         </div>
-        
+
     </div>
 </div>
 @if (Model.Usuarios.Count > 0)
@@ -264,10 +279,6 @@ else
     });
 
     $("#desplegarArchivo").click(function () {
-        $('#Nombre').val("");
-        $('#ApellidoPaterno').val("")
-        $('#ApellidoMaterno').val("")
-        $('#Rol').val("")
         $('#FormularioCargaMasiva').toggle(700, function () {
         });
     });

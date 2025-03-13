@@ -40,7 +40,6 @@ namespace PL_Web.Controllers
 
             result = BL.Rol.GetAll();
             usuario.Rol.Roles = result.Objects;
-
             return View(usuario);
         }
 
@@ -71,10 +70,10 @@ namespace PL_Web.Controllers
 
             result = BL.Rol.GetAll();
             usuario.Rol.Roles = result.Objects;
-            
+
             return View(usuario);
         }
-        
+
         [HttpGet] //Mostrar una vista
 
         public ActionResult Form(int? IdUsuario) //el ? es para decir que puede o no recibir un valor 
@@ -245,36 +244,54 @@ namespace PL_Web.Controllers
                                 {
                                     //Hubo un error
                                     //mostrar una vista o una tabla
+                                    ViewBag.opcion = 1;
                                     ViewBag.MensajesError = validacionesResult.Objects;
                                     return PartialView("_Modal");
                                 }
                                 else
                                 {
                                     Session["RutaExcel"] = ruta;
+                                    Session["nombreArchivo"] = Path.GetFileName(archivo.FileName);
+                                    ViewBag.opcion = 2;
+                                    ViewBag.MensajeError = "No hay ningun error dentro del excel";
+                                    return PartialView("_Modal");
                                 }
                             }
                             else
                             {
                                 //No se pudo acceder al excel
                                 //mostrar vista parcial de error
+                                ViewBag.opcion = 2;
+                                ViewBag.MensajesError = "No se puedo leer el archivo excel";
+                                return PartialView("_Modal");
+
                             }
                         }
                         else
                         {
                             //Vista parcial
                             //El archivo ya existe
+                            ViewBag.opcion = 2;
+                            ViewBag.MensajesError = "El archivo ya existe favor de verificar";
+                            return PartialView("_Modal");
                         }
                     }
                     else
                     {
                         //vista parcial
                         //el archivo no es un excel
+                        ViewBag.opcion = 2;
+                        ViewBag.MensajesError = "El archivo ingresado no es un excel, verificar";
+                        return PartialView("_Modal");
                     }
                 }
                 else
                 {
                     //vista parcial
                     //No existe ningun archivo cargado
+                    ViewBag.opcion = 2;
+                    ViewBag.MensajesError = "No existe ningun archivo cargado, ingresar alguno";
+                    return PartialView("_Modal");
                 }
             }
             else
@@ -291,11 +308,16 @@ namespace PL_Web.Controllers
                         if (!insertResult.Correct)
                         {
                             //mostrar error salio
+                            ViewBag.MensajeError = "Ha ocurrido un error al insertar los registros del documento.";
+                            return PartialView("_Modal");
                         }
+                        
                     }
                     //cuantos insertes son correctos
                     //cuantos insertes son incorrectos
                     //cuales estuvieron mal
+                    ViewBag.MensajeError += "Se han insertado correctamente: " + leerResult.Objects.Count + " registros";
+                    return PartialView("_Modal");
                 }
                 else
                 {
@@ -304,7 +326,7 @@ namespace PL_Web.Controllers
             }
 
             Session["RutaExcel"] = null;
-            
+
             return RedirectToAction("GetAll");
         }
     }

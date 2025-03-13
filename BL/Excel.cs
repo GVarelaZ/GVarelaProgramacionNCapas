@@ -122,64 +122,64 @@ namespace BL
                 resultExcel.NumeroRegistro = contador;
                 if (usuario.Nombre == "" || usuario.Nombre == null || usuario.Nombre.Count() > 30) //validacion solo si son vacios, nulos o son mayores a algo
                 {
-                    resultExcel.ErrorMessage += "El nombre no puede venir vacio o no existe \n"; // se contatena el mensaje de error
+                    resultExcel.ErrorMessage += "El nombre no puede venir vacio o no existe |"; // se contatena el mensaje de error
                 }
                 if (usuario.ApellidoPaterno == "" || usuario.ApellidoPaterno == null || usuario.ApellidoPaterno.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "El Apellido paterno no puede venir vacio o no existe \n";
+                    resultExcel.ErrorMessage += "El Apellido paterno no puede venir vacio o no existe |";
                 }
                 if (usuario.ApellidoMaterno == "" || usuario.ApellidoMaterno == null || usuario.ApellidoMaterno.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "El Apellido materno no puede venir vacio o es no existe \n";
+                    resultExcel.ErrorMessage += "El Apellido materno no puede venir vacio o es no existe |";
                 }
                 if (usuario.Telefono == "" || usuario.Telefono == null || usuario.Telefono.Count() > 10)
                 {
-                    resultExcel.ErrorMessage += "El Telefono no puede venir vacio o solo debe de tener 10 digitos \n";
+                    resultExcel.ErrorMessage += "El Telefono no puede venir vacio o solo debe de tener 10 digitos |";
                 }
                 if (usuario.UserName == "" || usuario.UserName == null || usuario.UserName.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "El userName no puede venir vacio o no existe \n";
+                    resultExcel.ErrorMessage += "El userName no puede venir vacio o no existe |";
                 }
                 if (usuario.Password == "" || usuario.Password == null || usuario.Password.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "La contraseña no puede venir vacio o es muy larga \n";
+                    resultExcel.ErrorMessage += "La contraseña no puede venir vacio o es muy larga |";
                 }
                 if (usuario.FechaNacimiento == "" || usuario.FechaNacimiento == null)
                 {
-                    resultExcel.ErrorMessage += "La fecha de nacimiento no puede venir vacio \n";
+                    resultExcel.ErrorMessage += "La fecha de nacimiento no puede venir vacio |";
                 }
                 if (usuario.Sexo == "" || usuario.Sexo == null || usuario.Sexo.Count() > 2)
                 {
-                    resultExcel.ErrorMessage += "El sexo no puede ir vacio y/o solo puede ser H(hombre) o M(mujer) \n";
+                    resultExcel.ErrorMessage += "El sexo no puede ir vacio y/o solo puede ser H(hombre) o M(mujer) |";
                 }
                 if (usuario.Celular == "" || usuario.Celular == null || usuario.Celular.Count() > 10)
                 {
-                    resultExcel.ErrorMessage += "El celular no puede venir vacio o solo debe de tener 10 digitos \n";
+                    resultExcel.ErrorMessage += "El celular no puede venir vacio o solo debe de tener 10 digitos |";
                 }
 
                 int estatus = Convert.ToInt16(usuario.Estatus);
                 if (estatus > 1 || estatus.ToString() == null)
-                    resultExcel.ErrorMessage += "El estatus no puede venir vacio y/o solo puede contener 1(activo) o 0(inactivo) \n";
+                    resultExcel.ErrorMessage += "El estatus no puede venir vacio y/o solo puede contener 1(activo) o 0(inactivo) |";
 
-                resultExcel.ErrorMessage += usuario.Curp == "" || usuario.Curp == null || usuario.Curp.Count() > 18 ? "La contraseña no puede venir vacio o no existe \n" : "";
+                resultExcel.ErrorMessage += usuario.Curp == "" || usuario.Curp == null || usuario.Curp.Count() > 18 ? "La contraseña no puede venir vacio o no existe |" : "";
 
-                resultExcel.ErrorMessage += usuario.Imagen != null ? "La imagen no puede venir vacia, puedes colocar NULL \n" : "";
+                resultExcel.ErrorMessage += usuario.Imagen != null ? "La imagen no puede venir vacia, puedes colocar NULL |" : "";
 
-                resultExcel.ErrorMessage += usuario.Rol.IdRol == 0 || usuario.Rol.IdRol.ToString() == null || usuario.Rol.IdRol > 7 ? "El id del rol no puedde venir en vacio y/o solo existen del 1 al 6 \n" : "";
+                resultExcel.ErrorMessage += usuario.Rol.IdRol == 0 || usuario.Rol.IdRol.ToString() == null || usuario.Rol.IdRol > 7 ? "El id del rol no puedde venir en vacio y/o solo existen del 1 al 6 |" : "";
 
-                resultExcel.ErrorMessage += usuario.Email == "" || usuario.Email == null || usuario.Email.Count() > 25 ? "El correo no puede venir vacio o no existe \n" : "";
+                resultExcel.ErrorMessage += usuario.Email == "" || usuario.Email == null || usuario.Email.Count() > 25 ? "El correo no puede venir vacio o no existe |" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.Calle == "" || usuario.Direccion.Calle == null || usuario.Direccion.
                     Calle.Count() > 25 ? "La calle no puede venir vacio o no existe \n" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.NumeroInterior == "" || usuario.Direccion.NumeroInterior == null ||
-                    usuario.Direccion.NumeroInterior.Count() > 10 ? "El numero interior no puede venir vacio o no existe \n" : "";
+                    usuario.Direccion.NumeroInterior.Count() > 10 ? "El numero interior no puede venir vacio o no existe |" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.NumeroExterior == "" || usuario.Direccion.NumeroExterior == null ||
-                    usuario.Direccion.NumeroExterior.Count() > 10 ? "El numero exterior no puede venir vacio o no existe \n" : "";
+                    usuario.Direccion.NumeroExterior.Count() > 10 ? "El numero exterior no puede venir vacio o no existe |" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.Colonia.IdColonia == 0 || usuario.Direccion.Colonia.IdColonia.ToString() == null ||
-                    usuario.Direccion.Colonia.IdColonia > 3000 ? "El id de la colonia no puede venir vacio o no existe \n" : "";
+                    usuario.Direccion.Colonia.IdColonia > 3000 ? "El id de la colonia no puede venir vacio o no existe |" : "";
 
                 if (resultExcel.ErrorMessage != "")
                 {
