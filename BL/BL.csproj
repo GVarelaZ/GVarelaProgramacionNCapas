@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Colonia.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="Excel.cs" />
     <Compile Include="Municipio.cs" />
     <Compile Include="Rol.cs" />
     <Compile Include="Usuario.cs" />

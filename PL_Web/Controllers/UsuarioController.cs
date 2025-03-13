@@ -71,9 +71,10 @@ namespace PL_Web.Controllers
 
             result = BL.Rol.GetAll();
             usuario.Rol.Roles = result.Objects;
-
+            
             return View(usuario);
         }
+        
         [HttpGet] //Mostrar una vista
 
         public ActionResult Form(int? IdUsuario) //el ? es para decir que puede o no recibir un valor 
@@ -207,58 +208,104 @@ namespace PL_Web.Controllers
 
         public ActionResult CargaMasiva()
         {
-            HttpPostedFileBase archivo = Request.Files["archivoCargado"]; //recibe la peticion del input del formulario
-
-            string extensionAceptada = ".xlsx"; //formato de excel, solo permitido
-
-            if(archivo.ContentLength > 0) //si el usuario si ingreso un archivo correcto
+            if (Session["RutaExcel"] == null)
             {
-                string extensionArchivo = Path.GetExtension(archivo.FileName);  //path.getExtension obtiene la extension del archivo cargado
 
-                if(extensionAceptada == extensionArchivo)  // evalua si coinciden las extensiones del archivo
+                HttpPostedFileBase archivo = Request.Files["archivoCargado"]; //recibe la peticion del input del formulario
+
+                string extensionAceptada = ".xlsx"; //formato de excel, solo permitido
+
+                if (archivo.ContentLength > 0) //si el usuario si ingreso un archivo correcto
                 {
-                    //se hace una ruta para guardar una copia del archivo que el usuario ingreso para manipularlo
-                    string ruta = Server.MapPath("~/CargaMasiva/") + Path.GetFileNameWithoutExtension(archivo.FileName) + "-" +  //~ crea una ruta relativa con restricciones para mayor seguridad
-                        DateTime.Now.ToString("ddMMyyyyHmmssff") + extensionAceptada; //Se crea la ruta donde se va a guardar el archivo con el nombre y extension
+                    string extensionArchivo = Path.GetExtension(archivo.FileName);  //path.getExtension obtiene la extension del archivo cargado
 
-                    if (!System.IO.File.Exists(ruta)){ //si la ruta y archivo no existen entonces se va a guardar archivo
-                        
-                        archivo.SaveAs(ruta); //Se guarda el archivo en la ruta designada
+                    if (extensionAceptada == extensionArchivo)  // evalua si coinciden las extensiones del archivo
+                    {
+                        //se hace una ruta para guardar una copia del archivo que el usuario ingreso para manipularlo
+                        string ruta = Server.MapPath("~/CargaMasiva/") + Path.GetFileNameWithoutExtension(archivo.FileName) + "-" +  //~ crea una ruta relativa con restricciones para mayor seguridad
+                            DateTime.Now.ToString("ddMMyyyyHmmssff") + extensionAceptada; //Se crea la ruta donde se va a guardar el archivo con el nombre y extension
 
-                        //se usara el proveedor de OLEDB para leer y manipular el excel
-                        string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + ruta; //Cadena de conexion para usar OLEDB
+                        if (!System.IO.File.Exists(ruta))
+                        { //si la ruta y archivo no existen entonces se va a guardar archivo
 
-                        ML.Result resultExcel = BL.Usuario.LeerExcel(cadenaConexion);
+                            archivo.SaveAs(ruta); //Se guarda el archivo en la ruta designada
 
-                        if (resultExcel.Correct)
-                        {
-                            //El excel se a leido correctamente                           
-                            //hacer validaciones
+                            //se usara el proveedor de OLEDB para leer y manipular el excel
+                            string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + ruta; //Cadena de conexion para usar OLEDB
+
+                            ML.Result resultExcel = BL.Excel.LeerExcel(cadenaConexion);
+
+                            if (resultExcel.Correct)
+                            {
+                                //El excel se a leido correctamente                           
+                                //hacer validaciones
+                                ML.Result validacionesResult = BL.Excel.ValidarExcel(resultExcel.Objects);
+
+                                if (validacionesResult.Objects.Count > 0)
+                                {
+                                    //Hubo un error
+                                    //mostrar una vista o una tabla
+                                    ViewBag.MensajesError = validacionesResult.Objects;
+                                    return PartialView("_Modal");
+                                }
+                                else
+                                {
+                                    Session["RutaExcel"] = ruta;
+                                }
+                            }
+                            else
+                            {
+                                //No se pudo acceder al excel
+                                //mostrar vista parcial de error
+                            }
                         }
                         else
                         {
-                            //No se pudo acceder al excel
-                            //mostrar vista parcial de error
+                            //Vista parcial
+                            //El archivo ya existe
                         }
                     }
                     else
                     {
-                        //Vista parcial
-                        //El archivo ya existe
+                        //vista parcial
+                        //el archivo no es un excel
                     }
                 }
                 else
                 {
                     //vista parcial
-                    //el archivo no es un excel
+                    //No existe ningun archivo cargado
                 }
             }
             else
             {
-                //vista parcial
-                //No existe ningun archivo cargado
+                string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + Session["RutaExcel"].ToString();
+
+                ML.Result leerResult = BL.Excel.LeerExcel(cadenaConexion);
+
+                if (leerResult.Objects.Count > 0)
+                {
+                    foreach (ML.Usuario usuario in leerResult.Objects)
+                    {
+                        ML.Result insertResult = BL.Usuario.AddEF(usuario);
+                        if (!insertResult.Correct)
+                        {
+                            //mostrar error salio
+                        }
+                    }
+                    //cuantos insertes son correctos
+                    //cuantos insertes son incorrectos
+                    //cuales estuvieron mal
+                }
+                else
+                {
+                    //error
+                }
             }
-            return View();
+
+            Session["RutaExcel"] = null;
+            
+            return RedirectToAction("GetAll");
         }
     }
 }

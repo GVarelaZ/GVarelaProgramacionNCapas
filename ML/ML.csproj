@@ -44,6 +44,7 @@
     <Compile Include="Colonia.cs" />
     <Compile Include="Direccion.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="ExcelResult.cs" />
     <Compile Include="Municipio.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Rol.cs" />
