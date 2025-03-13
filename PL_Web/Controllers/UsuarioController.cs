@@ -140,16 +140,30 @@ namespace PL_Web.Controllers
             if (usuario.idUsuario == 0)  //Agregar Usuario
             {
                 result = BL.Usuario.AddEF(usuario);
+                if (result.Correct)
+                {
+                    ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
+                    return PartialView("_Avisos");
+                }
+                else
+                {
+                    ViewBag.mensajeError = "No se pudo ingresar el registro, favor de verificar la informacion y volver a intentar.";
+                    return PartialView("_Avisos");
+                }
             }
             else
             {
                 if (usuario.Direccion.IdDireccion == 0)
                 {
                     result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                    ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                    return PartialView("_Avisos");
                 }
                 else
                 {
                     result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+                    ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                    return PartialView("_Avisos");
 
                 }
             }
@@ -165,7 +179,8 @@ namespace PL_Web.Controllers
 
             if (result.Correct)
             {
-                return RedirectToAction("GetAll");
+                ViewBag.mensajeError = "El usuario seleccionado se ha eliminado correctamente.";
+                return PartialView("_Avisos");
             }
 
             return View();
@@ -252,7 +267,6 @@ namespace PL_Web.Controllers
                                 {
                                     Session["RutaExcel"] = ruta;
                                     Session["nombreArchivo"] = Path.GetFileName(archivo.FileName);
-                                    ViewBag.opcion = 2;
                                     ViewBag.MensajeError = "No hay ningun error dentro del excel";
                                     return PartialView("_Modal");
                                 }
@@ -261,7 +275,6 @@ namespace PL_Web.Controllers
                             {
                                 //No se pudo acceder al excel
                                 //mostrar vista parcial de error
-                                ViewBag.opcion = 2;
                                 ViewBag.MensajesError = "No se puedo leer el archivo excel";
                                 return PartialView("_Modal");
 
@@ -271,8 +284,7 @@ namespace PL_Web.Controllers
                         {
                             //Vista parcial
                             //El archivo ya existe
-                            ViewBag.opcion = 2;
-                            ViewBag.MensajesError = "El archivo ya existe favor de verificar";
+                            ViewBag.MensajeError = "El archivo ya existe favor de verificar";
                             return PartialView("_Modal");
                         }
                     }
@@ -280,8 +292,7 @@ namespace PL_Web.Controllers
                     {
                         //vista parcial
                         //el archivo no es un excel
-                        ViewBag.opcion = 2;
-                        ViewBag.MensajesError = "El archivo ingresado no es un excel, verificar";
+                        ViewBag.MensajeError = "El archivo ingresado no es un excel, verificar";
                         return PartialView("_Modal");
                     }
                 }
@@ -289,8 +300,7 @@ namespace PL_Web.Controllers
                 {
                     //vista parcial
                     //No existe ningun archivo cargado
-                    ViewBag.opcion = 2;
-                    ViewBag.MensajesError = "No existe ningun archivo cargado, ingresar alguno";
+                    ViewBag.MensajeError = "No existe ningun archivo cargado, ingresar alguno";
                     return PartialView("_Modal");
                 }
             }
@@ -311,7 +321,7 @@ namespace PL_Web.Controllers
                             ViewBag.MensajeError = "Ha ocurrido un error al insertar los registros del documento.";
                             return PartialView("_Modal");
                         }
-                        
+
                     }
                     //cuantos insertes son correctos
                     //cuantos insertes son incorrectos

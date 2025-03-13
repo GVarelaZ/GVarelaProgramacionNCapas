@@ -255,6 +255,7 @@
     <Content Include="Views\Usuario\GetAll.cshtml" />
     <Content Include="Views\Usuario\Form.cshtml" />
     <Content Include="Views\Usuario\_Modal.cshtml" />
+    <Content Include="Views\Usuario\_Avisos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
