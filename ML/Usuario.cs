@@ -36,6 +36,7 @@ namespace ML // ML = Model Layout
         public string UserName { get; set; }
         [DisplayName("Contraseña:")]
         [Required(ErrorMessage ="La contraseña es obligatorio")]
+        [RegularExpression(@"/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/", ErrorMessage = "La contraseña debe de contener min. 8 caracteres, 1 mayuscula, 1 minuscula, numeros y un simbolo")]
         public string Password { get; set; }
         [DisplayName("Fecha de nacimiento:")]
         [Required(ErrorMessage ="La fecha de nacimiento es obligatorio")]
@@ -45,6 +46,7 @@ namespace ML // ML = Model Layout
         public string Sexo { get; set; }
         [DisplayName("Celular personal:")]
         [Required(ErrorMessage ="El celular es obligatorio")]
+        [RegularExpression(@"/^[0-9]{1,10}$/", ErrorMessage = "Solo ingresar números")]
         public string Celular { get; set; }
 
         public bool Estatus { get; set; }
