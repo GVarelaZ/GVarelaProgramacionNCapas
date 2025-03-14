@@ -61,11 +61,26 @@
                     </div>
                 }
 
-                @if (ViewBag.mensajeError != null)
+                @if (ViewBag.mensajeInsertar != null)
                 {
-                    <h4>@ViewBag.MensajeError</h4>
+                    var temp = ViewBag.mensajeInsertar.Split('|');
+
+                    foreach (var mensaje in temp)
+                    {
+                        //@mensaje <br>
+                        <h4>@mensaje</h4>
+
+
+                    }
                 }
-            </div>
+                @if (ViewBag.mensajeError != null)
+                { 
+                    <h4>
+                        @ViewBag.mensajeError
+                        
+                    </h4>
+                }
+                </div>
             <div class="modal-footer">
                 @Html.ActionLink("Continuar", "GetAll", "Usuario", new { area = "" }, htmlAttributes: new { @class = "btn btn-danger" })
             </div>

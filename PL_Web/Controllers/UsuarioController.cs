@@ -267,7 +267,7 @@ namespace PL_Web.Controllers
                                 {
                                     Session["RutaExcel"] = ruta;
                                     Session["nombreArchivo"] = Path.GetFileName(archivo.FileName);
-                                    ViewBag.MensajeError = "No hay ningun error dentro del excel";
+                                    ViewBag.MensajeError = "El archivo a sido validado y actualmente no se han encontrado errores, ya se pueden ingresar correctamente.";
                                     return PartialView("_Modal");
                                 }
                             }
@@ -275,7 +275,7 @@ namespace PL_Web.Controllers
                             {
                                 //No se pudo acceder al excel
                                 //mostrar vista parcial de error
-                                ViewBag.MensajesError = "No se puedo leer el archivo excel";
+                                ViewBag.MensajesError = "No se ha cargado ningun archivo, favor de verificar y volver a intentar";
                                 return PartialView("_Modal");
 
                             }
@@ -300,7 +300,7 @@ namespace PL_Web.Controllers
                 {
                     //vista parcial
                     //No existe ningun archivo cargado
-                    ViewBag.MensajeError = "No existe ningun archivo cargado, ingresar alguno";
+                    ViewBag.MensajeError = "No existe ningun archivo cargado actualmente, ingresar alguno";
                     return PartialView("_Modal");
                 }
             }
@@ -312,21 +312,25 @@ namespace PL_Web.Controllers
 
                 if (leerResult.Objects.Count > 0)
                 {
+                    int contadorErrores = 0;
                     foreach (ML.Usuario usuario in leerResult.Objects)
                     {
                         ML.Result insertResult = BL.Usuario.AddEF(usuario);
                         if (!insertResult.Correct)
                         {
                             //mostrar error salio
-                            ViewBag.MensajeError = "Ha ocurrido un error al insertar los registros del documento.";
-                            return PartialView("_Modal");
+                            contadorErrores++;
                         }
 
                     }
                     //cuantos insertes son correctos
                     //cuantos insertes son incorrectos
                     //cuales estuvieron mal
-                    ViewBag.MensajeError += "Se han insertado correctamente: " + leerResult.Objects.Count + " registros";
+                    ViewBag.mensajeInsertar += "Total de registros obtenidos para su inserccion: " + (leerResult.Objects.Count) + " |";
+                    ViewBag.mensajeInsertar += "Registros insertados correctamente: " + (leerResult.Objects.Count - contadorErrores) + " , favor de verificarlos |";
+                    ViewBag.mensajeInsertar += "Registros que no han podido insertarse: " + (contadorErrores) + " , favor de revisarlos, he intentar de nuevo";
+                    Session["RutaExcel"] = null;
+
                     return PartialView("_Modal");
                 }
                 else
