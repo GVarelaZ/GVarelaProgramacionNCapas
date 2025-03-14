@@ -168,7 +168,7 @@ namespace PL_Web.Controllers
                 }
             }
 
-            return RedirectToAction("GetAll");
+            //return RedirectToAction("GetAll");
         }
 
         [HttpGet]  //Eliminar un registro seleccionado

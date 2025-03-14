@@ -43,6 +43,7 @@
                         @style = "border-width:3px",
                    @onKeypress = "validarCampo(event)"
                     })
+                    @Html.ValidationMessageFor(Model => Model.Nombre,"", new {@class="text-danger"})
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -194,7 +195,7 @@
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
-                    @Html.Label("Estado", new { @class = "control-label fw-bold" })
+                    @Html.Label("Estado:", new { @class = "control-label fw-bold" })
                     @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.Estado.IdEstado, new SelectList(
                    Model.Direccion.Colonia.Municipio.Estado.Estados, "IdEstado", "Nombre"), "Selecciona un estado", new
                    {
@@ -207,7 +208,7 @@
                 @if (Model.Direccion.Colonia.Municipio.Municipios != null || Model.Direccion.Colonia.Municipio.Municipios.Count > 0)
                 {
                     <div class="col-md-4">
-                        @Html.Label("Municipio", new { @class = "control-label fw-bold" })
+                        @Html.Label("Municipio:", new { @class = "control-label fw-bold" })
                         @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(
                         Model.Direccion.Colonia.Municipio.Municipios, "IdMunicipio", "Nombre"), "Selecciona un municipio", new
                         {
@@ -221,7 +222,7 @@
                 else
                 {
                     <div class="col-md-4">
-                        @Html.Label("Municipio", new { @class = "control-label fw-bold" })
+                        @Html.Label("Municipio:", new { @class = "control-label fw-bold" })
                         @Html.DropDownListFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, new SelectList(
                        String.Empty), "Selecciona un municipio", new
                        {
@@ -236,7 +237,7 @@
                 @if (Model.Direccion.Colonia.Colonias != null || Model.Direccion.Colonia.Colonias.Count > 0)
                 {
                     <div class="col-md-4">
-                        @Html.Label("Colonia", new { @class = "control-label fw-bold" })
+                        @Html.Label("Colonia:", new { @class = "control-label fw-bold" })
                         @Html.DropDownListFor(Model => Model.Direccion.Colonia.IdColonia, new SelectList(
                         Model.Direccion.Colonia.Colonias, "IdColonia", "Nombre"), "Selecciona una colonia", new
                         {
@@ -251,7 +252,7 @@
                 else
                 {
                     <div class="col-md-4">
-                        @Html.Label("Colonia", new { @class = "control-label fw-bold" })
+                        @Html.Label("Colonia:", new { @class = "control-label fw-bold" })
                         @Html.DropDownListFor(Model => Model.Direccion.Colonia.IdColonia, new SelectList(
                        String.Empty), "Selecciona una colonia", new
                        {
@@ -311,7 +312,7 @@
                 </div>
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <label class="control-label fw-bold">Confirmar password</label>
+                    <label class="control-label fw-bold">Confirmar password:</label>
                     <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
                 </div>
                 <div class="col-md-12 text-md-center">
