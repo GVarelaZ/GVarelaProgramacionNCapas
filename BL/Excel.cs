@@ -122,64 +122,64 @@ namespace BL
                 resultExcel.NumeroRegistro = contador;
                 if (usuario.Nombre == "" || usuario.Nombre == null || usuario.Nombre.Count() > 30) //validacion solo si son vacios, nulos o son mayores a algo
                 {
-                    resultExcel.ErrorMessage += "No existe nombre, favor de revisar el archivo |"; // se contatena el mensaje de error
+                    resultExcel.ErrorMessage += "No existe nombre, favor de revisar el archivo"; // se contatena el mensaje de error
                 }
                 if (usuario.ApellidoPaterno == "" || usuario.ApellidoPaterno == null || usuario.ApellidoPaterno.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "El nombre no tiene un apellido paterno, favor de verificar |";
+                    resultExcel.ErrorMessage += "| El nombre no tiene un apellido paterno, favor de verificar";
                 }
                 if (usuario.ApellidoMaterno == "" || usuario.ApellidoMaterno == null || usuario.ApellidoMaterno.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "El nombre no tiene un apellido materno, favor de verificar |";
+                    resultExcel.ErrorMessage += "| El nombre no tiene un apellido materno, favor de verificar";
                 }
                 if (usuario.Telefono == "" || usuario.Telefono == null || usuario.Telefono.Count() > 10)
                 {
-                    resultExcel.ErrorMessage += "No se ha encontrado un numero de telefono Y/O solo debe de ser de 10 digitos |";
+                    resultExcel.ErrorMessage += "| No se ha encontrado un numero de telefono Y/O solo debe de ser de 10 digitos";
                 }
                 if (usuario.UserName == "" || usuario.UserName == null || usuario.UserName.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "Debe de contener un userName y este dede de ser unico |";
+                    resultExcel.ErrorMessage += "| Debe de contener un userName y este dede de ser unico";
                 }
                 if (usuario.Password == "" || usuario.Password == null || usuario.Password.Count() > 30)
                 {
-                    resultExcel.ErrorMessage += "Debe de existir una contraseña para ingresar al sistema, favor de colocar una |";
+                    resultExcel.ErrorMessage += "| Debe de existir una contraseña para ingresar al sistema, favor de colocar una";
                 }
                 if (usuario.FechaNacimiento == "" || usuario.FechaNacimiento == null)
                 {
-                    resultExcel.ErrorMessage += "No se ha encontrado la fecha de nacimiento, favor de verificar |";
+                    resultExcel.ErrorMessage += "| No se ha encontrado la fecha de nacimiento, favor de verificar";
                 }
                 if (usuario.Sexo == "" || usuario.Sexo == null || usuario.Sexo.Count() > 2)
                 {
-                    resultExcel.ErrorMessage += "El sexo se debe de colocar como H(hombre) o M(mujer), verificalo |";
+                    resultExcel.ErrorMessage += "| El sexo se debe de colocar como H(hombre) o M(mujer), verificalo";
                 }
                 if (usuario.Celular == "" || usuario.Celular == null || usuario.Celular.Count() > 10)
                 {
-                    resultExcel.ErrorMessage += "No se ha encontrado un numero de celular Y/O solo debe de ser de 10 digitos |";
+                    resultExcel.ErrorMessage += "| No se ha encontrado un numero de celular Y/O solo debe de ser de 10 digitos";
                 }
 
                 int estatus = Convert.ToInt16(usuario.Estatus);
                 if (estatus > 1 || estatus.ToString() == null)
-                    resultExcel.ErrorMessage += "El estatus no puede venir vacio y/o solo puede contener 1(activo) o 0(inactivo) |";
+                    resultExcel.ErrorMessage += "| El estatus no puede venir vacio y/o solo puede contener 1(activo) o 0(inactivo)";
 
-                resultExcel.ErrorMessage += usuario.Curp == "" || usuario.Curp == null || usuario.Curp.Count() > 18 ? "El curp es necesario, favor de colocarlo |" : "";
+                resultExcel.ErrorMessage += usuario.Curp == "" || usuario.Curp == null || usuario.Curp.Count() > 18 ? "| El curp es necesario, favor de colocarlo" : "";
 
                 resultExcel.ErrorMessage += usuario.Imagen != null ? "La imagen se puede colocar como NULL |" : "";
 
-                resultExcel.ErrorMessage += usuario.Rol.IdRol == 0 || usuario.Rol.IdRol.ToString() == null || usuario.Rol.IdRol > 7 ? "El id del rol no puedde venir en vacio y/o solo existen del 1 al 6 |" : "";
+                resultExcel.ErrorMessage += usuario.Rol.IdRol == 0 || usuario.Rol.IdRol.ToString() == null || usuario.Rol.IdRol > 7 ? "| El id del rol no puedde venir en vacio y/o solo existen del 1 al 6" : "";
 
-                resultExcel.ErrorMessage += usuario.Email == "" || usuario.Email == null || usuario.Email.Count() > 25 ? "El correo debe de ser unico |" : "";
+                resultExcel.ErrorMessage += usuario.Email == "" || usuario.Email == null || usuario.Email.Count() > 25 ? "| El correo debe de ser unico" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.Calle == "" || usuario.Direccion.Calle == null || usuario.Direccion.
-                    Calle.Count() > 25 ? "La calle es necesario para su registro, favor de verificar \n" : "";
+                    Calle.Count() > 25 ? "| La calle es necesario para su registro, favor de verificar" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.NumeroInterior == "" || usuario.Direccion.NumeroInterior == null ||
-                    usuario.Direccion.NumeroInterior.Count() > 10 ? "no hay un numero interior asociado con el domicilio del usuario |" : "";
+                    usuario.Direccion.NumeroInterior.Count() > 10 ? "| no hay un numero interior asociado con el domicilio del usuario" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.NumeroExterior == "" || usuario.Direccion.NumeroExterior == null ||
-                    usuario.Direccion.NumeroExterior.Count() > 10 ? "no hay un numero exterior asociado con el domicilio del usuario |" : "";
+                    usuario.Direccion.NumeroExterior.Count() > 10 ? "| no hay un numero exterior asociado con el domicilio del usuario" : "";
 
                 resultExcel.ErrorMessage += usuario.Direccion.Colonia.IdColonia == 0 || usuario.Direccion.Colonia.IdColonia.ToString() == null ||
-                    usuario.Direccion.Colonia.IdColonia > 3000 ? "El id de la colonia no puede venir vacio o no existe |" : "";
+                    usuario.Direccion.Colonia.IdColonia > 3000 ? "| El id de la colonia no puede venir vacio o no existe" : "";
 
                 if (resultExcel.ErrorMessage != "")
                 {

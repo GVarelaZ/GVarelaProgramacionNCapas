@@ -52,7 +52,7 @@
         </div>
         <p></p>
         <br class="p-1" />
-        <div id="FormularioBusqueda" class="card mx-auto p-3 border border-dark border border-4 rounded-5" style="display:none;">
+        <div id="FormularioBusqueda" class="card mx-auto p-3 border border-dark border-4 rounded-5" style="display:none;">
             @using (Html.BeginForm("GetAll", "Usuario", FormMethod.Post))
             {
                 <div class="row g-1">
@@ -80,7 +80,7 @@
                 </div>
             }
         </div>
-        <div id="FormularioCargaMasiva" class="card col-6 p-3 border border-dark border border-4 rounded-5" style="display:none;">
+        <div id="FormularioCargaMasiva" class="card col-6 p-3 border border-dark border-4 rounded-5" style="display:none;">
             @using (Html.BeginForm("CargaMasiva", "Usuario", FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
                 <div class="row g-1">

@@ -139,32 +139,80 @@ namespace PL_Web.Controllers
 
             if (usuario.idUsuario == 0)  //Agregar Usuario
             {
-                result = BL.Usuario.AddEF(usuario);
-                if (result.Correct)
+                if (ModelState.IsValid)
                 {
-                    ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
-                    return PartialView("_Avisos");
+                    result = BL.Usuario.AddEF(usuario);
+                    if (result.Correct)
+                    {
+                        ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
+                        return PartialView("_Avisos");
+                    }
+                    else
+                    {
+                        ViewBag.mensajeError = "No se pudo ingresar el registro, favor de verificar la informacion y volver a intentar.";
+                        return PartialView("_Avisos");
+                    }
+                }
+
+                if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
+                {
+                    usuario.Direccion.Colonia.Colonias = new List<object>();
+                    usuario.Direccion.Colonia.Municipio.Municipios = new List<object>();
                 }
                 else
                 {
-                    ViewBag.mensajeError = "No se pudo ingresar el registro, favor de verificar la informacion y volver a intentar.";
-                    return PartialView("_Avisos");
+                    result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+                    usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
+                    result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+                    usuario.Direccion.Colonia.Colonias = result.Objects;
                 }
+                ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
+                usuario.Rol.Roles = resultRol.Objects;
+
+                ML.Result resultEstado = BL.Estado.EstadoGetAll();
+                usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+                return View(usuario);
+
             }
             else
             {
-                if (usuario.Direccion.IdDireccion == 0)
+                if (ModelState.IsValid)
                 {
-                    result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
-                    ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
-                    return PartialView("_Avisos");
+
+                    if (usuario.Direccion.IdDireccion == 0)
+                    {
+                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+                    }
+                    else
+                    {
+                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+
+                    }
                 }
                 else
                 {
-                    result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-                    ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
-                    return PartialView("_Avisos");
+                    if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
+                    {
+                        usuario.Direccion.Colonia.Colonias = new List<object>();
+                        usuario.Direccion.Colonia.Municipio.Municipios = new List<object>();
+                    }
+                    else
+                    {
+                        result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+                        usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
+                        result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+                        usuario.Direccion.Colonia.Colonias = result.Objects;
+                    }
+                    ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
+                    usuario.Rol.Roles = resultRol.Objects;
 
+                    ML.Result resultEstado = BL.Estado.EstadoGetAll();
+                    usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+                    return View(usuario);
                 }
             }
 
@@ -321,12 +369,13 @@ namespace PL_Web.Controllers
                             //mostrar error salio
                             contadorErrores++;
                         }
+                        ViewBag.RegistrosNoInsertados += " , " + contadorErrores ;
 
                     }
                     //cuantos insertes son correctos
                     //cuantos insertes son incorrectos
                     //cuales estuvieron mal
-                    ViewBag.mensajeInsertar += "Total de registros obtenidos para su inserccion: " + (leerResult.Objects.Count) + " |";
+                    ViewBag.mensajeInsertar += " | Total de registros obtenidos para su inserccion: " + (leerResult.Objects.Count) + " |";
                     ViewBag.mensajeInsertar += "Registros insertados correctamente: " + (leerResult.Objects.Count - contadorErrores) + " , favor de verificarlos |";
                     ViewBag.mensajeInsertar += "Registros que no han podido insertarse: " + (contadorErrores) + " , favor de revisarlos, he intentar de nuevo";
                     Session["RutaExcel"] = null;
