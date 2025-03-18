@@ -28,12 +28,12 @@ namespace ML // ML = Model Layout
 
         [DisplayName("Apellido materno:")]
         [Required(ErrorMessage = "El apellido paterno es obligatorio")]
-        [RegularExpression(@"[a-zA-Z\s]+", ErrorMessage = "Solo se aceptan letras")]
+        [RegularExpression(@"[a-zA-Z\s]", ErrorMessage = "Solo se aceptan letras")]
         public string ApellidoMaterno { get; set; }
 
         [DisplayName("Telefono de casa:")]
         [Required(ErrorMessage = "El telefono es obligatorio")]
-        [RegularExpression(@"[0-9]{1,10}$", ErrorMessage = "Solo ingresar números")]
+        [RegularExpression(@"[0-9]{1,10}", ErrorMessage = "Solo ingresar números")]
         public string Telefono { get; set; }
 
         [DisplayName("Nombre de usuario:")]
@@ -73,8 +73,6 @@ namespace ML // ML = Model Layout
         [Required(ErrorMessage = "El correo electrónico es obligatorio")]
         [RegularExpression(@"\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b", ErrorMessage = "No es un email válido")]
         public string Email { get; set; }
-        [DisplayName("Rol del usuario:")]
-        [Required(ErrorMessage = "Seleccione un rol")]
         public Rol Rol { get; set; }
         public Direccion Direccion { get; set; }
         public List<object> Usuarios { get; set; }

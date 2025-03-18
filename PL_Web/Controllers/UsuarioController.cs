@@ -128,19 +128,21 @@ namespace PL_Web.Controllers
         {
             ML.Result result = new Result();
 
-            HttpPostedFileBase file = Request.Files["imagenCargada"];  // Obtenemos un archivo que viene del input del formulario 
-
-            if (file != null && file.ContentLength != 0) //si hay informacion
+            if (ModelState.IsValid)
             {
-                //Convertir la imagen en un arreglo de Byte
-                usuario.Imagen = ConvertirArrayBytes(file);  //llamamos el metodo para la conversion y se lo mandamos al modelo para que lo guarde
-            }
 
+                HttpPostedFileBase file = Request.Files["imagenCargada"];  // Obtenemos un archivo que viene del input del formulario 
 
-            if (usuario.idUsuario == 0)  //Agregar Usuario
-            {
-                if (ModelState.IsValid)
+                if (file != null && file.ContentLength != 0) //si hay informacion
                 {
+                    //Convertir la imagen en un arreglo de Byte
+                    usuario.Imagen = ConvertirArrayBytes(file);  //llamamos el metodo para la conversion y se lo mandamos al modelo para que lo guarde
+                }
+
+
+                if (usuario.idUsuario == 0)  //Agregar Usuario
+                {
+
                     result = BL.Usuario.AddEF(usuario);
                     if (result.Correct)
                     {
@@ -153,7 +155,29 @@ namespace PL_Web.Controllers
                         return PartialView("_Avisos");
                     }
                 }
+                else
+                {
+                    if (usuario.Direccion.IdDireccion == 0)
+                    {
+                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+                    }
+                    else
+                    {
+                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+                    }
+                }
 
+                //return RedirectToAction("GetAll");
+            }
+            else
+            {
+                //regresar la informacion que me ha dado
+                //llenar los ddl
+                //mostrar los mensajes de error de DataAnnotations
                 if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
                 {
                     usuario.Direccion.Colonia.Colonias = new List<object>();
@@ -166,57 +190,16 @@ namespace PL_Web.Controllers
                     result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
                     usuario.Direccion.Colonia.Colonias = result.Objects;
                 }
+
                 ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
                 usuario.Rol.Roles = resultRol.Objects;
 
                 ML.Result resultEstado = BL.Estado.EstadoGetAll();
                 usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+
                 return View(usuario);
-
-            }
-            else
-            {
-                if (ModelState.IsValid)
-                {
-
-                    if (usuario.Direccion.IdDireccion == 0)
-                    {
-                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
-                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
-                        return PartialView("_Avisos");
-                    }
-                    else
-                    {
-                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
-                        return PartialView("_Avisos");
-
-                    }
-                }
-                else
-                {
-                    if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
-                    {
-                        usuario.Direccion.Colonia.Colonias = new List<object>();
-                        usuario.Direccion.Colonia.Municipio.Municipios = new List<object>();
-                    }
-                    else
-                    {
-                        result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
-                        usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
-                        result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
-                        usuario.Direccion.Colonia.Colonias = result.Objects;
-                    }
-                    ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
-                    usuario.Rol.Roles = resultRol.Objects;
-
-                    ML.Result resultEstado = BL.Estado.EstadoGetAll();
-                    usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
-                    return View(usuario);
-                }
             }
 
-            //return RedirectToAction("GetAll");
         }
 
         [HttpGet]  //Eliminar un registro seleccionado
@@ -315,7 +298,7 @@ namespace PL_Web.Controllers
                                 {
                                     Session["RutaExcel"] = ruta;
                                     Session["nombreArchivo"] = Path.GetFileName(archivo.FileName);
-                                    ViewBag.MensajeError = "El archivo a sido validado y actualmente no se han encontrado errores, ya se pueden ingresar correctamente.";
+                                    ViewBag.MensajeExito = "El archivo a sido validado y actualmente no se han encontrado errores, ya se pueden ingresar correctamente.";
                                     return PartialView("_Modal");
                                 }
                             }
@@ -369,7 +352,7 @@ namespace PL_Web.Controllers
                             //mostrar error salio
                             contadorErrores++;
                         }
-                        ViewBag.RegistrosNoInsertados += " , " + contadorErrores ;
+                        ViewBag.RegistrosNoInsertados += " , " + contadorErrores;
 
                     }
                     //cuantos insertes son correctos

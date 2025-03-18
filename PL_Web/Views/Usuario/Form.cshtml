@@ -28,9 +28,9 @@
     @Html.HiddenFor(Model => Model.idUsuario)
     @Html.HiddenFor(Model => Model.Direccion.IdDireccion)
     @Html.HiddenFor(Model => Model.Imagen)
-
     <div class="container">
         <div class=" col-md-6">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <h3 style="font-style:italic; color:white;" class="text-decoration-underline fw-bold text-lg-start">Datos personales</h3>
         </div>
         <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
@@ -43,7 +43,7 @@
                    @style = "border-width:3px",
                    //@onKeypress = "validarCampo(event)"
                })
-                    @Html.ValidationMessageFor(Model => Model.Nombre, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                     @*<span class="notificacion"></span>*@
                 </div>
                 <div class="col-md-4">
@@ -52,7 +52,7 @@
                     {
                         @class = "form-control rounded-pill",
                         @style = "border-width:3px",
-                   @onKeypress = "validarCampo(event)"
+                   //@onKeypress = "validarCampo(event)"
                     })
                     @*<span class="notificacion"></span>*@
                     @Html.ValidationMessageFor(Model => Model.ApellidoPaterno, "", new { @class = "text-danger" })
@@ -79,21 +79,21 @@
                             <div class="form-check form-check-inline">
                                 @Html.Label("Hombre", new { @class = " control-label fw-bold" })
                                 @Html.RadioButtonFor(Model => Model.Sexo, "H", new { @class = "form-check form-check-input", @checked = "true" })
-                                
+
                             </div>
                             <div class="form-check form-check-inline">
                                 @Html.Label("Mujer", new { @class = "control-label fw-bold" })
                                 @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input" })
 
                             </div>
-                                @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
                         }
                         else
                         {
                             <div class="form-check form-check-inline">
                                 @Html.Label("Hombre", new { @class = "control-label fw-bold" })
                                 @Html.RadioButtonFor(Model => Model.Sexo, "H", new { @class = "form-check form-check-input" })
-                                
+
 
                             </div>
                             <div class="form-check form-check-inline">
@@ -101,7 +101,7 @@
                                 @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input", @checked = "true" })
 
                             </div>
-                                @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
                         }
                     }
                     else
@@ -334,12 +334,12 @@
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Password, new { @class = "control-label fw-bold" })
                     @Html.TextBoxFor(Model => Model.Password, new
-                    {
-                        @Type = "password",
-                        @class = "form-control rounded-pill",
-                        @style = "border-width:3px",
-                   @onKeypress = "validarCampo(this)"
-                    })
+               {
+                   @Type = "password",
+                   @class = "form-control rounded-pill",
+                   @style = "border-width:3px",
+                   //@onKeypress = "validarCampo(this)"
+               })
                     @*<span class="notificacion"></span>*@
                     @Html.ValidationMessageFor(Model => Model.Password, "", new { @class = "text-danger" })
                 </div>
@@ -352,8 +352,9 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <label class="control-label fw-bold">Confirmar password:</label>
-                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />
-                    <span class="notificacion"></span>
+                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" />
+                    @*<span class="notificacion"></span>*@
+                    @Html.ValidationMessageFor(Model => Model.Password, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-12 text-md-center">
                     @if (Model.Imagen == null)
@@ -495,7 +496,7 @@
             }
         }
     }
-
+    /*
     function validarCampo(eventoPress) {  //Recibe el evento del onkeypress
         var keypress = String.fromCharCode(eventoPress.which) //conversion del codigo de la tecla presionada para ser string
         var inputField = eventoPress.target //prop target para conocer en donde se encuentra mi input o cual es
