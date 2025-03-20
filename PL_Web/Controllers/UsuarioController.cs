@@ -1,6 +1,10 @@
 ﻿using ML;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +40,6 @@ namespace PL_Web.Controllers
 
             result = BL.Rol.GetAll();
             usuario.Rol.Roles = result.Objects;
-
             return View(usuario);
         }
 
@@ -70,6 +73,7 @@ namespace PL_Web.Controllers
 
             return View(usuario);
         }
+
         [HttpGet] //Mostrar una vista
 
         public ActionResult Form(int? IdUsuario) //el ? es para decir que puede o no recibir un valor 
@@ -124,33 +128,78 @@ namespace PL_Web.Controllers
         {
             ML.Result result = new Result();
 
-            HttpPostedFileBase file = Request.Files["imagenCargada"];  // Obtenemos un archivo que viene del input del formulario 
-
-            if (file != null && file.ContentLength != 0) //si hay informacion
+            if (ModelState.IsValid)
             {
-                //Convertir la imagen en un arreglo de Byte
-                usuario.Imagen = ConvertirArrayBytes(file);  //llamamos el metodo para la conversion y se lo mandamos al modelo para que lo guarde
-            }
 
+                HttpPostedFileBase file = Request.Files["imagenCargada"];  // Obtenemos un archivo que viene del input del formulario 
 
-            if (usuario.idUsuario == 0)  //Agregar Usuario
-            {
-                result = BL.Usuario.AddEF(usuario);
-            }
-            else
-            {
-                if (usuario.Direccion.IdDireccion == 0)
+                if (file != null && file.ContentLength != 0) //si hay informacion
                 {
-                    result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                    //Convertir la imagen en un arreglo de Byte
+                    usuario.Imagen = ConvertirArrayBytes(file);  //llamamos el metodo para la conversion y se lo mandamos al modelo para que lo guarde
+                }
+
+
+                if (usuario.idUsuario == 0)  //Agregar Usuario
+                {
+
+                    result = BL.Usuario.AddEF(usuario);
+                    if (result.Correct)
+                    {
+                        ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
+                        return PartialView("_Avisos");
+                    }
+                    else
+                    {
+                        ViewBag.mensajeError = "No se pudo ingresar el registro, favor de verificar la informacion y volver a intentar.";
+                        return PartialView("_Avisos");
+                    }
                 }
                 else
                 {
-                    result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-
+                    if (usuario.Direccion.IdDireccion == 0)
+                    {
+                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+                    }
+                    else
+                    {
+                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        return PartialView("_Avisos");
+                    }
                 }
+
+                //return RedirectToAction("GetAll");
+            }
+            else
+            {
+                //regresar la informacion que me ha dado
+                //llenar los ddl
+                //mostrar los mensajes de error de DataAnnotations
+                if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
+                {
+                    usuario.Direccion.Colonia.Colonias = new List<object>();
+                    usuario.Direccion.Colonia.Municipio.Municipios = new List<object>();
+                }
+                else
+                {
+                    result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+                    usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
+                    result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+                    usuario.Direccion.Colonia.Colonias = result.Objects;
+                }
+
+                ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
+                usuario.Rol.Roles = resultRol.Objects;
+
+                ML.Result resultEstado = BL.Estado.EstadoGetAll();
+                usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
+
+                return View(usuario);
             }
 
-            return RedirectToAction("GetAll");
         }
 
         [HttpGet]  //Eliminar un registro seleccionado
@@ -161,7 +210,8 @@ namespace PL_Web.Controllers
 
             if (result.Correct)
             {
-                return RedirectToAction("GetAll");
+                ViewBag.mensajeError = "El usuario seleccionado se ha eliminado correctamente.";
+                return PartialView("_Avisos");
             }
 
             return View();
@@ -197,6 +247,133 @@ namespace PL_Web.Controllers
             byte[] data = reader.ReadBytes((int)foto.ContentLength);
 
             return data;
+        }
+
+        [HttpPost]
+
+        public ActionResult CargaMasiva()
+        {
+            if (Session["RutaExcel"] == null)
+            {
+
+                HttpPostedFileBase archivo = Request.Files["archivoCargado"]; //recibe la peticion del input del formulario
+
+                string extensionAceptada = ".xlsx"; //formato de excel, solo permitido
+
+                if (archivo.ContentLength > 0) //si el usuario si ingreso un archivo correcto
+                {
+                    string extensionArchivo = Path.GetExtension(archivo.FileName);  //path.getExtension obtiene la extension del archivo cargado
+
+                    if (extensionAceptada == extensionArchivo)  // evalua si coinciden las extensiones del archivo
+                    {
+                        //se hace una ruta para guardar una copia del archivo que el usuario ingreso para manipularlo
+                        string ruta = Server.MapPath("~/CargaMasiva/") + Path.GetFileNameWithoutExtension(archivo.FileName) + "-" +  //~ crea una ruta relativa con restricciones para mayor seguridad
+                            DateTime.Now.ToString("ddMMyyyyHmmssff") + extensionAceptada; //Se crea la ruta donde se va a guardar el archivo con el nombre y extension
+
+                        if (!System.IO.File.Exists(ruta))
+                        { //si la ruta y archivo no existen entonces se va a guardar archivo
+
+                            archivo.SaveAs(ruta); //Se guarda el archivo en la ruta designada
+
+                            //se usara el proveedor de OLEDB para leer y manipular el excel
+                            string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + ruta; //Cadena de conexion para usar OLEDB
+
+                            ML.Result resultExcel = BL.Excel.LeerExcel(cadenaConexion);
+
+                            if (resultExcel.Correct)
+                            {
+                                //El excel se a leido correctamente                           
+                                //hacer validaciones
+                                ML.Result validacionesResult = BL.Excel.ValidarExcel(resultExcel.Objects);
+
+                                if (validacionesResult.Objects.Count > 0)
+                                {
+                                    //Hubo un error
+                                    //mostrar una vista o una tabla
+                                    ViewBag.opcion = 1;
+                                    ViewBag.MensajesError = validacionesResult.Objects;
+                                    return PartialView("_Modal");
+                                }
+                                else
+                                {
+                                    Session["RutaExcel"] = ruta;
+                                    Session["nombreArchivo"] = Path.GetFileName(archivo.FileName);
+                                    ViewBag.MensajeExito = "El archivo a sido validado y actualmente no se han encontrado errores, ya se pueden ingresar correctamente.";
+                                    return PartialView("_Modal");
+                                }
+                            }
+                            else
+                            {
+                                //No se pudo acceder al excel
+                                //mostrar vista parcial de error
+                                ViewBag.MensajesError = "No se ha cargado ningun archivo, favor de verificar y volver a intentar";
+                                return PartialView("_Modal");
+
+                            }
+                        }
+                        else
+                        {
+                            //Vista parcial
+                            //El archivo ya existe
+                            ViewBag.MensajeError = "El archivo ya existe favor de verificar";
+                            return PartialView("_Modal");
+                        }
+                    }
+                    else
+                    {
+                        //vista parcial
+                        //el archivo no es un excel
+                        ViewBag.MensajeError = "El archivo ingresado no es un excel, verificar";
+                        return PartialView("_Modal");
+                    }
+                }
+                else
+                {
+                    //vista parcial
+                    //No existe ningun archivo cargado
+                    ViewBag.MensajeError = "No existe ningun archivo cargado actualmente, ingresar alguno";
+                    return PartialView("_Modal");
+                }
+            }
+            else
+            {
+                string cadenaConexion = ConfigurationManager.ConnectionStrings["OleDbConnection"] + Session["RutaExcel"].ToString();
+
+                ML.Result leerResult = BL.Excel.LeerExcel(cadenaConexion);
+
+                if (leerResult.Objects.Count > 0)
+                {
+                    int contadorErrores = 0;
+                    foreach (ML.Usuario usuario in leerResult.Objects)
+                    {
+                        ML.Result insertResult = BL.Usuario.AddEF(usuario);
+                        if (!insertResult.Correct)
+                        {
+                            //mostrar error salio
+                            contadorErrores++;
+                        }
+                        ViewBag.RegistrosNoInsertados += " , " + contadorErrores;
+
+                    }
+                    //cuantos insertes son correctos
+                    //cuantos insertes son incorrectos
+                    //cuales estuvieron mal
+                    ViewBag.mensajeInsertar += " | Total de registros obtenidos para su inserccion: " + (leerResult.Objects.Count) + " |";
+                    ViewBag.mensajeInsertar += "Registros insertados correctamente: " + (leerResult.Objects.Count - contadorErrores) + " , favor de verificarlos |";
+                    ViewBag.mensajeInsertar += "Registros que no han podido insertarse: " + (contadorErrores) + " , favor de revisarlos, he intentar de nuevo";
+                    Session["RutaExcel"] = null;
+
+                    return PartialView("_Modal");
+                }
+                else
+                {
+                    //error
+                }
+            }
+
+            Session["RutaExcel"] = null;
+
+            return RedirectToAction("GetAll");
         }
     }
 }

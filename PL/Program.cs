@@ -20,6 +20,7 @@ namespace PL
                 Console.WriteLine("2. Eliminar algun registro");
                 Console.WriteLine("3. Actualizar datos de algun registro");
                 Console.WriteLine("4. Obtener registros");
+                Console.WriteLine("6. Carga masiva");
                 Console.WriteLine("5. Salir \n");
                 opcion = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("-----------------------------------------------------------------------");
@@ -39,6 +40,9 @@ namespace PL
                         break;
                     case 5:
                         Console.WriteLine("Hasta luego...!");
+                        break;
+                    case 6:
+                        Usuario.cargaMasiva();
                         break;
                     default:
                         Console.WriteLine("Opcion incorrecta, vuelve a intentar...");

@@ -39,7 +39,7 @@ namespace PL // PL = Presentation Layout
             usuario.Curp = Console.ReadLine();
             Console.WriteLine("Ingresa una foto de perfil:");
             usuario.Imagen = Encoding.ASCII.GetBytes(Console.ReadLine());
-            usuario.IdRol = 1;
+            usuario.Rol.IdRol = 1;
             Console.WriteLine("Ingresa un correo electronico:");
             usuario.Email = Console.ReadLine();
 
@@ -89,7 +89,7 @@ namespace PL // PL = Presentation Layout
                 Console.WriteLine("Celular: " + usuario.Celular);
                 Console.WriteLine("CURP: " + usuario.Curp);
                 Console.WriteLine("Imagen: " + usuario.Imagen);
-                Console.WriteLine("IdRol: " + usuario.IdRol);
+                Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                 Console.WriteLine("Email: " + usuario.Email);
 
                 if (usuario.Estatus)
@@ -157,7 +157,7 @@ namespace PL // PL = Presentation Layout
             usuario.Curp = Console.ReadLine();
             Console.WriteLine("Ingresa una foto de perfil:");
             usuario.Imagen = Encoding.ASCII.GetBytes(Console.ReadLine());
-            usuario.IdRol = 1;
+            usuario.Rol.IdRol = 1;
             Console.WriteLine("Ingresa un correo electronico:");
             usuario.Email = Console.ReadLine();
 
@@ -193,7 +193,7 @@ namespace PL // PL = Presentation Layout
             switch (opcion)
             {
                 case 1:
-                    ML.Result result = BL.Usuario.GetAllEF(); //Regresa todos los registros de la tabla
+                    ML.Result result = new Result(); //Regresa todos los registros de la tabla
                     //ML.Result result = BL.Usuario.GetAllLINQ();
 
                     if (result.Correct)
@@ -213,7 +213,7 @@ namespace PL // PL = Presentation Layout
                             Console.WriteLine("Celular: " + usuario.Celular);
                             Console.WriteLine("CURP: " + usuario.Curp);
                             Console.WriteLine("Imagen: " + usuario.Imagen);
-                            Console.WriteLine("IdRol: " + usuario.IdRol);
+                            Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                             Console.WriteLine("Email: " + usuario.Email);
 
                             if (usuario.Estatus)
@@ -257,7 +257,7 @@ namespace PL // PL = Presentation Layout
                         Console.WriteLine("Celular: " + usuario.Celular);
                         Console.WriteLine("CURP: " + usuario.Curp);
                         Console.WriteLine("Imagen: " + usuario.Imagen);
-                        Console.WriteLine("IdRol: " + usuario.IdRol);
+                        Console.WriteLine("IdRol: " + usuario.Rol.IdRol);
                         Console.WriteLine("Email: " + usuario.Email);
 
                         if (usuario.Estatus)
@@ -282,5 +282,70 @@ namespace PL // PL = Presentation Layout
                     break;
             }
         }
+
+        public static void cargaMasiva()
+        {
+            ML.Result result = new ML.Result();
+
+            Console.WriteLine("Entrando a carga masiva");
+            string ruta = @"C:\Users\digis\Documents\Documentos\Gustavo David Varela Zuñiga\cargaMasiva.txt"; //Se coloca la ruta absoluta del txt que deseamos leer
+            try
+            {
+                StreamReader sr = new StreamReader(ruta); //Instanciamos un objeto de tipo StreamReader para poder leer el archivo
+                string fila = ""; 
+
+                sr.ReadLine(); // se lee la primer linea que corresponde al encabezado del archivo
+
+                while((fila =  sr.ReadLine()) != null){ //condicional while, para que vaya iterando fila por fila hasta que se encuentre con alguna que no contenga nada o este vacia
+                    String[] valores = fila.Split('|'); //se hace un arreglo de string para guardar los datos del txt pero separados por el simbolo |
+                    
+                    ML.Usuario usuario = new ML.Usuario(); //Modelo de usuario para almacenar todos los registros
+                    usuario.Direccion = new Direccion();
+                    usuario.Direccion.Colonia = new Colonia();
+                    usuario.Rol = new Rol();
+
+                    usuario.Nombre = valores[0];
+                    usuario.ApellidoPaterno = valores[1];
+                    usuario.ApellidoMaterno = valores[2];
+                    usuario.Telefono = valores[3];
+                    usuario.UserName = valores[4];
+                    usuario.Password = valores[5];
+                    usuario.FechaNacimiento = valores[6];
+                    usuario.Sexo = valores[7];
+                    usuario.Celular = valores[8];
+                    int estatus = int.Parse(valores[9]); //el tipo booleano se convierte en int para guardarlo en el modelo
+                    if(estatus == 1)
+                    {
+                        usuario.Estatus = Convert.ToBoolean(estatus); //si es 1 el valor se convierte a booleano
+                    }
+                    else
+                    {
+                        usuario.Estatus = Convert.ToBoolean(estatus); //si no el 0 se convierte en booleano
+                    }
+                    usuario.Curp = valores[10];
+                    usuario.Rol.IdRol = int.Parse(valores[12]);
+                    usuario.Email = valores[13];
+                    usuario.Direccion.Calle = valores[14];
+                    usuario.Direccion.NumeroInterior = valores[15];
+                    usuario.Direccion.NumeroExterior = valores[16];
+                    usuario.Direccion.Colonia.IdColonia = int.Parse(valores[17]);
+
+                    result = BL.Usuario.AddEF(usuario); // Metodo que llega desde BL para agregar usuario con RESULT
+                                
+
+                    if (result.Correct)
+                    {
+                        Console.WriteLine(result.ErrorMessage);
+                    }
+                    else
+                    {
+                        Console.WriteLine(result.ErrorMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        } 
     }
 }

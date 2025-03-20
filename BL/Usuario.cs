@@ -3,6 +3,7 @@ using ML;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -378,6 +379,8 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
             }
             return result;
         }
+        
+        
         /*  
           public static Result AddLINQ(ML.Usuario usuario)
           {
