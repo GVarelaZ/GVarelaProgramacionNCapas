@@ -76,6 +76,7 @@ namespace ML // ML = Model Layout
         public Rol Rol { get; set; }
         public Direccion Direccion { get; set; }
         public List<object> Usuarios { get; set; }
+        public string imagenJS { get; set; }
 
     }
 }

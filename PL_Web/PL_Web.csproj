@@ -166,9 +166,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\LargeJsonValueProviderFactory.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CrudJSController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -218,6 +220,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Usuario\CRUD_JS.js" />
     <Content Include="Scripts\Usuario\Validaciones.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -257,6 +260,7 @@
     <Content Include="Views\Usuario\Form.cshtml" />
     <Content Include="Views\Usuario\_Modal.cshtml" />
     <Content Include="Views\Usuario\_Avisos.cshtml" />
+    <Content Include="Views\CrudJS\GetAllJS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.Title = "GetAllJS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var rutaGetAll = "@Url.Action("GetAll", "CrudJS")"
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+<script src="~/Scripts/Usuario/CRUD_JS.js"></script>
+<script src="~/Scripts/Usuario/Validaciones.js"></script>
+
+<style>
+
+    body {
+        //background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&w=600");
+        background-color: floralwhite;
+        background-size: cover;
+    }
+
+    thead th {
+        position: sticky; /* queremos que las celdas estén fijas    */
+        top: 0; /* en lo más alto de la tabla/página.     */
+        background: white; /* esto debería ser el fondo de la celda  */
+        z-index: 1; /* debe quedar encima de las otras celdas */
+    }
+
+    .table-responsive {
+        max-height: 600px;
+    }
+
+    .avatar {
+        border-radius: 30%;
+        object-fit: cover;
+        object-position: center;
+    }
+</style>
+<p></p>
+<h1 style="color: black; text-align: center; font-family: Bahnschrift; font-size: 60px; text-shadow: 5px 5px 10px blue; ">CRUD usando solo JavaScript</h1>
+<p></p>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Button trigger modal -->
+            <button style="width:contain" id="btnAbrir" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Agregar usuario
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">FORMULARIO</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h2 style="font-style: oblique; font-size:50px;" class="text-decoration-underline fw-bold text-lg-center">FORMULARIO PARA NUEVOS REGISTROS</h2>
+                            <div class="container">
+                                <div class=" col-md-6">
+                                    <h3 style="font-style:italic;" class="text-decoration-underline fw-bold text-lg-start">Datos personales</h3>
+                                </div>
+                                <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Nombre:</label>
+                                            <input id="nombre" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                                   onBlur="campoVacio(event)" />
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Apellido paterno:</label>
+                                            <input id="apellidoPaterno" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Apellido materno:</label>
+                                            <input id="apellidoMaterno" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                                   onBlur="campoVacio(event)" />
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4 ">
+                                            <label class="control-label fw-bold">Sexo:</label>
+                                            <p></p>
+                                            <div class="form-check form-check-inline">
+                                                <label class="control-label fw-bold">Hombre:</label>
+                                                <input class="form-check form-check-input" id="Sexo" name="Sexo" type="radio" value="H">
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <label class="control-label fw-bold">Mujer:</label>
+                                                <input class="form-check form-check-input" id="Sexo" name="Sexo" type="radio" value="M">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Telefono:</label>
+                                            <input id="telefono" maxlength="10" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">FechaNacimiento:</label>
+                                            <input style="border-width:3px" class="form-select rounded-pill" type="text" id="datepicker" onChange="cambiarColor(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Celular:</label>
+                                            <input id="celular" maxlength="10" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Rol:</label>
+                                            <select class="form-select rounded-pill" data-val-required="Seleccione un rol" id="Rol" name="Rol" onchange="cambiarColor(event)" style="border-width:3px">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Curp:</label>
+                                            <input id="curp_input" class="form-control rounded-pill" style="border-width:3px" oninput="validarInput(this)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span id="resultado" class="notificacion"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="p-2"></p>
+                                <h3  class="text-decoration-underline fw-bold text-lg-start">Direccion</h3>
+                                <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Calle:</label>
+                                            <input id="calle" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                                   onBlur="campoVacio(event)" />
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Numero exterior:</label>
+                                            <input id="numeroExterior" maxlength="5" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Numero interior:</label>
+                                            <input id="numeroInterior" maxlength="5" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Estado:</label>
+                                            <select id="ddlEstado" class="form-select rounded-pill" style="border-width:3px"
+                                                    onChange="MunicipioGetByIdEstado(), cambiarColor(event)">
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Municipio:</label>
+                                            <select id="ddlMunicipio" class="form-select rounded-pill" style="border-width:3px" onChange="ColoniaGetByIdMunicipio(), cambiarColor(event)">
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Coloniar:</label>
+                                            <select id="ddlColonia" class="form-select rounded-pill" style="border-width:3px" onChange="cambiarColor(event)"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="p-2"></p>
+                                <h3 class="text-decoration-underline fw-bold text-lg-start">Datos inicio de sesion</h3>
+                                <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Email:</label>
+                                            <input type="text" id="emailInput" class="form-control rounded-pill" style="border-width:3px" onBlur="validarEmail(event), campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">UserName:</label>
+                                            <input id="UserName" class="form-control rounded-pill" style="border-width:3px" onKeypress="userNameValid(event)" onBlur="campoVacio(event), campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Password:</label>
+                                            <input id="inptContraseña" Type="password" class="form-control rounded-pill" style="border-width:3px"
+                                                   onBlur="validarPassword(event), campoVacio(event)"/>
+                                            <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Foto perfil:</label>
+
+                                            <input name="imagenCargada" id="imagenInput" type="file" class="form-control rounded-pill" style="border-width:3px"
+                                                   onChange="ValidarImagen(), cambiarColor(event)" />
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <label class="control-label fw-bold">Confirmar password</label>
+                                            <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                                        </div>
+                                        <div class="col-md-12 text-md-center">
+
+                                            <img id="fotoPerfil" class="avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
+                                                 width="60px" height="60px">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="btnRegistrar" class=" btn btn-success fw-bold btn-lg text-center" type="button">Registrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p></p>
+            <div class="table-responsive">
+                <table id="usuarios" class="table table-striped table-bordered table-light">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">#</th>
+                            <th class="text-center" scope="col">Nombre completo</th>
+                            <th class="text-center" scope="col">Contactos</th>
+                            <!--<th scope="col">UserName</th>
+                            <th scope="col">Contraseña</th> -->
+                            <th scope="col">Fecha Nacimiento</th>
+                            <th scope="col">Sexo</th>
+                            <!--<th scope="col">Imagen</th>-->
+                            <th scope="col">Direccion</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="tableGetAll">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -204,7 +204,89 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
             }
             return result;
         }
+        public static Result GetAllEFJS(ML.Usuario usuario)
+        {
+            Result result = new Result(); // Modelo de Result para el retorno de informacion
 
+            try
+            {
+
+                using (GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
+                {
+
+                    var registros = context.UsuarioGetAll(usuario.Nombre, usuario.ApellidoPaterno, usuario.ApellidoMaterno,
+                                                                //usuario.Rol.IdRol).ToList(); //Retorna una lista con los valores obtenidos
+
+                                                                //var registros = context.UsuarioGetAllViewSP(usuario.Nombre, usuario.ApellidoPaterno, usuario.ApellidoMaterno,
+                                                                usuario.Rol.IdRol).ToList();  //SP consumiendo una vista
+
+                    if (registros.Count > 0)
+                    {
+                        result.Objects = new List<object>(); //Crea una lista de modelos Objects
+
+                        foreach (var data in registros) // Recorrido de las tablas por filas
+                        {
+                            ML.Usuario usuarioML = new ML.Usuario(); //Se crea un objeto para cada iteracion o fila
+                            usuarioML.Rol = new ML.Rol(); //  Se crea una instancia desde usuario, se abre la puerta
+                            usuarioML.Direccion = new ML.Direccion();
+                            usuarioML.Direccion.Colonia = new ML.Colonia();
+                            usuarioML.Direccion.Colonia.Municipio = new ML.Municipio();
+                            usuarioML.Direccion.Colonia.Municipio.Estado = new ML.Estado();
+
+                            usuarioML.idUsuario = Convert.ToInt32(data.IdUsuario.ToString());
+                            usuarioML.Nombre = data.UsuarioNombre;
+                            usuarioML.ApellidoPaterno = data.ApellidoPaterno;
+                            usuarioML.ApellidoMaterno = data.ApellidoMaterno;
+                            usuarioML.Telefono = data.Telefono;
+                            usuarioML.UserName = data.UserName;
+                            usuarioML.Password = data.Password;
+                            usuarioML.FechaNacimiento = data.FechaNacimiento;
+                            usuarioML.Sexo = data.Sexo;
+                            usuarioML.Celular = data.Celular;
+                            usuarioML.Estatus = Convert.ToBoolean(data.Status.ToString());
+                            usuarioML.Curp = data.CURP;
+                            //usuarioML.imagenJS = data.Imagen == null ? "" : Convert.ToBase64String(data.Imagen);
+                            usuarioML.Email = data.Email;
+                            usuarioML.Rol.Nombre = data.RolNombre;
+                            if (data.IdDireccion != null)
+                            {
+                                usuarioML.Direccion.IdDireccion = data.IdDireccion.Value;
+                            }
+                            else
+                            {
+                                usuarioML.Direccion.IdDireccion = 0;
+                            }
+                            usuarioML.Direccion.Calle = data.Calle;
+                            usuarioML.Direccion.NumeroInterior = data.NumeroInterior;
+                            usuarioML.Direccion.NumeroExterior = data.NumeroExterior;
+                            usuarioML.Direccion.Colonia.Nombre = data.ColoniaNombre;
+                            usuarioML.Direccion.Colonia.CodigoPostal = data.CodigoPostal;
+                            usuarioML.Direccion.Colonia.Municipio.Nombre = data.MunicipioNombre;
+                            usuarioML.Direccion.Colonia.Municipio.Estado.Nombre = data.EstadoNOmbre;
+
+                            result.Objects.Add(usuarioML); // Se ingresa un objeto por cada iteracion
+                        }
+
+                        result.Correct = true;
+                        result.ErrorMessage = "Campos obtenidos correctamente";
+
+                    }
+                    else
+                    {
+                        // No hay registros
+                        result.Correct = false;
+                        result.ErrorMessage = "\nNo hay registros o datos";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.ex = ex;
+            }
+            return result;
+        }
         public static Result GetByIdEF(int idUsuario) // Selecciona solo 1 registro
         {
             ML.Result result = new ML.Result(); // Crea un modelo de result
