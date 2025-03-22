@@ -5,7 +5,15 @@
 }
 
 <script>
-    var rutaGetAll = "@Url.Action("GetAll", "CrudJS")"
+    var rutaGetAll = "@Url.Action("GetAll")"
+    var rutaDelete = "@Url.Action("DeleteById")"
+    var rutaDDLRol = "@Url.Action("DDLroles")"
+    var rutaDDLEstado = "@Url.Action("GetEstados")"
+    var rutaForm = "@Url.Action("form")"
+    var rutaAdd = "@Url.Action("add")"
+    var UrlEstados = "@Url.Action("MunicipioGetByIdEstado")?idEstado="
+    var UrlMunicipio = "@Url.Action("ColoniaGetByIdMunicipio")?idMunicipio="
+
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="~/Scripts/jquery-3.7.0.js"></script>
@@ -47,11 +55,11 @@
     <div class="row">
         <div class="col-md-4">
             <!-- Button trigger modal -->
-            <button style="width:contain" id="btnAbrir" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <button style="width:contain" id="btnAbrir" type="button" class="btn btn-outline-info" data-bs-target="#staticBackdrop" onclick="formulario(0)">
                 Agregar usuario
             </button>
             <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="display:none">
                 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -68,19 +76,19 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Nombre:</label>
-                                            <input id="nombre" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                            <input id="nombre" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
                                                    onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Apellido paterno:</label>
-                                            <input id="apellidoPaterno" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="apellidoPaterno" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                                   onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Apellido materno:</label>
-                                            <input id="apellidoMaterno" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                            <input id="apellidoMaterno" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
                                                    onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
@@ -89,82 +97,82 @@
                                             <p></p>
                                             <div class="form-check form-check-inline">
                                                 <label class="control-label fw-bold">Hombre:</label>
-                                                <input class="form-check form-check-input" id="Sexo" name="Sexo" type="radio" value="H">
+                                                <input class="inpt form-check form-check-input" id="SexoH" name="Sexo" type="radio" value="H">
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <label class="control-label fw-bold">Mujer:</label>
-                                                <input class="form-check form-check-input" id="Sexo" name="Sexo" type="radio" value="M">
+                                                <input class="inpt form-check form-check-input" id="SexoM" name="Sexo" type="radio" value="M">
                                             </div>
 
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Telefono:</label>
-                                            <input id="telefono" maxlength="10" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="telefono" maxlength="10" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">FechaNacimiento:</label>
-                                            <input style="border-width:3px" class="form-select rounded-pill" type="text" id="datepicker" onChange="cambiarColor(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input style="border-width:3px" class="inpt form-select rounded-pill" type="text" id="datepicker" onChange="cambiarColor(event)"
+                                                   onBlur="campoVacio(event)" />
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Celular:</label>
-                                            <input id="celular" maxlength="10" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="celular" maxlength="10" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Rol:</label>
-                                            <select class="form-select rounded-pill" data-val-required="Seleccione un rol" id="Rol" name="Rol" onchange="cambiarColor(event)" style="border-width:3px">
+                                            <select class="select form-select rounded-pill" data-val-required="Seleccione un rol" id="Rol" name="Rol" onchange="cambiarColor(event)" style="border-width:3px">
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Curp:</label>
-                                            <input id="curp_input" class="form-control rounded-pill" style="border-width:3px" oninput="validarInput(this)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="curp_input" class="inpt form-control rounded-pill" style="border-width:3px" oninput="validarInput(this)"
+                                                   onBlur="campoVacio(event)" />
                                             <span id="resultado" class="notificacion"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <p class="p-2"></p>
-                                <h3  class="text-decoration-underline fw-bold text-lg-start">Direccion</h3>
+                                <h3 class="text-decoration-underline fw-bold text-lg-start">Direccion</h3>
                                 <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Calle:</label>
-                                            <input id="calle" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
+                                            <input id="calle" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)"
                                                    onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Numero exterior:</label>
-                                            <input id="numeroExterior" maxlength="5" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="numeroExterior" maxlength="5" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Numero interior:</label>
-                                            <input id="numeroInterior" maxlength="5" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
-                                                   onBlur="campoVacio(event)"/>
+                                            <input id="numeroInterior" maxlength="5" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="validarNumeros(event)"
+                                                   onBlur="campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Estado:</label>
-                                            <select id="ddlEstado" class="form-select rounded-pill" style="border-width:3px"
+                                            <select id="ddlEstado" class="select form-select rounded-pill" style="border-width:3px"
                                                     onChange="MunicipioGetByIdEstado(), cambiarColor(event)">
                                             </select>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Municipio:</label>
-                                            <select id="ddlMunicipio" class="form-select rounded-pill" style="border-width:3px" onChange="ColoniaGetByIdMunicipio(), cambiarColor(event)">
+                                            <select id="ddlMunicipio" class="select form-select rounded-pill" style="border-width:3px" onChange="ColoniaGetByIdMunicipio(), cambiarColor(event)">
                                             </select>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label class="control-label fw-bold">Coloniar:</label>
-                                            <select id="ddlColonia" class="form-select rounded-pill" style="border-width:3px" onChange="cambiarColor(event)"></select>
+                                            <label class="control-label fw-bold">Colonia:</label>
+                                            <select id="ddlColonia" class="select form-select rounded-pill" style="border-width:3px" onChange="cambiarColor(event)"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -174,30 +182,30 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Email:</label>
-                                            <input type="text" id="emailInput" class="form-control rounded-pill" style="border-width:3px" onBlur="validarEmail(event), campoVacio(event)"/>
+                                            <input type="text" id="emailInput" class="inpt form-control rounded-pill" style="border-width:3px" onBlur="validarEmail(event), campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">UserName:</label>
-                                            <input id="UserName" class="form-control rounded-pill" style="border-width:3px" onKeypress="userNameValid(event)" onBlur="campoVacio(event), campoVacio(event)"/>
+                                            <input id="UserName" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="userNameValid(event)" onBlur="campoVacio(event), campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Password:</label>
-                                            <input id="inptContraseña" Type="password" class="form-control rounded-pill" style="border-width:3px"
-                                                   onBlur="validarPassword(event), campoVacio(event)"/>
+                                            <input id="inptContraseña" Type="password" class="inpt form-control rounded-pill" style="border-width:3px"
+                                                   onBlur="validarPassword(event), campoVacio(event)" />
                                             <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Foto perfil:</label>
 
-                                            <input name="imagenCargada" id="imagenInput" type="file" class="form-control rounded-pill" style="border-width:3px"
+                                            <input name="imagenCargada" id="imagenInput" type="file" class="inpt form-control rounded-pill" style="border-width:3px"
                                                    onChange="ValidarImagen(), cambiarColor(event)" />
                                         </div>
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Confirmar password</label>
-                                            <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                                            <input Type="password" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="contraseñasIguales(event)" />  <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-12 text-md-center">
 
@@ -237,7 +245,6 @@
 
                     </thead>
                     <tbody id="tableGetAll">
-
                     </tbody>
                 </table>
             </div>

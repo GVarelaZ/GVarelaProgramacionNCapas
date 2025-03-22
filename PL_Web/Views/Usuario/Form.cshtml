@@ -343,7 +343,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <label class="control-label fw-bold">Confirmar password</label>
-                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                    <input íd="inptValidar" Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="contraseñasIguales(this)" />  <span class="notificacion"></span>
                 </div>
                 <div class="col-md-12 text-md-center">
                     @if (Model.Imagen == null)
@@ -365,7 +365,7 @@
     </div>
 }
 
-<script src="~/Scripts/jquery-3.7.0.js"></script>
+@*<script src="~/Scripts/jquery-3.7.0.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" src="/resources/demos/style.css">
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -610,7 +610,7 @@
             inputError.style.borderWidth = "3px";
             inputError.style.borderColor = 'green'
         }
-    }
+    }*@
 
 
    /* function VisualizarImagen(input) {

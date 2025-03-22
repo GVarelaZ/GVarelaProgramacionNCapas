@@ -9,69 +9,6 @@ $(document).ready(
 )
 
 
-function MunicipioGetByIdEstado() {
-    let idEstado = $('#ddlEstado').val() // Alojar el Id del estado seleccionado
-    //console.log(idEstado)
-    $.ajax({
-        url: "" + UrlEstados + idEstado + "", //mandar un unicio dato cadena interpolada
-        type: "GET",
-        dataType: "JSON",
-        //data : Modelo enviar
-        success: function (result) {
-            //console.log(result) //Envia el result que viene del BL
-            if (result.Correct) {
-                //console.log(result.Correct)
-                $('#ddlMunicipio').empty();
-                $('#ddlMunicipio').append("<option value=0>Selecciona un municìpio</option>")
-                $('#ddlColonia').empty();
-                $('#ddlColonia').append("<option value=0>Selecciona una colonia</option>")
-
-                let ddlMunicipio = $('#ddlMunicipio') //Asignamos la variable del ddl a llenar
-
-                $.each(result.Objects, function (i, valor) {
-                    //console.log(i)
-                    //console.log(valor)
-                    let opcion = `<option value=${valor.IdMunicipio}> ${valor.Nombre} </option>` //Llenamos la etiqueta select con opcion
-                    ddlMunicipio.append(opcion) //se insertan los opcion
-                })
-            } else {
-
-            }
-        },
-        error: function (xhr) {
-            console.log(xhr)
-        }
-    })
-}
-
-function ColoniaGetByIdMunicipio() {
-    let ddlMunicipio = $('#ddlMunicipio').val()
-    //console.log(ddlMunicipio)
-
-    $.ajax({
-        url: "" + UrlMunicipio + ddlMunicipio + "",
-        type: "GET",
-        dataType: "JSON",
-        success: function (result) {
-            //console.log(result)
-            if (result.Correct) {
-                $('#ddlColonia').empty();
-                $('#ddlColonia').append("<option value=0>Selecciona una colonia</option>")
-                let ddlColonia = $('#ddlColonia')
-
-                $.each(result.Objects, function (i, colonia) {
-                    let opcion = `<option value=${colonia.IdColonia}>${colonia.Nombre}</option>`
-                    //console.log(opcion)
-                    ddlColonia.append(opcion)
-                })
-            }
-        },
-        error: function (xhr) {
-            console.log(xhr)
-        }
-    })
-}
-
 function ValidarImagen() { //validacion para saber si el usuario ingreso una imagen exclusivamente
     let imagen = $('#imagenInput')
     let nombreImagen = imagen[0].files[0].name //accede a la propiedad para el nombre del archivo

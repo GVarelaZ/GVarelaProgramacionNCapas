@@ -245,7 +245,7 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                             usuarioML.Celular = data.Celular;
                             usuarioML.Estatus = Convert.ToBoolean(data.Status.ToString());
                             usuarioML.Curp = data.CURP;
-                            //usuarioML.imagenJS = data.Imagen == null ? "" : Convert.ToBase64String(data.Imagen);
+                            usuarioML.imagenJS = data.Imagen == null ? "" : Convert.ToBase64String(data.Imagen);
                             usuarioML.Email = data.Email;
                             usuarioML.Rol.Nombre = data.RolNombre;
                             if (data.IdDireccion != null)
