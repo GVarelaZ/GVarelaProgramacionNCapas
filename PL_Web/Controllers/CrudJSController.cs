@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.ModelBinding;
 using System.Web.Mvc;
+using System.IO;
+using static System.Net.WebRequestMethods;
 
 namespace PL_Web.Controllers
 {
@@ -41,7 +43,6 @@ namespace PL_Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //add
         //Update
         [HttpGet]//DDLRol
         public JsonResult DDLroles()
@@ -123,59 +124,39 @@ namespace PL_Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult add(ML.Usuario usuario)
+        public JsonResult form(ML.Usuario usuario)
         {
             ML.Result result = new Result();
 
-            if (ModelState.IsValid)
+
+            if (usuario.idUsuario == 0)  //Agregar Usuario
             {
 
-                if (usuario.idUsuario == 0)  //Agregar Usuario
-                {
+                result = BL.Usuario.AddEF(usuario);
 
-                    result = BL.Usuario.AddEF(usuario);
-
-                }
-                else
-                {
-                    if (usuario.Direccion.IdDireccion == 0)
-                    {
-                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
-                    }
-                    else
-                    {
-                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-                    }
-                }
-
-                return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                //regresar la informacion que me ha dado
-                //llenar los ddl
-                //mostrar los mensajes de error de DataAnnotations
-                if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
+                if (usuario.Direccion.IdDireccion == 0)
                 {
-                    usuario.Direccion.Colonia.Colonias = new List<object>();
-                    usuario.Direccion.Colonia.Municipio.Municipios = new List<object>();
+                    result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
                 }
                 else
                 {
-                    result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
-                    usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
-                    result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
-                    usuario.Direccion.Colonia.Colonias = result.Objects;
+                    result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
                 }
-
-                ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
-                usuario.Rol.Roles = resultRol.Objects;
-
-                ML.Result resultEstado = BL.Estado.EstadoGetAll();
-                usuario.Direccion.Colonia.Municipio.Estado.Estados = resultEstado.Objects;
-
-                return Json(usuario, JsonRequestBehavior.AllowGet);
             }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //Metodo para convertir una imagen a []bytes
+        public byte[] ConvertirArrayBytes(HttpPostedFileBase foto)
+        {
+            System.IO.BinaryReader reader = new System.IO.BinaryReader(foto.InputStream);
+            byte[] data = reader.ReadBytes((int)foto.ContentLength);
+
+            return data;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     GetAll()
+    console.log($('#idUsuario').val())
 })
 
 function GetAll() {
@@ -98,11 +99,25 @@ function GetAll() {
 
     })
 }
-function add() {
 
-}
-function Update() {
+function EnviarFormulario() {
 
+    var json = ObtenerValores()
+
+    $.ajax({
+        url: rutaForm,
+        type: "POST",
+        dataType: "JSON",
+        data: JSON.stringify(json),
+        contentType: "application/json; charset=UTF-8",
+        success: function (result) {
+            alert("Se han realizado los cambios exitosamente")
+            window.location.reload()
+        },
+        error: function (xhr) {
+            console.log(xhr)
+        }
+    })
 }
 
 function selectAddUpdate(idUsuario) { //mostrar formulario lleno o vacio
@@ -113,6 +128,7 @@ function selectAddUpdate(idUsuario) { //mostrar formulario lleno o vacio
         dataType: "JSON",
         success: function (usuario) {
             if (idUsuario != 0) {
+                $('#idUsuario').val(usuario.idUsuario)
                 $('#nombre').val(usuario.Nombre)
                 $('#apellidoPaterno').val(usuario.ApellidoPaterno)
                 $('#apellidoMaterno').val(usuario.ApellidoMaterno)
@@ -156,9 +172,11 @@ function selectAddUpdate(idUsuario) { //mostrar formulario lleno o vacio
                 $('#emailInput').val(usuario.Email)
                 $('#UserName').val(usuario.UserName)
                 $('#inptContraseña').val(usuario.Password)
-                $('#fotoPerfi').val(usuario.Password)
+                $('#inptValidar').val(usuario.Password)
                 let imagen = usuario.imagenJS == "" ? "https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740" : `data:image/*;base64,${usuario.imagenJS}`
                 $("#fotoPerfil").attr("src", `${imagen}`)
+                $('#imagen').val(usuario.imagenJS)
+                $('#idDireccion').val(usuario.Direccion.IdDireccion)
             }
         },
         error: function (xhr) {
@@ -220,6 +238,7 @@ function LimpiarModal() {
             select.options[i] = null;
         }
     })
+    $('#fotoPerfil').attr("src", "https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740")
 }
 function DDLRol() {
     let ddlRol = $('#Rol')
@@ -337,4 +356,89 @@ function ColoniaGetByIdMunicipio() {
             console.log(xhr)
         }
     })
+}
+
+function ValidarFormularioJS() {
+    var inptNombre = $('#nombre').val()
+    var inptApellidoPaterno = $('#apellidoPaterno').val()
+    var inptApellidoMaterno = $('#apellidoMaterno').val()
+    var inptTelefono = $('#Telefono').val()
+    var inptFecha = $('#datepicker').val()
+    var inptCelular = $('#Celular').val()
+    var inptCurp = $('#curp_input').val()
+    var inptCalle = $('#Calle').val()
+    var inptnExterior = $('#numeroExterior').val()
+    var inptnInterior = $('#numeroInterior').val()
+    var inptEmail = $('#emailInput').val()
+    var inptUserName = $('#UserName').val()
+    var inptPassword = $('#inptContraseña').val()
+    var inptConfirmPassword = $('#inptValidar').val()
+    if (inptNombre == '' || inptApellidoPaterno == '' || inptApellidoMaterno == '' || inptTelefono == '' || inptFecha == '' || inptCelular == '' || inptCurp == '' ||
+        inptCalle == '' || inptnExterior == '' || inptnInterior == '' || inptEmail == '' || inptUserName == '' || inptPassword == '' || inptConfirmPassword == '') {
+        alert("No se puede mandar el formulario, todos los campos deben de estar llenos")
+    } else {
+        alert("Formulario enviado correctamente")
+        EnviarFormulario()
+    }
+}
+
+function ObtenerValores() {
+    var sexo
+    var imagenMandar
+    var selector = $('#SexoH')[0].checked
+    var imagen = $('#imagen').val()
+    if (selector) {
+        sexo = "H"
+    } else {
+        sexo = "M"
+    }
+    console.log($('#imagenInput')[0].files)
+    imgInpt = $('#imagenInput')[0]
+    if (imgInpt.files.length > 0) { //si hay archivos
+        var reader = new FileReader() // objeto para leer archivo de blob o file
+        reader.onload = function (elemento) { //si el objeto se a leido correctamente hace esa funcion
+            console.log(elemento.target.result)
+        }
+        reader.readAsDataURL(imgInpt.files[0])
+    }else if (imagen != "") {
+        imagenMandar = imagen
+    }
+
+    var json = {
+        "idUsuario": $('#idUsuario').val(),
+        "nombre": $('#nombre').val(),
+        "apellidoPaterno": $('#apellidoPaterno').val(),
+        "apellidoMaterno": $('#apellidoMaterno').val(),
+        "telefono": $('#telefono').val(),
+        "userName": $('#UserName').val(),
+        "password": $('#inptContraseña').val(),
+        "fechaNacimiento": $('#datepicker').val(),
+        "sexo": sexo,
+        "celular": $('#celular').val(),
+        "curp": $('#curp_input').val(),
+        "email": $('#emailInput').val(),
+        "rol": {
+            "idRol": $('#Rol').val(),
+        },
+        "direccion": {
+            "idDireccion": $('#idDireccion').val(),
+            "calle": $('#calle').val(),
+            "numeroInterior": $('#numeroInterior').val(),
+            "numeroExterior": $('#numeroExterior').val(),
+            "colonia": {
+                "idColonia": $('#ddlColonia').val(),
+                "municipio": {
+                    "idMunicipio": $('#ddlMunicipio').val(),
+                    "estado": {
+                        "idEstado": $('#ddlEstado').val(),
+                    }
+                }
+
+            }
+        },
+        "imagenJS": imagenMandar
+    }
+
+    return json
+    //console.log(json)
 }

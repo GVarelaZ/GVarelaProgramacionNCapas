@@ -1,13 +1,4 @@
 ﻿
-$(document).ready(
-    $("#datepicker").datepicker({
-        dateFormat: "dd/mm/yy",
-        showAnim: "fold",
-        changeMonth: true,
-        changeYear: true
-    })
-)
-
 
 function ValidarImagen() { //validacion para saber si el usuario ingreso una imagen exclusivamente
     let imagen = $('#imagenInput')
@@ -41,10 +32,11 @@ function ValidarImagen() { //validacion para saber si el usuario ingreso una ima
         return false;
     } else {
         console.log("es una imagen")
+        var fotoPerfil = $('#fotoPerfil')
         //console.log(`es una imagen, solo formatos ${validImagenExtension}`)
         const [file] = imagen[0].files
         if (file) {
-            fotoPerfil.src = URL.createObjectURL(file)
+            fotoPerfil[0].src = URL.createObjectURL(file)
             //VisualizarImagen(imagenVisual)
         }
     }
@@ -102,7 +94,7 @@ function validarEmail(evento) {
     //console.log(errorMessage)
     errorMessage.textContent = ''
 
-    if (!(/^\w+@@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(emailInput))) {
+    if (!(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(emailInput))) {
         evento.preventDefault()
         input.style.borderWidth = "3px";
         input.style.borderColor = 'red'

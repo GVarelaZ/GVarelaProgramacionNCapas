@@ -10,7 +10,7 @@
     var rutaDDLRol = "@Url.Action("DDLroles")"
     var rutaDDLEstado = "@Url.Action("GetEstados")"
     var rutaForm = "@Url.Action("form")"
-    var rutaAdd = "@Url.Action("add")"
+    var rutaFormPost = "@Url.Action("form")"
     var UrlEstados = "@Url.Action("MunicipioGetByIdEstado")?idEstado="
     var UrlMunicipio = "@Url.Action("ColoniaGetByIdMunicipio")?idMunicipio="
 
@@ -67,9 +67,13 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                           
                             <h2 style="font-style: oblique; font-size:50px;" class="text-decoration-underline fw-bold text-lg-center">FORMULARIO PARA NUEVOS REGISTROS</h2>
                             <div class="container">
-                                <div class=" col-md-6">
+                                <div class=" col-md-6" enctype = "multipart/form-data">
+                                    <input class="inpt" type="text" value="0" id="idUsuario" style="display:none">
+                                    <input class="inpt" type="text" value="" id="imagen" style="display:none">
+                                    <input class="inpt" type="text" value="" id="idDireccion" style="display:none">
                                     <h3 style="font-style:italic;" class="text-decoration-underline fw-bold text-lg-start">Datos personales</h3>
                                 </div>
                                 <div class="card mx-auto p-3 border border-dark border border-4 rounded-5">
@@ -200,16 +204,17 @@
                                             <label class="control-label fw-bold">Foto perfil:</label>
 
                                             <input name="imagenCargada" id="imagenInput" type="file" class="inpt form-control rounded-pill" style="border-width:3px"
-                                                   onChange="ValidarImagen(), cambiarColor(event)" />
+                                                   onChange="ValidarImagen(), cambiarColor(event)" enctype = "multipart/form-data" />
                                         </div>
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4">
                                             <label class="control-label fw-bold">Confirmar password</label>
-                                            <input Type="password" class="inpt form-control rounded-pill" style="border-width:3px" onKeypress="contraseñasIguales(event)" />  <span class="notificacion"></span>
+                                            <input Type="password" class="inpt form-control rounded-pill" style="border-width:3px" onblur="contraseñasIguales(this), campoVacio(event)" id="inptValidar" />
+                                            <span class="notificacion"></span>
                                         </div>
                                         <div class="col-md-12 text-md-center">
 
-                                            <img id="fotoPerfil" class="avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
+                                            <img id="fotoPerfil" class="inpt avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
                                                  width="60px" height="60px">
 
                                         </div>
@@ -219,7 +224,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="btnRegistrar" class=" btn btn-success fw-bold btn-lg text-center" type="button">Registrar</button>
+                            <button id="btnRegistrar" class=" btn btn-success fw-bold btn-lg text-center" type="button" onclick="ValidarFormularioJS()">Registrar</button>
                         </div>
                     </div>
                 </div>
@@ -251,4 +256,11 @@
         </div>
     </div>
 </div>
-
+<script>
+    $("#datepicker").datepicker({
+        dateFormat: "dd/mm/yy",
+        showAnim: "fold",
+        changeMonth: true,
+        changeYear: true
+    })
+</script>
