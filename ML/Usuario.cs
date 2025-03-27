@@ -28,7 +28,7 @@ namespace ML // ML = Model Layout
 
         [DisplayName("Apellido materno:")]
         [Required(ErrorMessage = "El apellido paterno es obligatorio")]
-        [RegularExpression(@"[a-zA-Z\s]", ErrorMessage = "Solo se aceptan letras")]
+        [RegularExpression(@"[a-zA-Z\s]+", ErrorMessage = "Solo se aceptan letras")]
         public string ApellidoMaterno { get; set; }
 
         [DisplayName("Telefono de casa:")]

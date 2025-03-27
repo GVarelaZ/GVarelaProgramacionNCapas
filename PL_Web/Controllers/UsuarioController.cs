@@ -17,20 +17,27 @@ namespace PL_Web.Controllers
         [HttpGet]  //DECORADOR que es lo que espera el controlador para hacer la accion
         public ActionResult GetAll() // ActionMethod = metodo de accion para alguna salida (view, json, etc)
         {
+            ML.Result resultBL = new Result();
+
             ML.Usuario usuario = new Usuario();
             usuario.Rol = new Rol();
             usuario.Nombre = "";
             usuario.ApellidoPaterno = "";
             usuario.ApellidoMaterno = "";
             usuario.Rol.IdRol = 0;
-            ML.Result result = BL.Usuario.GetAllEF(usuario);
 
+            //GETALL CONSUMIDO DESDE EL CONTROLADOR HACIA EL BL
+            //ML.Result result = BL.Usuario.GetAllEF(usuario);
+
+            //GETALL OCNSUMIDO POR EL WEBSERVICES HACIA EL BL POR MEDIO DE SOAP
+            UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient(); // Se consume el web service 
+            var result = ObjetoWCF.GetAllWebService(usuario); //se consume el metodo que viene del servicio
             if (result.Correct)
             {
                 //Se obtiene toda la informacion que viene del BL por medio de result
 
-                usuario.Usuarios = result.Objects; // > 0
-                                                   // lo que trae el result se lo pasa a materia para que esta se envie
+                usuario.Usuarios = result.Objects.ToList(); // > 0
+                                                            // lo que trae el result se lo pasa a materia para que esta se envie
             }
             else
             {
@@ -38,20 +45,26 @@ namespace PL_Web.Controllers
                 usuario.Usuarios = new List<object> { }; // = 0
             }
 
-            result = BL.Rol.GetAll();
-            usuario.Rol.Roles = result.Objects;
+            resultBL = BL.Rol.GetAll();
+            usuario.Rol.Roles = resultBL.Objects;
             return View(usuario);
         }
 
-        [HttpPost]
+        [HttpPost] //Busqueda abierta
         public ActionResult GetAll(Usuario usuarioView)
         {
             usuarioView.ApellidoPaterno = usuarioView.ApellidoPaterno == null ? "" : usuarioView.ApellidoPaterno;
             usuarioView.Nombre = usuarioView.Nombre == null ? "" : usuarioView.Nombre; //Condicion termario si es null se hace vacio si no si queda el valor de la propiedad
             usuarioView.ApellidoMaterno = usuarioView.ApellidoMaterno == null ? "" : usuarioView.ApellidoMaterno;
 
-            Result result = BL.Usuario.GetAllEF(usuarioView);
+            //ESTE RESULT CONSUME DIRECTAMENTE AL BL
+            //Result result = BL.Usuario.GetAllEF(usuarioView);
 
+            //ESTE OBJETO CONSUME EL WEB SERVICES DE TIPO SOAP
+            UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient();
+            var result = ObjetoWCF.GetAllWebService(usuarioView);
+
+            Result resultBL = new Result();
             Usuario usuario = new Usuario();
             usuario.Rol = new Rol();
 
@@ -59,8 +72,8 @@ namespace PL_Web.Controllers
             {
                 //Se obtiene toda la informacion que viene del BL por medio de result
 
-                usuario.Usuarios = result.Objects; // > 0
-                                                   // lo que trae el result se lo pasa a materia para que esta se envie
+                usuario.Usuarios = result.Objects.ToList(); // > 0
+                                                            // lo que trae el result se lo pasa a materia para que esta se envie
             }
             else
             {
@@ -68,14 +81,13 @@ namespace PL_Web.Controllers
                 usuario.Usuarios = new List<object> { }; // = 0
             }
 
-            result = BL.Rol.GetAll();
-            usuario.Rol.Roles = result.Objects;
+            resultBL = BL.Rol.GetAll();
+            usuario.Rol.Roles = resultBL.Objects;
 
             return View(usuario);
         }
 
         [HttpGet] //Mostrar una vista
-
         public ActionResult Form(int? IdUsuario) //el ? es para decir que puede o no recibir un valor 
         {
 
@@ -97,8 +109,14 @@ namespace PL_Web.Controllers
             }
             else
             {
-                result = BL.Usuario.GetByIdEF(IdUsuario.Value);
-                usuario = (ML.Usuario)result.Object;
+                //RESULT QUE CONSUME EL BL DIRECTAMENTE
+                //result = BL.Usuario.GetByIdEF(IdUsuario.Value);
+
+                //OBJETO QUE CONSUME PRIMERO EL WEB SERVICES QUE CONSUME AL BL
+                UsuarioReference.UsuarioClient ObjetoWSF = new UsuarioReference.UsuarioClient();
+                var resultWSF = ObjetoWSF.GetByIdWebService(IdUsuario.Value);
+
+                usuario = (ML.Usuario)resultWSF.Object;
                 if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
                 {
                     usuario.Direccion.Colonia.Colonias = new List<object>();
@@ -123,10 +141,9 @@ namespace PL_Web.Controllers
         }
 
         [HttpPost]  //CACHAR INFORMACIOM DEL USUARIO, ya se ha de agregar o actualizar registros
-
         public ActionResult Form(ML.Usuario usuario)
         {
-            ML.Result result = new Result();
+            ML.Result resultCtrl = new Result();
 
             if (ModelState.IsValid)
             {
@@ -142,8 +159,12 @@ namespace PL_Web.Controllers
 
                 if (usuario.idUsuario == 0)  //Agregar Usuario
                 {
+                    //  El controlador consume directamente al BL
+                    //result = BL.Usuario.AddEF(usuario);
 
-                    result = BL.Usuario.AddEF(usuario);
+                    //El controlador consume al web services para despues consumir al BL
+                    UsuarioReference.UsuarioClient resultSWF = new UsuarioReference.UsuarioClient();
+                    var result = resultSWF.AddWebService(usuario);
                     if (result.Correct)
                     {
                         ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
@@ -159,15 +180,26 @@ namespace PL_Web.Controllers
                 {
                     if (usuario.Direccion.IdDireccion == 0)
                     {
-                        result = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
+                        resultCtrl = BL.Usuario.UsuarioUpdateAddDireccion(usuario);
                         ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
                         return PartialView("_Avisos");
                     }
                     else
                     {
-                        result = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
-                        return PartialView("_Avisos");
+                        //resultCtrl = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+                        UsuarioReference.UsuarioClient usuarioWCF = new UsuarioReference.UsuarioClient();
+                        var result = usuarioWCF.UpdateWebService(usuario);
+                        if (result.Correct)
+                        {
+                            ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                            return PartialView("_Avisos");
+
+                        }
+                        else
+                        {
+                            ViewBag.mensajeError = "No se ha podido actualizado correctamente al usuario seleccionado.";
+                            return PartialView("_Avisos");
+                        }
                     }
                 }
 
@@ -185,10 +217,10 @@ namespace PL_Web.Controllers
                 }
                 else
                 {
-                    result = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
-                    usuario.Direccion.Colonia.Municipio.Municipios = result.Objects;
-                    result = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
-                    usuario.Direccion.Colonia.Colonias = result.Objects;
+                    resultCtrl = BL.Municipio.MunicipioGetByIdEstado(usuario.Direccion.Colonia.Municipio.Estado.IdEstado);
+                    usuario.Direccion.Colonia.Municipio.Municipios = resultCtrl.Objects;
+                    resultCtrl = BL.Colonia.ColoniaGetByIdMunicipio(usuario.Direccion.Colonia.Municipio.IdMunicipio);
+                    usuario.Direccion.Colonia.Colonias = resultCtrl.Objects;
                 }
 
                 ML.Result resultRol = BL.Rol.GetAll(); // se guarda el resultado del get del rol
@@ -205,16 +237,21 @@ namespace PL_Web.Controllers
         [HttpGet]  //Eliminar un registro seleccionado
         public ActionResult Delete(int IdUsuario)
         {
-            Usuario usuario = new Usuario();
-            Result result = BL.Usuario.DeleteEF(IdUsuario);
+            //Result result = BL.Usuario.DeleteEF(IdUsuario);
+            UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient();
+            var result = ObjetoWCF.DeleteWebService(IdUsuario);
 
             if (result.Correct)
             {
                 ViewBag.mensajeError = "El usuario seleccionado se ha eliminado correctamente.";
                 return PartialView("_Avisos");
             }
+            else
+            {
+                ViewBag.mensajeError = "El usuario seleccionado no se ha eliminado correctamente.";
+                return PartialView("_Avisos");
+            }
 
-            return View();
         }
 
         [HttpPost]

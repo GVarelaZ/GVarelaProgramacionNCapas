@@ -343,7 +343,7 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <label class="control-label fw-bold">Confirmar password</label>
-                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onKeypress="validarCampo(event)" />  <span class="notificacion"></span>
+                    <input id="inptValidar" Type="password" class="form-control rounded-pill" style="border-width:3px" onblur="contraseñasIguales(this)" />  <span class="notificacion"></span>
                 </div>
                 <div class="col-md-12 text-md-center">
                     @if (Model.Imagen == null)
