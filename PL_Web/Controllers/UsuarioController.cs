@@ -6,8 +6,13 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace PL_Web.Controllers
 {
@@ -15,7 +20,9 @@ namespace PL_Web.Controllers
     {
         // GET: Usuario
         [HttpGet]  //DECORADOR que es lo que espera el controlador para hacer la accion
-        public ActionResult GetAll() // ActionMethod = metodo de accion para alguna salida (view, json, etc)
+
+        //Metodo consumiendo al web service con service reference
+        /*public ActionResult GetAll() // ActionMethod = metodo de accion para alguna salida (view, json, etc)
         {
             ML.Result resultBL = new Result();
 
@@ -48,6 +55,82 @@ namespace PL_Web.Controllers
             resultBL = BL.Rol.GetAll();
             usuario.Rol.Roles = resultBL.Objects;
             return View(usuario);
+        }*/
+
+        // Metodo para consummir el web service desde el envio, lectura y respuesta de la peticion SOAP
+        public ActionResult GetAll()
+        {
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.Rol = new Rol();
+
+            string action = "http://tempuri.org/IUsuario/GetAllWebService"; // URL de la accion o metodo para consumir el web service 
+            string url = "http://localhost:48690/Usuario.svc"; //URL del servicio a consumir
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("SOAPAction", action);
+            request.ContentType = "text/xml;charset=\"utf-8\"";
+            request.Accept = "text/xml";
+            request.Method = "POST";   //etiquetas parecidos a las de un ajax
+
+            string soapEnviar = $@"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:tem=""http://tempuri.org/"" xmlns:ml=""http://schemas.datacontract.org/2004/07/ML"" xmlns:arr=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"">
+                               <soapenv:Header/>
+                               <soapenv:Body>
+                                  <tem:GetAllWebService>
+                                     <tem:usuario>
+                                        <ml:ApellidoMaterno></ml:ApellidoMaterno>
+                                        <ml:ApellidoPaterno></ml:ApellidoPaterno>
+                                        <ml:Nombre></ml:Nombre>
+                                        <ml:Rol>
+                                           <ml:IdRol>0</ml:IdRol>
+                                        </ml:Rol>
+                                     </tem:usuario>
+                                  </tem:GetAllWebService>
+                               </soapenv:Body>
+                            </soapenv:Envelope>";  //XML a enviar al webservices de ti po SOAP
+
+            using (Stream stream = request.GetRequestStream()) //Se enviara la solicitud
+            {
+                byte[] content = Encoding.UTF8.GetBytes(soapEnviar); // Se transforma el XML de tipo string a UTF8 en array bite
+                stream.Write(content, 0, content.Length); // Se envia la peticion
+            }
+            //Se obtiene la respuesta
+            try
+            {
+                using (WebResponse respuesta = request.GetResponse()) // se obtiene la respuesta del XML enviado
+                {
+                    using (StreamReader readerXML = new StreamReader(respuesta.GetResponseStream())) // Se lee el archivo XML de respuesta
+                    {
+                        string result = readerXML.ReadToEnd(); // se guarda el XML de respuesta
+
+                        //Deserealizar el XML
+                        ML.Result resultXML = deserealizarUsuarios(result); //se manda a un metodo diferente todo el result
+
+                        if (resultXML.Correct)
+                        {
+                            //Se obtiene toda la informacion que viene del BL por medio de result
+
+                            usuario.Usuarios = resultXML.Objects.ToList(); // > 0
+                                                                           // lo que trae el result se lo pasa a materia para que esta se envie
+                        }
+                        else
+                        {
+                            //Si no trae informacion
+                            usuario.Usuarios = new List<object> { }; // = 0
+                        }
+                        ML.Result resultBL = new ML.Result();
+
+                        resultBL = BL.Rol.GetAll();
+                        usuario.Rol.Roles = resultBL.Objects;
+                        return View(usuario);
+                    }
+                }
+            }
+            catch (Exception EX)
+            {
+                ViewBag.mensajeError = "Los registros no se han podido obtener correctamente";
+                return PartialView("_Avisos");
+
+            }
+
         }
 
         [HttpPost] //Busqueda abierta
@@ -113,8 +196,11 @@ namespace PL_Web.Controllers
                 //result = BL.Usuario.GetByIdEF(IdUsuario.Value);
 
                 //OBJETO QUE CONSUME PRIMERO EL WEB SERVICES QUE CONSUME AL BL
-                UsuarioReference.UsuarioClient ObjetoWSF = new UsuarioReference.UsuarioClient();
-                var resultWSF = ObjetoWSF.GetByIdWebService(IdUsuario.Value);
+                //UsuarioReference.UsuarioClient ObjetoWSF = new UsuarioReference.UsuarioClient();
+                //var resultWSF = ObjetoWSF.GetByIdWebService(IdUsuario.Value);
+
+                //METODO QUE CONSUME EL WEB SERVICE CON EL XML DESDE CERO
+                ML.Result resultWSF = GetByIdWebService(IdUsuario.Value);
 
                 usuario = (ML.Usuario)resultWSF.Object;
                 if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
@@ -163,8 +249,12 @@ namespace PL_Web.Controllers
                     //result = BL.Usuario.AddEF(usuario);
 
                     //El controlador consume al web services para despues consumir al BL
-                    UsuarioReference.UsuarioClient resultSWF = new UsuarioReference.UsuarioClient();
-                    var result = resultSWF.AddWebService(usuario);
+                    //UsuarioReference.UsuarioClient resultSWF = new UsuarioReference.UsuarioClient();
+                    //var result = resultSWF.AddWebService(usuario);
+
+                    //FUNCION QUE REALIZA LA PETICION DESDE EL WEBSERVICE ENVIANDO EL XML COMPLETO
+                    var result = InsertarActualizar(usuario);
+
                     if (result.Correct)
                     {
                         ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
@@ -186,9 +276,15 @@ namespace PL_Web.Controllers
                     }
                     else
                     {
-                        //resultCtrl = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
-                        UsuarioReference.UsuarioClient usuarioWCF = new UsuarioReference.UsuarioClient();
-                        var result = usuarioWCF.UpdateWebService(usuario);
+                        ////resultCtrl = BL.Usuario.ChangeEF(usuario); //Actualizar usuario
+
+                        ///CONSUMIR EL WEB SERVICE DESDE LA REFERENCIA CON EL WEB SERVICE
+                        //UsuarioReference.UsuarioClient usuarioWCF = new UsuarioReference.UsuarioClient();
+                        //var result = usuarioWCF.UpdateWebService(usuario);
+
+                        //CONSUMIR EL WEB SERVICE ENVIANDO TODO EL XML DE LA PETICION DESDE CERO
+                        var result = InsertarActualizar(usuario);
+
                         if (result.Correct)
                         {
                             ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
@@ -235,9 +331,10 @@ namespace PL_Web.Controllers
         }
 
         [HttpGet]  //Eliminar un registro seleccionado
-        public ActionResult Delete(int IdUsuario)
+        /*public ActionResult Delete(int IdUsuario)
         {
             //Result result = BL.Usuario.DeleteEF(IdUsuario);
+
             UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient();
             var result = ObjetoWCF.DeleteWebService(IdUsuario);
 
@@ -252,6 +349,69 @@ namespace PL_Web.Controllers
                 return PartialView("_Avisos");
             }
 
+        }*/
+
+        // Metodo para consummir el web service desde el envio, lectura y respuesta de la peticion SOAP
+        public ActionResult Delete(int IdUsuario)
+        {
+            ML.Result result = new Result();
+
+            string action = "http://tempuri.org/IUsuario/DeleteWebService";
+            string url = "http://localhost:48690/Usuario.svc";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("SOAPAction", action);
+            request.ContentType = "text/xml;charset=\"utf-8\"";
+            request.Method = "POST";
+            request.Accept = "text/xml";  //Configurar nuestro xml para poder enviarse parecido a un JSON
+
+            string soapEnviar = $@"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:tem=""http://tempuri.org/"">
+                                       <soapenv:Header/>
+                                       <soapenv:Body>
+                                          <tem:DeleteWebService>
+                                             <tem:idUsuario>{IdUsuario}</tem:idUsuario>
+                                          </tem:DeleteWebService>
+                                       </soapenv:Body>
+                                    </soapenv:Envelope>";  //XML de nuestra peticion al web services
+
+            using (Stream stream = request.GetRequestStream())
+            {
+                byte[] content = Encoding.UTF8.GetBytes(soapEnviar);
+                stream.Write(content, 0, content.Length);
+            } // Envio de peticion por medio del XML
+
+            try //Obtener la respuesta a la peticion
+            {
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        string xml = reader.ReadToEnd(); // Se lee la respuesta del Web service
+                        var xdoc = XDocument.Parse(xml);
+                        var xresult = xdoc.Descendants().FirstOrDefault(e =>
+                                        e.Name.LocalName == "Correct" &&
+                                        e.GetDefaultNamespace().NamespaceName == "http://tempuri.org/"); //obtengo la etiqueta completa por su nombre
+
+                        result.Correct = bool.Parse(xresult.Value);
+
+
+                        if (result.Correct)
+                        {
+                            ViewBag.mensajeError = "El usuario seleccionado se ha eliminado correctamente.";
+                            return PartialView("_Avisos");
+                        }
+                        else
+                        {
+                            ViewBag.mensajeError = "El registro no se ha podido eliminar";
+                            return PartialView("_Avisos");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.mensajeError = "El registro no se ha podido eliminar";
+                return PartialView("_Avisos");
+            }
         }
 
         [HttpPost]
@@ -411,6 +571,327 @@ namespace PL_Web.Controllers
             Session["RutaExcel"] = null;
 
             return RedirectToAction("GetAll");
+        }
+
+        [NonAction]
+        private ML.Result deserealizarUsuarios(string XML)
+        {
+            ML.Result result = new Result();
+            result.Objects = new List<object>();
+
+            var usuarioDocument = XDocument.Parse(XML); // Convertir el string a un Xdocument
+
+            //Acceder a los registro obtenidos del XML de respuesta
+            var objetos = usuarioDocument.Descendants("{http://schemas.microsoft.com/2003/10/Serialization/Arrays}anyType");
+
+            if (objetos.Count() > 0)
+            {
+
+                foreach (var usuarioXML in objetos)
+                {
+                    var usuario = new ML.Usuario();
+                    usuario.Rol = new Rol();
+                    usuario.Direccion = new Direccion();
+                    usuario.Direccion.Colonia = new Colonia();
+                    usuario.Direccion.Colonia.Municipio = new Municipio();
+                    usuario.Direccion.Colonia.Municipio.Estado = new Estado();
+
+                    int idUsuario;
+                    bool status;
+                    // Si el idUsuario es nulo o vacio entonces no hace la conversion, sino entonces hace la conversion y lo retorna en una variable
+                    int.TryParse(usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}idUsuario")?.Value, out idUsuario);
+                    usuario.idUsuario = idUsuario;
+                    bool.TryParse(usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Estatus")?.Value, out status);
+
+                    usuario.Nombre = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+                    usuario.ApellidoPaterno = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}ApellidoPaterno")?.Value ?? string.Empty;
+                    usuario.ApellidoMaterno = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}ApellidoMaterno")?.Value ?? string.Empty;
+                    usuario.Telefono = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Telefono")?.Value ?? string.Empty;
+                    usuario.UserName = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}UserName")?.Value ?? string.Empty;
+                    usuario.Password = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Password")?.Value ?? string.Empty;
+                    usuario.FechaNacimiento = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}FechaNacimiento")?.Value ?? string.Empty;
+                    usuario.Sexo = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Sexo")?.Value ?? string.Empty;
+                    usuario.Celular = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Celular")?.Value ?? string.Empty;
+                    usuario.Estatus = status;
+                    usuario.Curp = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Curp")?.Value ?? string.Empty;
+                    usuario.Email = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Email")?.Value ?? string.Empty;
+
+                    var Rol = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Rol");
+                    usuario.Rol.Nombre = Rol.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+
+                    var Direccion = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Direccion");
+                    usuario.Direccion.Calle = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Calle")?.Value ?? string.Empty;
+                    usuario.Direccion.NumeroInterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroInterior")?.Value ?? string.Empty;
+                    usuario.Direccion.NumeroExterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroExterior")?.Value ?? string.Empty;
+
+                    var Colonia = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Colonia");
+                    usuario.Direccion.Colonia.Nombre = Colonia.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+                    usuario.Direccion.Colonia.CodigoPostal = Colonia.Element("{http://schemas.datacontract.org/2004/07/ML}CodigoPostal")?.Value ?? string.Empty;
+
+                    var Municipio = Colonia.Element("{http://schemas.datacontract.org/2004/07/ML}Municipio");
+                    usuario.Direccion.Colonia.Municipio.Nombre = Municipio.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+
+                    var Estado = Municipio.Element("{http://schemas.datacontract.org/2004/07/ML}Estado");
+                    usuario.Direccion.Colonia.Municipio.Estado.Nombre = Estado.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+
+                    result.Objects.Add(usuario);
+                }
+                result.Correct = true;
+            }
+            else
+            {
+                result.Correct = false;
+            }
+
+            return result;
+        }
+
+        [NonAction]
+
+        private ML.Result GetByIdWebService(int IdUsuario)
+        {
+            ML.Result Result = new Result();
+
+            string action = "http://tempuri.org/IUsuario/GetByIdWebService";
+            string url = "http://localhost:48690/Usuario.svc";
+            string xmlEnviar = $@"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:tem=""http://tempuri.org/"">
+                                   <soapenv:Header/>
+                                   <soapenv:Body>
+                                      <tem:GetByIdWebService>
+                                         <tem:idUsuario>{IdUsuario}</tem:idUsuario>
+                                      </tem:GetByIdWebService>
+                                   </soapenv:Body>
+                                </soapenv:Envelope>";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("SOAPAction", action);
+            request.ContentType = "text/xml;charset=\"utf-8\"";
+            request.Accept = "text/xml";
+            request.Method = "POST";
+
+            //enviar solicitud
+            using (Stream stream = request.GetRequestStream())
+            {
+                byte[] content = Encoding.UTF8.GetBytes(xmlEnviar);
+                stream.Write(content, 0, content.Length);  //enviar peticion
+            }
+
+            try
+            {
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+                    {
+                        string xml = stream.ReadToEnd();
+
+                        Result.Object = deserealizarUsuario(xml);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Result.ErrorMessage = "El registro no pudo obtenerse";
+
+            }
+            return Result;
+        }
+
+        private ML.Usuario deserealizarUsuario(string xml)
+        {
+            ML.Result result = new ML.Result();
+            ML.Usuario usuario = new ML.Usuario();
+
+            var xdoc = XDocument.Parse(xml);
+            // Acceder a GetUsuarioByIdResult usando el namespace correcto
+            var usuarioElement = xdoc.Descendants().FirstOrDefault(e =>
+                e.Name.LocalName == "Object" &&
+                e.GetDefaultNamespace().NamespaceName == "http://tempuri.org/");
+
+            if (usuarioElement != null)
+            {
+                usuario.Rol = new Rol();
+                usuario.Direccion = new Direccion();
+                usuario.Direccion.Colonia = new Colonia();
+                usuario.Direccion.Colonia.Municipio = new Municipio();
+                usuario.Direccion.Colonia.Municipio.Estado = new Estado();
+
+                int idUsuario;
+                bool status;
+                // Si el idUsuario es nulo o vacio entonces no hace la conversion, sino entonces hace la conversion y lo retorna en una variable
+                int.TryParse(usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}idUsuario")?.Value, out idUsuario);
+                usuario.idUsuario = idUsuario;
+                bool.TryParse(usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Estatus")?.Value, out status);
+
+                usuario.Nombre = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
+                usuario.ApellidoPaterno = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}ApellidoPaterno")?.Value ?? string.Empty;
+                usuario.ApellidoMaterno = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}ApellidoMaterno")?.Value ?? string.Empty;
+                usuario.Telefono = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Telefono")?.Value ?? string.Empty;
+                usuario.UserName = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}UserName")?.Value ?? string.Empty;
+                usuario.Password = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Password")?.Value ?? string.Empty;
+                usuario.FechaNacimiento = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}FechaNacimiento")?.Value ?? string.Empty;
+                usuario.Sexo = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Sexo")?.Value ?? string.Empty;
+                usuario.Celular = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Celular")?.Value ?? string.Empty;
+                usuario.Estatus = status;
+                usuario.Curp = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Curp")?.Value ?? string.Empty;
+                usuario.Email = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Email")?.Value ?? string.Empty;
+
+                var Rol = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Rol");
+                int idRol;
+                int.TryParse(Rol.Element("{http://schemas.datacontract.org/2004/07/ML}IdRol")?.Value, out idRol);
+                usuario.Rol.IdRol = idRol;
+
+                var Direccion = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Direccion");
+                usuario.Direccion.Calle = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Calle")?.Value ?? string.Empty;
+                usuario.Direccion.NumeroInterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroInterior")?.Value ?? string.Empty;
+                usuario.Direccion.NumeroExterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroExterior")?.Value ?? string.Empty;
+
+                var Colonia = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Colonia");
+                int idColonia;
+                int.TryParse(Colonia.Element("{http://schemas.datacontract.org/2004/07/ML}IdColonia")?.Value, out idColonia);
+                usuario.Direccion.Colonia.IdColonia = idColonia;
+
+                var Municipio = Colonia.Element("{http://schemas.datacontract.org/2004/07/ML}Municipio");
+                int idMunicipio;
+                int.TryParse(Municipio.Element("{http://schemas.datacontract.org/2004/07/ML}IdMunicipio")?.Value, out idMunicipio);
+                usuario.Direccion.Colonia.Municipio.IdMunicipio = idMunicipio;
+
+                var Estado = Municipio.Element("{http://schemas.datacontract.org/2004/07/ML}Estado");
+                int idEstado;
+                int.TryParse(Estado.Element("{http://schemas.datacontract.org/2004/07/ML}IdEstado")?.Value, out idEstado);
+                usuario.Direccion.Colonia.Municipio.Estado.IdEstado = idEstado;
+
+                result.Correct = true;
+            }
+            else
+            {
+                result.Correct = false;
+            }
+            return usuario;
+        }
+    
+    
+        //AQUI VCA EL METODO PARA ENVIAR PETICION PARA AGREGAR O ACTUALIZAR
+        private ML.Result InsertarActualizar(ML.Usuario usuario)
+        {
+            ML.Result result = new Result();
+
+            string url = "http://localhost:48690/Usuario.svc"; //URL del web service de usuario
+            string SoapEnviar; // se crea la variable para el XML de envio
+
+            string action;  // Se hace la variable para colocar la peticion dependiendo su es agregar o actualizar
+
+            if (usuario.idUsuario == 0) //SE agrega
+            {
+                action = "http://tempuri.org/IUsuario/AddWebService";
+                SoapEnviar = $@"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:tem=""http://tempuri.org/"" xmlns:ml=""http://schemas.datacontract.org/2004/07/ML"" xmlns:arr=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"">
+                                   <soapenv:Header/>
+                                   <soapenv:Body>
+                                      <tem:AddWebService>
+                                         <tem:usuario>
+                                            <ml:ApellidoMaterno>{usuario.ApellidoMaterno}</ml:ApellidoMaterno>
+                                            <ml:ApellidoPaterno>{usuario.ApellidoPaterno}</ml:ApellidoPaterno>
+                                            <ml:Celular>{usuario.Celular}</ml:Celular>
+                                            <ml:Curp>{usuario.Curp}</ml:Curp>
+                                            <ml:Direccion>
+                                               <ml:Calle>{usuario.Direccion.Calle}</ml:Calle>
+                                               <ml:Colonia>
+                                                  <ml:IdColonia>{usuario.Direccion.Colonia.IdColonia}</ml:IdColonia>
+                                               </ml:Colonia>
+                                               <ml:NumeroExterior>{usuario.Direccion.NumeroExterior}</ml:NumeroExterior>
+                                               <ml:NumeroInterior>{usuario.Direccion.NumeroInterior}</ml:NumeroInterior>
+                                               <ml:Usuario/>
+                                            </ml:Direccion>
+                                            <ml:Email>{usuario.Email}</ml:Email>
+                                            <ml:FechaNacimiento>{usuario.FechaNacimiento}</ml:FechaNacimiento>
+                                            <ml:Nombre>{usuario.Nombre}</ml:Nombre>
+                                            <ml:Password>{usuario.Password}</ml:Password>
+                                            <ml:Rol>
+                                               <ml:IdRol>{usuario.Rol.IdRol}</ml:IdRol>
+                                            </ml:Rol>
+                                            <ml:Sexo>{usuario.Sexo}</ml:Sexo>
+
+                                            <ml:Telefono>{usuario.Telefono}</ml:Telefono>
+                                            <ml:UserName>{usuario.UserName}</ml:UserName>
+                                         </tem:usuario>
+                                      </tem:AddWebService>
+                                   </soapenv:Body>
+                                </soapenv:Envelope>";
+            }
+            else
+            {
+                action = "http://tempuri.org/IUsuario/UpdateWebService";
+                SoapEnviar = $@"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:tem=""http://tempuri.org/"" xmlns:ml=""http://schemas.datacontract.org/2004/07/ML"" xmlns:arr=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"">
+                                   <soapenv:Header/>
+                                   <soapenv:Body>
+                                      <tem:UpdateWebService>
+                                         <tem:usuario>
+                                           <ml:ApellidoMaterno>{usuario.ApellidoMaterno}</ml:ApellidoMaterno>
+                                            <ml:ApellidoPaterno>{usuario.ApellidoPaterno}</ml:ApellidoPaterno>
+                                            <ml:Celular>{usuario.Celular}</ml:Celular>
+                                            <ml:Curp>{usuario.Curp}</ml:Curp>
+                                            <ml:Direccion>
+                                               <ml:Calle>{usuario.Direccion.Calle}</ml:Calle>
+                                               <ml:Colonia>
+                                                  <ml:IdColonia>{usuario.Direccion.Colonia.IdColonia}</ml:IdColonia>
+                                               </ml:Colonia>
+                                               <ml:NumeroExterior>{usuario.Direccion.NumeroExterior}</ml:NumeroExterior>
+                                               <ml:NumeroInterior>{usuario.Direccion.NumeroInterior}</ml:NumeroInterior>
+                                               <ml:Usuario/>
+                                            </ml:Direccion>
+                                            <ml:Email>{usuario.Email}</ml:Email>
+                                            <ml:FechaNacimiento>{usuario.FechaNacimiento}</ml:FechaNacimiento>
+                                            <ml:Nombre>{usuario.Nombre}</ml:Nombre>
+                                            <ml:Password>{usuario.Password}</ml:Password>
+                                            <ml:Rol>
+                                               <ml:IdRol>{usuario.Rol.IdRol}</ml:IdRol>
+                                            </ml:Rol>
+                                            <ml:Sexo>{usuario.Sexo}</ml:Sexo>
+
+                                            <ml:Telefono>{usuario.Telefono}</ml:Telefono>
+                                            <ml:UserName>{usuario.UserName}</ml:UserName>
+                                            <ml:idUsuario>{usuario.idUsuario}</ml:idUsuario>
+                                         </tem:usuario>
+                                      </tem:UpdateWebService>
+                                   </soapenv:Body>
+                                </soapenv:Envelope>";
+            }
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("SOAPAction", action);
+            request.ContentType = "text/xml;charset=\"utf-8\"";
+            request.Accept = "text/xml";
+            request.Method = "POST";
+
+            //ENVIAR PETICION
+            using (Stream stream = request.GetRequestStream())
+            {
+                byte[] content = Encoding.UTF8.GetBytes(SoapEnviar);
+                stream.Write(content, 0, content.Length);
+            }
+
+            //OBTENER LA RESPUESTA A LA PETICION
+            try
+            {
+                using(WebResponse response = request.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        string xml = reader.ReadToEnd(); // Se lee la respuesta del Web service
+                        var xdoc = XDocument.Parse(xml);
+                        var xresult = xdoc.Descendants().FirstOrDefault(e =>
+                                        e.Name.LocalName == "Correct" &&
+                                        e.GetDefaultNamespace().NamespaceName == "http://tempuri.org/"); //obtengo la etiqueta completa por su nombre
+
+                        result.Correct = bool.Parse(xresult.Value);
+                    }
+                }
+            }catch(Exception ex)
+            {
+                result.Correct = false;
+            }
+
+            return result;
         }
     }
 }
