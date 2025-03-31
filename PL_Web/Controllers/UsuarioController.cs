@@ -589,7 +589,7 @@ namespace PL_Web.Controllers
 
                 foreach (var usuarioXML in objetos)
                 {
-                    var usuario = new ML.Usuario();
+                    ML.Usuario usuario = new ML.Usuario();
                     usuario.Rol = new Rol();
                     usuario.Direccion = new Direccion();
                     usuario.Direccion.Colonia = new Colonia();
@@ -620,6 +620,9 @@ namespace PL_Web.Controllers
                     usuario.Rol.Nombre = Rol.Element("{http://schemas.datacontract.org/2004/07/ML}Nombre")?.Value ?? string.Empty;
 
                     var Direccion = usuarioXML.Element("{http://schemas.datacontract.org/2004/07/ML}Direccion");
+                    int idDireccion;
+                    int.TryParse(Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}IdDireccion")?.Value, out idDireccion);
+                    usuario.Direccion.IdDireccion = idDireccion;
                     usuario.Direccion.Calle = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Calle")?.Value ?? string.Empty;
                     usuario.Direccion.NumeroInterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroInterior")?.Value ?? string.Empty;
                     usuario.Direccion.NumeroExterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroExterior")?.Value ?? string.Empty;
@@ -684,7 +687,7 @@ namespace PL_Web.Controllers
                     {
                         string xml = stream.ReadToEnd();
 
-                        Result.Object = deserealizarUsuario(xml);
+                        Result = deserealizarUsuario(xml);
 
                     }
                 }
@@ -697,7 +700,7 @@ namespace PL_Web.Controllers
             return Result;
         }
 
-        private ML.Usuario deserealizarUsuario(string xml)
+        private ML.Result deserealizarUsuario(string xml)
         {
             ML.Result result = new ML.Result();
             ML.Usuario usuario = new ML.Usuario();
@@ -710,6 +713,7 @@ namespace PL_Web.Controllers
 
             if (usuarioElement != null)
             {
+                
                 usuario.Rol = new Rol();
                 usuario.Direccion = new Direccion();
                 usuario.Direccion.Colonia = new Colonia();
@@ -742,6 +746,9 @@ namespace PL_Web.Controllers
                 usuario.Rol.IdRol = idRol;
 
                 var Direccion = usuarioElement.Element("{http://schemas.datacontract.org/2004/07/ML}Direccion");
+                int idDireccion;
+                int.TryParse(Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}IdDireccion")?.Value, out idDireccion);
+                usuario.Direccion.IdDireccion = idDireccion;
                 usuario.Direccion.Calle = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}Calle")?.Value ?? string.Empty;
                 usuario.Direccion.NumeroInterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroInterior")?.Value ?? string.Empty;
                 usuario.Direccion.NumeroExterior = Direccion.Element("{http://schemas.datacontract.org/2004/07/ML}NumeroExterior")?.Value ?? string.Empty;
@@ -761,13 +768,14 @@ namespace PL_Web.Controllers
                 int.TryParse(Estado.Element("{http://schemas.datacontract.org/2004/07/ML}IdEstado")?.Value, out idEstado);
                 usuario.Direccion.Colonia.Municipio.Estado.IdEstado = idEstado;
 
+                result.Object = usuario;
                 result.Correct = true;
             }
             else
             {
                 result.Correct = false;
             }
-            return usuario;
+            return result;
         }
     
     
