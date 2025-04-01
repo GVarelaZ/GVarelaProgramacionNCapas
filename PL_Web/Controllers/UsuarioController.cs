@@ -455,7 +455,8 @@ namespace PL_Web.Controllers
 
                 HttpPostedFileBase archivo = Request.Files["archivoCargado"]; //recibe la peticion del input del formulario
 
-                string extensionAceptada = ".xlsx"; //formato de excel, solo permitido
+                string extensionExcel = ConfigurationManager.AppSettings["ExtensionExcel"].ToString(); //variable que se encuentra en el appSettings del webConfig
+                string extensionAceptada = extensionExcel; //formato de excel, solo permitido
 
                 if (archivo.ContentLength > 0) //si el usuario si ingreso un archivo correcto
                 {
