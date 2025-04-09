@@ -52,7 +52,7 @@ namespace Web_API.Controllers
 
         [HttpPost]
         [Route("add")] //edita el endPoint, para no usar el predeterminado
-        public IHttpActionResult agregarUsuario([FromBody] Usuario usuario) //mandamos un Json atraves del Body
+        public IHttpActionResult agregarUsuario([FromBody] ML.Usuario usuario) //mandamos un Json atraves del Body
         {
             Result result = BL.Usuario.AddEF(usuario);
             if (result.Correct)
@@ -84,6 +84,7 @@ namespace Web_API.Controllers
         [Route("Update/{idUsuario}")]
         public IHttpActionResult update(int idUsuario,[FromBody] Usuario usuario)
         {
+            usuario.idUsuario = idUsuario;
             Result result = BL.Usuario.ChangeEF(usuario);
 
             if (result.Correct)

@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Web;
@@ -58,7 +59,7 @@ namespace PL_Web.Controllers
         }*/
 
         // Metodo para consummir el web service desde el envio, lectura y respuesta de la peticion SOAP
-        public ActionResult GetAll()
+        /*public ActionResult GetAll()
         {
             ML.Usuario usuario = new ML.Usuario();
             usuario.Rol = new Rol();
@@ -131,6 +132,63 @@ namespace PL_Web.Controllers
 
             }
 
+        }*/
+
+        //GETALL consumido desde el WEB API con el uso de HttpClient
+        public ActionResult GetAll()
+        {
+            ML.Result resultController = new ML.Result();
+            resultController.Objects = new List<object>();
+
+            using (var cliente = new HttpClient()) //se crea una nueva variable de tipo HTTPCLIENT
+            {
+                string rutaEndPoint = ConfigurationManager.AppSettings["EndPoint"].ToString(); //Se obtiene la ruta de la API 
+                cliente.BaseAddress = new Uri(rutaEndPoint); //se le asigna el endPoint al objeto de client
+
+                var respuesta = cliente.GetAsync("GetAll"); //se define que metodo va a consumir del EndPoint antes ingresado
+                respuesta.Wait(); // espera a que se acceda al API y realice consulta
+
+                var resultAPI = respuesta.Result; //asigna lo que se obtuvo de la peticion a una variable
+
+                if (resultAPI.IsSuccessStatusCode) //si el Codigo de estado es 200 o true
+                {
+                    var leerRespuesta = resultAPI.Content.ReadAsAsync<ML.Result>(); //se deserealiza el Json de respuesta a un Modelo
+                    leerRespuesta.Wait();
+
+                    foreach (var ObjetosBD in leerRespuesta.Result.Objects) //Se recorre el result para poder obtener cada uno de sus objetos
+                    {
+                        ML.Usuario usuariosAPI = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(ObjetosBD.ToString()); //Se deserealiza cada json en un modelo
+                        resultController.Objects.Add(usuariosAPI);
+                    }
+
+                    resultController.Correct = true;
+                }
+                else
+                {
+                    resultController.Correct = false;
+                }
+
+            }
+
+            ML.Usuario usuario = new ML.Usuario();
+            usuario.Rol = new Rol();
+            if (resultController.Correct)
+            {
+                //Se obtiene toda la informacion que viene del BL por medio de result
+
+                usuario.Usuarios = resultController.Objects.ToList(); // > 0
+                                                                      // lo que trae el result se lo pasa a materia para que esta se envie
+            }
+            else
+            {
+                //Si no trae informacion
+                usuario.Usuarios = new List<object> { }; // = 0
+            }
+
+            resultController = BL.Rol.GetAll();
+            usuario.Rol.Roles = resultController.Objects;
+
+            return View(usuario);
         }
 
         [HttpPost] //Busqueda abierta
@@ -200,7 +258,10 @@ namespace PL_Web.Controllers
                 //var resultWSF = ObjetoWSF.GetByIdWebService(IdUsuario.Value);
 
                 //METODO QUE CONSUME EL WEB SERVICE CON EL XML DESDE CERO
-                ML.Result resultWSF = GetByIdWebService(IdUsuario.Value);
+                //ML.Result resultWSF = GetByIdWebService(IdUsuario.Value);
+
+                //METODO QUE CONSUME LA API REST
+                ML.Result resultWSF = GetByIdREST(IdUsuario.Value);
 
                 usuario = (ML.Usuario)resultWSF.Object;
                 if (usuario.Direccion.Colonia.Municipio.Estado.IdEstado == 0)
@@ -253,7 +314,12 @@ namespace PL_Web.Controllers
                     //var result = resultSWF.AddWebService(usuario);
 
                     //FUNCION QUE REALIZA LA PETICION DESDE EL WEBSERVICE ENVIANDO EL XML COMPLETO
-                    var result = InsertarActualizar(usuario);
+                    //var result = InsertarActualizar(usuario);
+
+
+                    //FUNCION QUE REALIZA LA PETICION A LA API REST
+                    var result = InsertarActualizarREST(usuario);
+
 
                     if (result.Correct)
                     {
@@ -283,7 +349,7 @@ namespace PL_Web.Controllers
                         //var result = usuarioWCF.UpdateWebService(usuario);
 
                         //CONSUMIR EL WEB SERVICE ENVIANDO TODO EL XML DE LA PETICION DESDE CERO
-                        var result = InsertarActualizar(usuario);
+                        var result = InsertarActualizarREST(usuario);
 
                         if (result.Correct)
                         {
@@ -352,7 +418,7 @@ namespace PL_Web.Controllers
         }*/
 
         // Metodo para consummir el web service desde el envio, lectura y respuesta de la peticion SOAP
-        public ActionResult Delete(int IdUsuario)
+        /*public ActionResult Delete(int IdUsuario)
         {
             ML.Result result = new Result();
 
@@ -411,6 +477,38 @@ namespace PL_Web.Controllers
             {
                 ViewBag.mensajeError = "El registro no se ha podido eliminar";
                 return PartialView("_Avisos");
+            }
+        }
+        */
+
+        //METODO PARA CONSUMIR EL API REST PARA PODER ELIMINAR AL USUARIO
+
+        public ActionResult Delete(int idUsuario)
+        {
+            ML.Result result = new Result();
+
+            using (var cliente = new HttpClient())
+            {
+                string endPoint = ConfigurationManager.AppSettings["EndPoint"].ToString();
+                cliente.BaseAddress = new Uri(endPoint);
+
+                var peticionEnviar = cliente.DeleteAsync($"Delete/{idUsuario}"); //se manda la peticion de tipo DELETE
+                peticionEnviar.Wait();
+
+                var resultREST = peticionEnviar.Result;
+
+                if (resultREST.IsSuccessStatusCode)
+
+                {
+                    ViewBag.mensajeError = "El usuario seleccionado se ha eliminado correctamente.";
+                    return PartialView("_Avisos");
+                }
+                else
+                {
+                    ViewBag.mensajeError = "El registro no se ha podido eliminar";
+                    return PartialView("_Avisos");
+                }
+
             }
         }
 
@@ -714,7 +812,7 @@ namespace PL_Web.Controllers
 
             if (usuarioElement != null)
             {
-                
+
                 usuario.Rol = new Rol();
                 usuario.Direccion = new Direccion();
                 usuario.Direccion.Colonia = new Colonia();
@@ -778,9 +876,9 @@ namespace PL_Web.Controllers
             }
             return result;
         }
-    
-    
-        //AQUI VCA EL METODO PARA ENVIAR PETICION PARA AGREGAR O ACTUALIZAR
+
+
+        //AQUI VA EL METODO PARA ENVIAR PETICION PARA AGREGAR O ACTUALIZAR
         private ML.Result InsertarActualizar(ML.Usuario usuario)
         {
             ML.Result result = new Result();
@@ -882,7 +980,7 @@ namespace PL_Web.Controllers
             //OBTENER LA RESPUESTA A LA PETICION
             try
             {
-                using(WebResponse response = request.GetResponse())
+                using (WebResponse response = request.GetResponse())
                 {
                     using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                     {
@@ -895,9 +993,94 @@ namespace PL_Web.Controllers
                         result.Correct = bool.Parse(xresult.Value);
                     }
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 result.Correct = false;
+            }
+
+            return result;
+        }
+
+        //AQUI VA EL METODO PARA INSERTAR Y ACTUALIZAR MEDIANTE LA PETICION A LA API REST
+
+        private ML.Result InsertarActualizarREST(ML.Usuario usuario)
+        {
+            ML.Result result = new Result();
+
+            using (var cliente = new HttpClient())
+            {
+                string EndPont = ConfigurationManager.AppSettings["EndPoint"].ToString();
+                cliente.BaseAddress = new Uri(EndPont);
+
+                var resultAPI = new HttpResponseMessage();
+
+                if (usuario.idUsuario == 0) //Se agrega el usuario
+                {
+                    var peticionPost = cliente.PostAsJsonAsync<ML.Usuario>("add", usuario); //Serialzar el Modelo a Json para mandar la peticion de tipo POST
+                    peticionPost.Wait();
+
+                    resultAPI = peticionPost.Result;
+                }
+                else //se actualiza el usuario
+                {
+                    var perticionPost = cliente.PutAsJsonAsync<ML.Usuario>($"Update/{usuario.idUsuario}", usuario); //Serialzar el Modelo a Json para mandar la peticion de tipo PUT
+                    perticionPost.Wait();
+
+                    resultAPI = perticionPost.Result;
+                }
+
+                if (resultAPI.IsSuccessStatusCode)
+                {
+                    result.Correct = true;
+                }
+                else
+                {
+                    result.Correct = false;
+                }
+            }
+
+            return result;
+        }
+
+        private ML.Result GetByIdREST(int idUsuario)
+        {
+            ML.Result result = new Result();
+
+            try
+            {
+                string endPoint = ConfigurationManager.AppSettings["EndPoint"].ToString();
+
+                using (var cliente = new HttpClient())
+                {
+                    cliente.BaseAddress = new Uri(endPoint);
+                    var peticionAPI = cliente.GetAsync($"GetById/{idUsuario}");
+                    peticionAPI.Wait();
+
+                    var resultAPI = peticionAPI.Result;
+
+                    if (resultAPI.IsSuccessStatusCode)
+                    {
+                        var readRespuesta = resultAPI.Content.ReadAsAsync<ML.Result>(); //se deserealiza el json de result en su respectivo modelo
+                        readRespuesta.Wait();
+
+                        ML.Usuario usuario = new ML.Usuario();
+                        usuario = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Usuario>(readRespuesta.Result.Object.ToString()); //se deserealiza la propiedad object para obtener el modelo de usuario
+
+                        result.Object = usuario;
+                        result.Correct = true;
+
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
             }
 
             return result;
