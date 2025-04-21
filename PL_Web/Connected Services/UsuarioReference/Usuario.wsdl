@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="Usuario" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ML" />
+      <xsd:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/SL_WCF" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IUsuario_AddWebService_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddWebService" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_AddWebService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddWebServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_UpdateWebService_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateWebService" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_UpdateWebService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateWebServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_DeleteWebService_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteWebService" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_DeleteWebService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteWebServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_GetAllWebService_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllWebService" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_GetAllWebService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllWebServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_GetByIdWebService_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetByIdWebService" />
+  </wsdl:message>
+  <wsdl:message name="IUsuario_GetByIdWebService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetByIdWebServiceResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IUsuario">
+    <wsdl:operation name="AddWebService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUsuario/AddWebService" message="tns:IUsuario_AddWebService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUsuario/AddWebServiceResponse" message="tns:IUsuario_AddWebService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateWebService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUsuario/UpdateWebService" message="tns:IUsuario_UpdateWebService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUsuario/UpdateWebServiceResponse" message="tns:IUsuario_UpdateWebService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteWebService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUsuario/DeleteWebService" message="tns:IUsuario_DeleteWebService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUsuario/DeleteWebServiceResponse" message="tns:IUsuario_DeleteWebService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllWebService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUsuario/GetAllWebService" message="tns:IUsuario_GetAllWebService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUsuario/GetAllWebServiceResponse" message="tns:IUsuario_GetAllWebService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetByIdWebService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IUsuario/GetByIdWebService" message="tns:IUsuario_GetByIdWebService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IUsuario/GetByIdWebServiceResponse" message="tns:IUsuario_GetByIdWebService_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IUsuario" type="tns:IUsuario">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddWebService">
+      <soap:operation soapAction="http://tempuri.org/IUsuario/AddWebService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateWebService">
+      <soap:operation soapAction="http://tempuri.org/IUsuario/UpdateWebService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteWebService">
+      <soap:operation soapAction="http://tempuri.org/IUsuario/DeleteWebService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllWebService">
+      <soap:operation soapAction="http://tempuri.org/IUsuario/GetAllWebService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetByIdWebService">
+      <soap:operation soapAction="http://tempuri.org/IUsuario/GetByIdWebService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Usuario">
+    <wsdl:port name="BasicHttpBinding_IUsuario" binding="tns:BasicHttpBinding_IUsuario">
+      <soap:address location="http://localhost:48690/Usuario.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

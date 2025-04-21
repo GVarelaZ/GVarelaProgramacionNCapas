@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ML" />
+  <xs:import schemaLocation="http://localhost:48690/Usuario.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/SL_WCF" />
+  <xs:element name="AddWebService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ML" minOccurs="0" name="usuario" nillable="true" type="q1:Usuario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddWebServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/SL_WCF" minOccurs="0" name="AddWebServiceResult" nillable="true" type="q2:Result" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateWebService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/ML" minOccurs="0" name="usuario" nillable="true" type="q3:Usuario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateWebServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/SL_WCF" minOccurs="0" name="UpdateWebServiceResult" nillable="true" type="q4:Result" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteWebService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idUsuario" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteWebServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/SL_WCF" minOccurs="0" name="DeleteWebServiceResult" nillable="true" type="q5:Result" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllWebService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/ML" minOccurs="0" name="usuario" nillable="true" type="q6:Usuario" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllWebServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/SL_WCF" minOccurs="0" name="GetAllWebServiceResult" nillable="true" type="q7:Result" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetByIdWebService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idUsuario" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetByIdWebServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/SL_WCF" minOccurs="0" name="GetByIdWebServiceResult" nillable="true" type="q8:Result" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

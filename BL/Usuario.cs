@@ -132,10 +132,10 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                 {
 
                     var registros = context.UsuarioGetAll(usuario.Nombre,usuario.ApellidoPaterno, usuario.ApellidoMaterno,
-                                                          //usuario.Rol.IdRol).ToList(); //Retorna una lista con los valores obtenidos
+                                                          usuario.Rol.IdRol).ToList(); //Retorna una lista con los valores obtenidos
 
                     //var registros = context.UsuarioGetAllViewSP(usuario.Nombre, usuario.ApellidoPaterno, usuario.ApellidoMaterno,
-                                                                usuario.Rol.IdRol).ToList();  //SP consumiendo una vista
+                                                                //usuario.Rol.IdRol).ToList();  //SP consumiendo una vista
 
                     if (registros.Count > 0)
                     {
@@ -322,7 +322,7 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                         usuario.Celular = datos.Celular;
                         usuario.Estatus = Convert.ToBoolean(datos.Status);
                         usuario.Curp = datos.CURP;
-                        usuario.Imagen = datos.Imagen;
+                        //usuario.Imagen = datos.Imagen;
                         usuario.Email = datos.Email;
                         if (datos.IdRol != null)
                         {

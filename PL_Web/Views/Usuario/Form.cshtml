@@ -55,6 +55,7 @@
                    @onKeypress = "validarCampo(event)",
                         @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -67,6 +68,7 @@
                    @onKeypress = "validarCampo(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.ApellidoPaterno, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -79,6 +81,7 @@
                    @onKeypress = "validarCampo(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.ApellidoMaterno, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4 ">
@@ -96,6 +99,7 @@
                                 @Html.Label("Mujer", new { @class = "control-label fw-bold" })
                                 @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input" })
                             </div>
+                            @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
                         }
                         else
                         {
@@ -107,6 +111,7 @@
                                 @Html.Label("Mujer", new { @class = "control-label fw-bold" })
                                 @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input", @checked = "true" })
                             </div>
+                            @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
                         }
                     }
                     else
@@ -120,6 +125,7 @@
                             @Html.Label("  Mujer", new { @class = "control-label fw-bold" })
                             @Html.RadioButtonFor(Model => Model.Sexo, "M", new { @class = "form-check form-check-input" })
                         </div>
+                        @Html.ValidationMessageFor(Model => Model.Sexo, "", new { @class = "text-danger" })
                     }
                 </div>
                 <div class="col-md-4">
@@ -133,6 +139,7 @@
                    @onKeypress = "validarNumeros(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Telefono, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -146,6 +153,7 @@
                    @onChange = "cambiarColor(event)",
                         @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.FechaNacimiento, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Celular, new { @class = "control-label fw-bold" })
@@ -158,12 +166,14 @@
                    @onKeypress = "validarNumeros(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Celular, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Rol, new { @class = "control-label fw-bold" })
                     @Html.DropDownListFor(Model => Model.Rol.IdRol, new SelectList(Model.Rol.Roles, "IdRol", "Nombre"), "Seleccione una opcion", new
                { @style = "border-width:3px", @class = "form-select rounded-pill", @onChange = "cambiarColor(event)" })
+                    @Html.ValidationMessageFor(Model => Model.Rol.IdRol, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Curp, new { @class = "control-label fw-bold" })
@@ -175,6 +185,7 @@
                    @oninput = "validarInput(this)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Curp, "", new { @class = "text-danger" })
                     <span id="resultado" class="notificacion"></span>
                 </div>
             </div>
@@ -193,6 +204,7 @@
                    @onKeypress = "validarCampo(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Direccion.Calle, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -206,6 +218,7 @@
                    @onKeypress = "validarNumeros(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Direccion.NumeroInterior, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -219,6 +232,7 @@
                    @onKeypress = "validarNumeros(event)",
                    @onBlur = "campoVacio(event)"
                })
+                    @Html.ValidationMessageFor(Model => Model.Direccion.NumeroInterior, "", new { @class = "text-danger" })
                     <span class="notificacion"></span>
                 </div>
                 <div class="col-md-4">
@@ -231,6 +245,7 @@
                        @style = "border-width:3px",
                        onChange = "MunicipioGetByIdEstado(), cambiarColor(event)"
                    })
+                    @Html.ValidationMessageFor(Model => Model.Direccion.Colonia.Municipio.Estado.IdEstado, "", new { @class = "text-danger" })
                 </div>
                 @if (Model.Direccion.Colonia.Municipio.Municipios != null || Model.Direccion.Colonia.Municipio.Municipios.Count > 0)
                 {
@@ -244,6 +259,7 @@
                             @style = "border-width:3px",
                             @onChange = "ColoniaGetByIdMunicipio(), cambiarColor(event)"
                         })
+                        @Html.ValidationMessageFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
@@ -258,6 +274,7 @@
                            @style = "border-width:3px",
                            @onChange = "ColoniaGetByIdMunicipio(), cambiarColor(event)"
                        })
+                        @Html.ValidationMessageFor(Model => Model.Direccion.Colonia.Municipio.IdMunicipio, "", new { @class = "text-danger" })
                     </div>
 
                 }
@@ -274,6 +291,7 @@
                                  @onChange = "cambiarColor(event)"
 
                         })
+                        @Html.ValidationMessageFor(Model => Model.Direccion.Colonia.IdColonia, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
@@ -289,8 +307,8 @@
                            @onChange = "cambiarColor(event)"
 
                        })
+                        @Html.ValidationMessageFor(Model => Model.Direccion.Colonia.IdColonia, "", new { @class = "text-danger" })
                     </div>
-
                 }
             </div>
         </div>
@@ -309,6 +327,7 @@
                    @onBlur = "validarEmail(event), campoVacio(event)"
                })
                     <span class="notificacion"></span>
+                    @Html.ValidationMessageFor(Model => Model.Email, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.UserName, new { @class = "control-label fw-bold" })
@@ -318,9 +337,10 @@
                    @class = "form-control rounded-pill",
                    @style = "border-width:3px",
                    @onKeypress = "userNameValid(event)",
-                   @onBlur = "campoVacio(event), campoVacio(event)"
+                   @onBlur = "campoVacio(event) campoVacio(event)"
                })
                     <span class="notificacion"></span>
+                    @Html.ValidationMessageFor(Model => Model.UserName, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Password, new { @class = "control-label fw-bold" })
@@ -333,6 +353,7 @@
                    @onBlur = "validarPassword(event), campoVacio(event)"
                })
                     <span class="notificacion"></span>
+                    @Html.ValidationMessageFor(Model => Model.Password, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-4">
                     @Html.LabelFor(Model => Model.Imagen, new { @class = "control-label fw-bold" })
@@ -343,8 +364,8 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
                     <label class="control-label fw-bold">Confirmar password</label>
-                    <input Type="password" class="form-control rounded-pill" style="border-width:3px" onblur="contraseñasIguales(this), campoVacio(event)" id="inptValidar" />
-                    <span class="notificacion"></span>
+                    <input id="inptValidar" Type="password" class="form-control rounded-pill" style="border-width:3px" onblur="contraseñasIguales(this)" />  <span class="notificacion"></span>
+
                 </div>
                 <div class="col-md-12 text-md-center">
                     @if (Model.Imagen == null)
@@ -372,7 +393,10 @@
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
 <script>
-
+    window.onload = () => {
+        const myInput = document.getElementById('inptValidar');
+        myInput.onpaste = e => e.preventDefault();
+    }
     $(document).ready(
         $("#datepicker").datepicker({
             dateFormat: "dd/mm/yy",

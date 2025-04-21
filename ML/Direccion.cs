@@ -24,6 +24,6 @@ namespace ML
         [RegularExpression(@"[0-9]{1,10}$", ErrorMessage = "Solo ingresar números")]
         public string NumeroExterior { get; set; }
         public Colonia Colonia { get; set; }
-        public Usuario Usuario { get; set; }
+        //public Usuario Usuario { get; set; }
     }
 }
