@@ -233,6 +233,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CandidatoController.cs" />
     <Compile Include="Controllers\CrudJSController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -350,6 +351,9 @@
     <Content Include="Views\Usuario\_Modal.cshtml" />
     <Content Include="Views\Usuario\_Avisos.cshtml" />
     <Content Include="Views\CrudJS\GetAllJS.cshtml" />
+    <Content Include="Views\Candidato\Inicio.cshtml" />
+    <Content Include="Views\Candidato\Formulario.cshtml" />
+    <Content Include="Views\Candidato\_notificacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

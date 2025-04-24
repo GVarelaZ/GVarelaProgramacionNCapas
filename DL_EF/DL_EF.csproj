@@ -50,6 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BolsaTrabajo.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Candidato.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Carrera.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="Colonia.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
@@ -64,6 +73,12 @@
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="EstadoGetAll_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstatusVacante.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="getByIdCandidato_Result.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="GVarelaProgramacionNCapas.Context.cs">
@@ -87,6 +102,12 @@
     <Compile Include="MunicipioGetById_Result.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
+    <Compile Include="ObtenerCandidatos_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Promedio.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rol.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
@@ -100,6 +121,9 @@
     <Compile Include="sysdiagram.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Universidad.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Usuario.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
@@ -110,6 +134,9 @@
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="UsuarioGetById_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Vacante.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
   </ItemGroup>

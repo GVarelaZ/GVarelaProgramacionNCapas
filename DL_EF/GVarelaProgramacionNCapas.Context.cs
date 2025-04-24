@@ -34,6 +34,13 @@ namespace DL_EF
         public virtual DbSet<Estado> Estadoes { get; set; }
         public virtual DbSet<Municipio> Municipios { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<BolsaTrabajo> BolsaTrabajoes { get; set; }
+        public virtual DbSet<Candidato> Candidatoes { get; set; }
+        public virtual DbSet<Carrera> Carreras { get; set; }
+        public virtual DbSet<EstatusVacante> EstatusVacantes { get; set; }
+        public virtual DbSet<Promedio> Promedios { get; set; }
+        public virtual DbSet<Universidad> Universidads { get; set; }
+        public virtual DbSet<Vacante> Vacantes { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -475,6 +482,179 @@ namespace DL_EF
                 new ObjectParameter("IdRol", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UsuarioGetAllViewSP_Result>("UsuarioGetAllViewSP", nombreParameter, apellidoPaternoParameter, apellidoMaternoParameter, idRolParameter);
+        }
+    
+        public virtual int CandidatoAdd(string nombre, string apellidoPaterno, string apellidoMaterno, string edad, string correo, string telefono, string direccion, byte[] foto, byte[] curriculum, Nullable<int> idUniversidad, Nullable<int> idCarrera, Nullable<int> idBolsaTrabajo, Nullable<int> idVacante, string promedioUniversidad, string promedioPreparatoria, string promedioSecundaria)
+        {
+            var nombreParameter = nombre != null ?
+                new ObjectParameter("Nombre", nombre) :
+                new ObjectParameter("Nombre", typeof(string));
+    
+            var apellidoPaternoParameter = apellidoPaterno != null ?
+                new ObjectParameter("ApellidoPaterno", apellidoPaterno) :
+                new ObjectParameter("ApellidoPaterno", typeof(string));
+    
+            var apellidoMaternoParameter = apellidoMaterno != null ?
+                new ObjectParameter("ApellidoMaterno", apellidoMaterno) :
+                new ObjectParameter("ApellidoMaterno", typeof(string));
+    
+            var edadParameter = edad != null ?
+                new ObjectParameter("Edad", edad) :
+                new ObjectParameter("Edad", typeof(string));
+    
+            var correoParameter = correo != null ?
+                new ObjectParameter("Correo", correo) :
+                new ObjectParameter("Correo", typeof(string));
+    
+            var telefonoParameter = telefono != null ?
+                new ObjectParameter("Telefono", telefono) :
+                new ObjectParameter("Telefono", typeof(string));
+    
+            var direccionParameter = direccion != null ?
+                new ObjectParameter("Direccion", direccion) :
+                new ObjectParameter("Direccion", typeof(string));
+    
+            var fotoParameter = foto != null ?
+                new ObjectParameter("Foto", foto) :
+                new ObjectParameter("Foto", typeof(byte[]));
+    
+            var curriculumParameter = curriculum != null ?
+                new ObjectParameter("Curriculum", curriculum) :
+                new ObjectParameter("Curriculum", typeof(byte[]));
+    
+            var idUniversidadParameter = idUniversidad.HasValue ?
+                new ObjectParameter("IdUniversidad", idUniversidad) :
+                new ObjectParameter("IdUniversidad", typeof(int));
+    
+            var idCarreraParameter = idCarrera.HasValue ?
+                new ObjectParameter("IdCarrera", idCarrera) :
+                new ObjectParameter("IdCarrera", typeof(int));
+    
+            var idBolsaTrabajoParameter = idBolsaTrabajo.HasValue ?
+                new ObjectParameter("IdBolsaTrabajo", idBolsaTrabajo) :
+                new ObjectParameter("IdBolsaTrabajo", typeof(int));
+    
+            var idVacanteParameter = idVacante.HasValue ?
+                new ObjectParameter("IdVacante", idVacante) :
+                new ObjectParameter("IdVacante", typeof(int));
+    
+            var promedioUniversidadParameter = promedioUniversidad != null ?
+                new ObjectParameter("PromedioUniversidad", promedioUniversidad) :
+                new ObjectParameter("PromedioUniversidad", typeof(string));
+    
+            var promedioPreparatoriaParameter = promedioPreparatoria != null ?
+                new ObjectParameter("PromedioPreparatoria", promedioPreparatoria) :
+                new ObjectParameter("PromedioPreparatoria", typeof(string));
+    
+            var promedioSecundariaParameter = promedioSecundaria != null ?
+                new ObjectParameter("PromedioSecundaria", promedioSecundaria) :
+                new ObjectParameter("PromedioSecundaria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CandidatoAdd", nombreParameter, apellidoPaternoParameter, apellidoMaternoParameter, edadParameter, correoParameter, telefonoParameter, direccionParameter, fotoParameter, curriculumParameter, idUniversidadParameter, idCarreraParameter, idBolsaTrabajoParameter, idVacanteParameter, promedioUniversidadParameter, promedioPreparatoriaParameter, promedioSecundariaParameter);
+        }
+    
+        public virtual int CandidatoUpdate(Nullable<int> idCandidato, string nombre, string apellidoPaterno, string apellidoMaterno, string edad, string correo, string telefono, string direccion, byte[] foto, byte[] curriculum, Nullable<int> idUniversidad, Nullable<int> idCarrera, Nullable<int> idBolsaTrabajo, Nullable<int> idVacante, Nullable<int> idPromedio, string promedioUniversidad, string promedioPreparatoria, string promedioSecundaria)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            var nombreParameter = nombre != null ?
+                new ObjectParameter("Nombre", nombre) :
+                new ObjectParameter("Nombre", typeof(string));
+    
+            var apellidoPaternoParameter = apellidoPaterno != null ?
+                new ObjectParameter("ApellidoPaterno", apellidoPaterno) :
+                new ObjectParameter("ApellidoPaterno", typeof(string));
+    
+            var apellidoMaternoParameter = apellidoMaterno != null ?
+                new ObjectParameter("ApellidoMaterno", apellidoMaterno) :
+                new ObjectParameter("ApellidoMaterno", typeof(string));
+    
+            var edadParameter = edad != null ?
+                new ObjectParameter("Edad", edad) :
+                new ObjectParameter("Edad", typeof(string));
+    
+            var correoParameter = correo != null ?
+                new ObjectParameter("Correo", correo) :
+                new ObjectParameter("Correo", typeof(string));
+    
+            var telefonoParameter = telefono != null ?
+                new ObjectParameter("Telefono", telefono) :
+                new ObjectParameter("Telefono", typeof(string));
+    
+            var direccionParameter = direccion != null ?
+                new ObjectParameter("Direccion", direccion) :
+                new ObjectParameter("Direccion", typeof(string));
+    
+            var fotoParameter = foto != null ?
+                new ObjectParameter("Foto", foto) :
+                new ObjectParameter("Foto", typeof(byte[]));
+    
+            var curriculumParameter = curriculum != null ?
+                new ObjectParameter("Curriculum", curriculum) :
+                new ObjectParameter("Curriculum", typeof(byte[]));
+    
+            var idUniversidadParameter = idUniversidad.HasValue ?
+                new ObjectParameter("IdUniversidad", idUniversidad) :
+                new ObjectParameter("IdUniversidad", typeof(int));
+    
+            var idCarreraParameter = idCarrera.HasValue ?
+                new ObjectParameter("IdCarrera", idCarrera) :
+                new ObjectParameter("IdCarrera", typeof(int));
+    
+            var idBolsaTrabajoParameter = idBolsaTrabajo.HasValue ?
+                new ObjectParameter("IdBolsaTrabajo", idBolsaTrabajo) :
+                new ObjectParameter("IdBolsaTrabajo", typeof(int));
+    
+            var idVacanteParameter = idVacante.HasValue ?
+                new ObjectParameter("IdVacante", idVacante) :
+                new ObjectParameter("IdVacante", typeof(int));
+    
+            var idPromedioParameter = idPromedio.HasValue ?
+                new ObjectParameter("IdPromedio", idPromedio) :
+                new ObjectParameter("IdPromedio", typeof(int));
+    
+            var promedioUniversidadParameter = promedioUniversidad != null ?
+                new ObjectParameter("PromedioUniversidad", promedioUniversidad) :
+                new ObjectParameter("PromedioUniversidad", typeof(string));
+    
+            var promedioPreparatoriaParameter = promedioPreparatoria != null ?
+                new ObjectParameter("PromedioPreparatoria", promedioPreparatoria) :
+                new ObjectParameter("PromedioPreparatoria", typeof(string));
+    
+            var promedioSecundariaParameter = promedioSecundaria != null ?
+                new ObjectParameter("PromedioSecundaria", promedioSecundaria) :
+                new ObjectParameter("PromedioSecundaria", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CandidatoUpdate", idCandidatoParameter, nombreParameter, apellidoPaternoParameter, apellidoMaternoParameter, edadParameter, correoParameter, telefonoParameter, direccionParameter, fotoParameter, curriculumParameter, idUniversidadParameter, idCarreraParameter, idBolsaTrabajoParameter, idVacanteParameter, idPromedioParameter, promedioUniversidadParameter, promedioPreparatoriaParameter, promedioSecundariaParameter);
+        }
+    
+        public virtual int deleteCandidato(Nullable<int> idCandidato)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCandidato", idCandidatoParameter);
+        }
+    
+        public virtual ObjectResult<getByIdCandidato_Result> getByIdCandidato(Nullable<int> idCandidato)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getByIdCandidato_Result>("getByIdCandidato", idCandidatoParameter);
+        }
+    
+        public virtual ObjectResult<ObtenerCandidatos_Result> ObtenerCandidatos(Nullable<int> idVacante)
+        {
+            var idVacanteParameter = idVacante.HasValue ?
+                new ObjectParameter("IdVacante", idVacante) :
+                new ObjectParameter("IdVacante", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ObtenerCandidatos_Result>("ObtenerCandidatos", idVacanteParameter);
         }
     }
 }

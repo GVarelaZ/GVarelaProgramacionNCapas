@@ -5,6 +5,39 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GVarelaProgramacionNCapasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BolsaTrabajo">
+          <Key>
+            <PropertyRef Name="IdBolsaTrabajo" />
+          </Key>
+          <Property Name="IdBolsaTrabajo" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Candidato">
+          <Key>
+            <PropertyRef Name="IdCandidato" />
+          </Key>
+          <Property Name="IdCandidato" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="50" />
+          <Property Name="Edad" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Foto" Type="varbinary(max)" />
+          <Property Name="Curriculum" Type="varbinary(max)" />
+          <Property Name="IdUniversidad" Type="int" />
+          <Property Name="IdCarrera" Type="int" />
+          <Property Name="IdBolsaTrabajo" Type="int" />
+          <Property Name="IdVacante" Type="int" />
+        </EntityType>
+        <EntityType Name="Carrera">
+          <Key>
+            <PropertyRef Name="IdCarrera" />
+          </Key>
+          <Property Name="IdCarrera" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
         <EntityType Name="Colonia">
           <Key>
             <PropertyRef Name="IdColonia" />
@@ -32,6 +65,13 @@
           <Property Name="IdEstado" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="EstatusVacante">
+          <Key>
+            <PropertyRef Name="IdEstatusVacante" />
+          </Key>
+          <Property Name="IdEstatusVacante" Type="tinyint" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Municipio">
           <Key>
             <PropertyRef Name="IdMunicipio" />
@@ -39,6 +79,16 @@
           <Property Name="IdMunicipio" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IdEstado" Type="int" />
+        </EntityType>
+        <EntityType Name="Promedio">
+          <Key>
+            <PropertyRef Name="IdPromedio" />
+          </Key>
+          <Property Name="IdPromedio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCandidato" Type="int" />
+          <Property Name="PromedioUniversidad" Type="varchar" MaxLength="10" />
+          <Property Name="PromedioPreparatoria" Type="varchar" MaxLength="10" />
+          <Property Name="PromedioSecundaria" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Rol">
           <Key>
@@ -56,6 +106,13 @@
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Universidad">
+          <Key>
+            <PropertyRef Name="IdUniversidad" />
+          </Key>
+          <Property Name="IdUniversidad" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -77,6 +134,65 @@
           <Property Name="Email" Type="varchar" MaxLength="254" Nullable="false" />
           <Property Name="IdRol" Type="int" />
         </EntityType>
+        <EntityType Name="Vacante">
+          <Key>
+            <PropertyRef Name="IdVacante" />
+          </Key>
+          <Property Name="IdVacante" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="FechaPublicacion" Type="datetime" />
+          <Property Name="FechaLimite" Type="datetime" />
+          <Property Name="UrlVacante" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="IdEstatusVacante" Type="tinyint" />
+        </EntityType>
+        <Association Name="FK__Candidato__IdBol__6B24EA82">
+          <End Role="BolsaTrabajo" Type="Self.BolsaTrabajo" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BolsaTrabajo">
+              <PropertyRef Name="IdBolsaTrabajo" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdBolsaTrabajo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdCar__6A30C649">
+          <End Role="Carrera" Type="Self.Carrera" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carrera">
+              <PropertyRef Name="IdCarrera" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdCarrera" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdUni__693CA210">
+          <End Role="Universidad" Type="Self.Universidad" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universidad">
+              <PropertyRef Name="IdUniversidad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdUniversidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdVac__6C190EBB">
+          <End Role="Vacante" Type="Self.Vacante" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vacante">
+              <PropertyRef Name="IdVacante" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdVacante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Colonia__IdMunic__3F466844">
           <End Role="Municipio" Type="Self.Municipio" Multiplicity="0..1" />
           <End Role="Colonia" Type="Self.Colonia" Multiplicity="*" />
@@ -125,6 +241,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Promedio__IdCand__6EF57B66">
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="0..1" />
+          <End Role="Promedio" Type="Self.Promedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidato">
+              <PropertyRef Name="IdCandidato" />
+            </Principal>
+            <Dependent Role="Promedio">
+              <PropertyRef Name="IdCandidato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vacante__IdEstat__60A75C0F">
+          <End Role="EstatusVacante" Type="Self.EstatusVacante" Multiplicity="0..1" />
+          <End Role="Vacante" Type="Self.Vacante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstatusVacante">
+              <PropertyRef Name="IdEstatusVacante" />
+            </Principal>
+            <Dependent Role="Vacante">
+              <PropertyRef Name="IdEstatusVacante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_IdRol">
           <End Role="Rol" Type="Self.Rol" Multiplicity="0..1" />
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
@@ -137,13 +277,60 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CandidatoAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+          <Parameter Name="Edad" Type="varchar" Mode="In" />
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
+          <Parameter Name="Direccion" Type="varchar" Mode="In" />
+          <Parameter Name="Foto" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Curriculum" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="IdUniversidad" Type="int" Mode="In" />
+          <Parameter Name="IdCarrera" Type="int" Mode="In" />
+          <Parameter Name="IdBolsaTrabajo" Type="int" Mode="In" />
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+          <Parameter Name="PromedioUniversidad" Type="varchar" Mode="In" />
+          <Parameter Name="PromedioPreparatoria" Type="varchar" Mode="In" />
+          <Parameter Name="PromedioSecundaria" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CandidatoUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+          <Parameter Name="Edad" Type="varchar" Mode="In" />
+          <Parameter Name="Correo" Type="varchar" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
+          <Parameter Name="Direccion" Type="varchar" Mode="In" />
+          <Parameter Name="Foto" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Curriculum" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="IdUniversidad" Type="int" Mode="In" />
+          <Parameter Name="IdCarrera" Type="int" Mode="In" />
+          <Parameter Name="IdBolsaTrabajo" Type="int" Mode="In" />
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+          <Parameter Name="IdPromedio" Type="int" Mode="In" />
+          <Parameter Name="PromedioUniversidad" Type="varchar" Mode="In" />
+          <Parameter Name="PromedioPreparatoria" Type="varchar" Mode="In" />
+          <Parameter Name="PromedioSecundaria" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="ColoniaGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdMunicipio" Type="int" Mode="In" />
         </Function>
+        <Function Name="deleteCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+        </Function>
         <Function Name="EstadoGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="getByIdCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+        </Function>
         <Function Name="MunicipioGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdEstado" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ObtenerCandidatos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
         </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -261,13 +448,36 @@
           <Parameter Name="Status" Type="bit" Mode="In" />
         </Function>
         <EntityContainer Name="GVarelaProgramacionNCapasModelStoreContainer">
+          <EntitySet Name="BolsaTrabajo" EntityType="Self.BolsaTrabajo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Candidato" EntityType="Self.Candidato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Carrera" EntityType="Self.Carrera" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Colonia" EntityType="Self.Colonia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Direccion" EntityType="Self.Direccion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EstatusVacante" EntityType="Self.EstatusVacante" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Municipio" EntityType="Self.Municipio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Promedio" EntityType="Self.Promedio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Universidad" EntityType="Self.Universidad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vacante" EntityType="Self.Vacante" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Candidato__IdBol__6B24EA82" Association="Self.FK__Candidato__IdBol__6B24EA82">
+            <End Role="BolsaTrabajo" EntitySet="BolsaTrabajo" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdCar__6A30C649" Association="Self.FK__Candidato__IdCar__6A30C649">
+            <End Role="Carrera" EntitySet="Carrera" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdUni__693CA210" Association="Self.FK__Candidato__IdUni__693CA210">
+            <End Role="Universidad" EntitySet="Universidad" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdVac__6C190EBB" Association="Self.FK__Candidato__IdVac__6C190EBB">
+            <End Role="Vacante" EntitySet="Vacante" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
           <AssociationSet Name="FK__Colonia__IdMunic__3F466844" Association="Self.FK__Colonia__IdMunic__3F466844">
             <End Role="Municipio" EntitySet="Municipio" />
             <End Role="Colonia" EntitySet="Colonia" />
@@ -283,6 +493,14 @@
           <AssociationSet Name="FK__Municipio__IdEst__3C69FB99" Association="Self.FK__Municipio__IdEst__3C69FB99">
             <End Role="Estado" EntitySet="Estado" />
             <End Role="Municipio" EntitySet="Municipio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Promedio__IdCand__6EF57B66" Association="Self.FK__Promedio__IdCand__6EF57B66">
+            <End Role="Candidato" EntitySet="Candidato" />
+            <End Role="Promedio" EntitySet="Promedio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vacante__IdEstat__60A75C0F" Association="Self.FK__Vacante__IdEstat__60A75C0F">
+            <End Role="EstatusVacante" EntitySet="EstatusVacante" />
+            <End Role="Vacante" EntitySet="Vacante" />
           </AssociationSet>
           <AssociationSet Name="FK_IdRol" Association="Self.FK_IdRol">
             <End Role="Rol" EntitySet="Rol" />
@@ -464,6 +682,84 @@
             <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
             <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
             <Parameter Name="IdRol" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="BolsaTrabajoes" EntityType="GVarelaProgramacionNCapasModel.BolsaTrabajo" />
+          <EntitySet Name="Candidatoes" EntityType="GVarelaProgramacionNCapasModel.Candidato" />
+          <EntitySet Name="Carreras" EntityType="GVarelaProgramacionNCapasModel.Carrera" />
+          <EntitySet Name="EstatusVacantes" EntityType="GVarelaProgramacionNCapasModel.EstatusVacante" />
+          <EntitySet Name="Promedios" EntityType="GVarelaProgramacionNCapasModel.Promedio" />
+          <EntitySet Name="Universidads" EntityType="GVarelaProgramacionNCapasModel.Universidad" />
+          <EntitySet Name="Vacantes" EntityType="GVarelaProgramacionNCapasModel.Vacante" />
+          <AssociationSet Name="FK__Candidato__IdBol__6B24EA82" Association="GVarelaProgramacionNCapasModel.FK__Candidato__IdBol__6B24EA82">
+            <End Role="BolsaTrabajo" EntitySet="BolsaTrabajoes" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdCar__6A30C649" Association="GVarelaProgramacionNCapasModel.FK__Candidato__IdCar__6A30C649">
+            <End Role="Carrera" EntitySet="Carreras" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdUni__693CA210" Association="GVarelaProgramacionNCapasModel.FK__Candidato__IdUni__693CA210">
+            <End Role="Universidad" EntitySet="Universidads" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Candidato__IdVac__6C190EBB" Association="GVarelaProgramacionNCapasModel.FK__Candidato__IdVac__6C190EBB">
+            <End Role="Vacante" EntitySet="Vacantes" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Promedio__IdCand__6EF57B66" Association="GVarelaProgramacionNCapasModel.FK__Promedio__IdCand__6EF57B66">
+            <End Role="Candidato" EntitySet="Candidatoes" />
+            <End Role="Promedio" EntitySet="Promedios" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vacante__IdEstat__60A75C0F" Association="GVarelaProgramacionNCapasModel.FK__Vacante__IdEstat__60A75C0F">
+            <End Role="EstatusVacante" EntitySet="EstatusVacantes" />
+            <End Role="Vacante" EntitySet="Vacantes" />
+          </AssociationSet>
+          <FunctionImport Name="CandidatoAdd">
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+            <Parameter Name="Edad" Mode="In" Type="String" />
+            <Parameter Name="Correo" Mode="In" Type="String" />
+            <Parameter Name="Telefono" Mode="In" Type="String" />
+            <Parameter Name="Direccion" Mode="In" Type="String" />
+            <Parameter Name="Foto" Mode="In" Type="Binary" />
+            <Parameter Name="Curriculum" Mode="In" Type="Binary" />
+            <Parameter Name="IdUniversidad" Mode="In" Type="Int32" />
+            <Parameter Name="IdCarrera" Mode="In" Type="Int32" />
+            <Parameter Name="IdBolsaTrabajo" Mode="In" Type="Int32" />
+            <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+            <Parameter Name="PromedioUniversidad" Mode="In" Type="String" />
+            <Parameter Name="PromedioPreparatoria" Mode="In" Type="String" />
+            <Parameter Name="PromedioSecundaria" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="CandidatoUpdate">
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+            <Parameter Name="Edad" Mode="In" Type="String" />
+            <Parameter Name="Correo" Mode="In" Type="String" />
+            <Parameter Name="Telefono" Mode="In" Type="String" />
+            <Parameter Name="Direccion" Mode="In" Type="String" />
+            <Parameter Name="Foto" Mode="In" Type="Binary" />
+            <Parameter Name="Curriculum" Mode="In" Type="Binary" />
+            <Parameter Name="IdUniversidad" Mode="In" Type="Int32" />
+            <Parameter Name="IdCarrera" Mode="In" Type="Int32" />
+            <Parameter Name="IdBolsaTrabajo" Mode="In" Type="Int32" />
+            <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+            <Parameter Name="IdPromedio" Mode="In" Type="Int32" />
+            <Parameter Name="PromedioUniversidad" Mode="In" Type="String" />
+            <Parameter Name="PromedioPreparatoria" Mode="In" Type="String" />
+            <Parameter Name="PromedioSecundaria" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="deleteCandidato">
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getByIdCandidato" ReturnType="Collection(GVarelaProgramacionNCapasModel.getByIdCandidato_Result)">
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ObtenerCandidatos" ReturnType="Collection(GVarelaProgramacionNCapasModel.ObtenerCandidatos_Result)">
+            <Parameter Name="IdVacante" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Rol">
@@ -682,6 +978,202 @@
           <Property Type="String" Name="CodigoPostal" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="MunicipioNombre" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="EstadoNOmbre" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="BolsaTrabajo">
+          <Key>
+            <PropertyRef Name="IdBolsaTrabajo" />
+          </Key>
+          <Property Name="IdBolsaTrabajo" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdBol__6B24EA82" FromRole="BolsaTrabajo" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Candidato">
+          <Key>
+            <PropertyRef Name="IdCandidato" />
+          </Key>
+          <Property Name="IdCandidato" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Edad" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Direccion" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Curriculum" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="IdUniversidad" Type="Int32" />
+          <Property Name="IdCarrera" Type="Int32" />
+          <Property Name="IdBolsaTrabajo" Type="Int32" />
+          <Property Name="IdVacante" Type="Int32" />
+          <NavigationProperty Name="BolsaTrabajo" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdBol__6B24EA82" FromRole="Candidato" ToRole="BolsaTrabajo" />
+          <NavigationProperty Name="Carrera" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdCar__6A30C649" FromRole="Candidato" ToRole="Carrera" />
+          <NavigationProperty Name="Universidad" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdUni__693CA210" FromRole="Candidato" ToRole="Universidad" />
+          <NavigationProperty Name="Vacante" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdVac__6C190EBB" FromRole="Candidato" ToRole="Vacante" />
+          <NavigationProperty Name="Promedios" Relationship="GVarelaProgramacionNCapasModel.FK__Promedio__IdCand__6EF57B66" FromRole="Candidato" ToRole="Promedio" />
+        </EntityType>
+        <EntityType Name="Carrera">
+          <Key>
+            <PropertyRef Name="IdCarrera" />
+          </Key>
+          <Property Name="IdCarrera" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdCar__6A30C649" FromRole="Carrera" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="EstatusVacante">
+          <Key>
+            <PropertyRef Name="IdEstatusVacante" />
+          </Key>
+          <Property Name="IdEstatusVacante" Type="Byte" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Vacantes" Relationship="GVarelaProgramacionNCapasModel.FK__Vacante__IdEstat__60A75C0F" FromRole="EstatusVacante" ToRole="Vacante" />
+        </EntityType>
+        <EntityType Name="Promedio">
+          <Key>
+            <PropertyRef Name="IdPromedio" />
+          </Key>
+          <Property Name="IdPromedio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCandidato" Type="Int32" />
+          <Property Name="PromedioUniversidad" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PromedioPreparatoria" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PromedioSecundaria" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Candidato" Relationship="GVarelaProgramacionNCapasModel.FK__Promedio__IdCand__6EF57B66" FromRole="Promedio" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Universidad">
+          <Key>
+            <PropertyRef Name="IdUniversidad" />
+          </Key>
+          <Property Name="IdUniversidad" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdUni__693CA210" FromRole="Universidad" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Vacante">
+          <Key>
+            <PropertyRef Name="IdVacante" />
+          </Key>
+          <Property Name="IdVacante" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaPublicacion" Type="DateTime" Precision="3" />
+          <Property Name="FechaLimite" Type="DateTime" Precision="3" />
+          <Property Name="UrlVacante" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IdEstatusVacante" Type="Byte" />
+          <NavigationProperty Name="Candidatoes" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdVac__6C190EBB" FromRole="Vacante" ToRole="Candidato" />
+          <NavigationProperty Name="EstatusVacante" Relationship="GVarelaProgramacionNCapasModel.FK__Vacante__IdEstat__60A75C0F" FromRole="Vacante" ToRole="EstatusVacante" />
+        </EntityType>
+        <Association Name="FK__Candidato__IdBol__6B24EA82">
+          <End Type="GVarelaProgramacionNCapasModel.BolsaTrabajo" Role="BolsaTrabajo" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BolsaTrabajo">
+              <PropertyRef Name="IdBolsaTrabajo" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdBolsaTrabajo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdCar__6A30C649">
+          <End Type="GVarelaProgramacionNCapasModel.Carrera" Role="Carrera" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carrera">
+              <PropertyRef Name="IdCarrera" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdCarrera" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdUni__693CA210">
+          <End Type="GVarelaProgramacionNCapasModel.Universidad" Role="Universidad" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universidad">
+              <PropertyRef Name="IdUniversidad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdUniversidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Candidato__IdVac__6C190EBB">
+          <End Type="GVarelaProgramacionNCapasModel.Vacante" Role="Vacante" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vacante">
+              <PropertyRef Name="IdVacante" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdVacante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Promedio__IdCand__6EF57B66">
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Promedio" Role="Promedio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidato">
+              <PropertyRef Name="IdCandidato" />
+            </Principal>
+            <Dependent Role="Promedio">
+              <PropertyRef Name="IdCandidato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vacante__IdEstat__60A75C0F">
+          <End Type="GVarelaProgramacionNCapasModel.EstatusVacante" Role="EstatusVacante" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Vacante" Role="Vacante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstatusVacante">
+              <PropertyRef Name="IdEstatusVacante" />
+            </Principal>
+            <Dependent Role="Vacante">
+              <PropertyRef Name="IdEstatusVacante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="getByIdCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Edad" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Correo" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Direccion" Nullable="false" MaxLength="500" />
+          <Property Type="Binary" Name="Foto" Nullable="true" />
+          <Property Type="Binary" Name="Curriculum" Nullable="true" />
+          <Property Type="Int32" Name="IdUniversidad" Nullable="true" />
+          <Property Type="Int32" Name="IdCarrera" Nullable="true" />
+          <Property Type="Int32" Name="IdBolsaTrabajo" Nullable="true" />
+          <Property Type="Int32" Name="IdVacante" Nullable="true" />
+          <Property Type="Int32" Name="IdPromedio" Nullable="false" />
+          <Property Type="String" Name="PromedioUniversidad" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="PromedioPreparatoria" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="PromedioSecundaria" Nullable="false" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="ObtenerCandidatos_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Edad" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Correo" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Direccion" Nullable="false" MaxLength="500" />
+          <Property Type="Binary" Name="Foto" Nullable="true" />
+          <Property Type="Binary" Name="Curriculum" Nullable="true" />
+          <Property Type="Int32" Name="IdUniversidad" Nullable="false" />
+          <Property Type="String" Name="NombreUniversidad" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdCarrera" Nullable="false" />
+          <Property Type="String" Name="NombreCarrera" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdBolsaTrabajo" Nullable="false" />
+          <Property Type="String" Name="NombreBolsaTrabajo" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdPromedio" Nullable="true" />
+          <Property Type="String" Name="PromedioUniversidad" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="PromedioPreparatoria" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="PromedioSecundaria" Nullable="true" MaxLength="10" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -904,6 +1396,136 @@
                 <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
                 <ScalarProperty Name="MunicipioNombre" ColumnName="MunicipioNombre" />
                 <ScalarProperty Name="EstadoNOmbre" ColumnName="EstadoNOmbre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="BolsaTrabajoes">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.BolsaTrabajo">
+              <MappingFragment StoreEntitySet="BolsaTrabajo">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdBolsaTrabajo" ColumnName="IdBolsaTrabajo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Candidatoes">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Candidato">
+              <MappingFragment StoreEntitySet="Candidato">
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="IdBolsaTrabajo" ColumnName="IdBolsaTrabajo" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="IdUniversidad" ColumnName="IdUniversidad" />
+                <ScalarProperty Name="Curriculum" ColumnName="Curriculum" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Carreras">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Carrera">
+              <MappingFragment StoreEntitySet="Carrera">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EstatusVacantes">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.EstatusVacante">
+              <MappingFragment StoreEntitySet="EstatusVacante">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdEstatusVacante" ColumnName="IdEstatusVacante" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Promedios">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Promedio">
+              <MappingFragment StoreEntitySet="Promedio">
+                <ScalarProperty Name="PromedioSecundaria" ColumnName="PromedioSecundaria" />
+                <ScalarProperty Name="PromedioPreparatoria" ColumnName="PromedioPreparatoria" />
+                <ScalarProperty Name="PromedioUniversidad" ColumnName="PromedioUniversidad" />
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="IdPromedio" ColumnName="IdPromedio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Universidads">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Universidad">
+              <MappingFragment StoreEntitySet="Universidad">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdUniversidad" ColumnName="IdUniversidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vacantes">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Vacante">
+              <MappingFragment StoreEntitySet="Vacante">
+                <ScalarProperty Name="IdEstatusVacante" ColumnName="IdEstatusVacante" />
+                <ScalarProperty Name="UrlVacante" ColumnName="UrlVacante" />
+                <ScalarProperty Name="FechaLimite" ColumnName="FechaLimite" />
+                <ScalarProperty Name="FechaPublicacion" ColumnName="FechaPublicacion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CandidatoAdd" FunctionName="GVarelaProgramacionNCapasModel.Store.CandidatoAdd" />
+          <FunctionImportMapping FunctionImportName="CandidatoUpdate" FunctionName="GVarelaProgramacionNCapasModel.Store.CandidatoUpdate" />
+          <FunctionImportMapping FunctionImportName="deleteCandidato" FunctionName="GVarelaProgramacionNCapasModel.Store.deleteCandidato" />
+          <FunctionImportMapping FunctionImportName="getByIdCandidato" FunctionName="GVarelaProgramacionNCapasModel.Store.getByIdCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GVarelaProgramacionNCapasModel.getByIdCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Curriculum" ColumnName="Curriculum" />
+                <ScalarProperty Name="IdUniversidad" ColumnName="IdUniversidad" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="IdBolsaTrabajo" ColumnName="IdBolsaTrabajo" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="IdPromedio" ColumnName="IdPromedio" />
+                <ScalarProperty Name="PromedioUniversidad" ColumnName="PromedioUniversidad" />
+                <ScalarProperty Name="PromedioPreparatoria" ColumnName="PromedioPreparatoria" />
+                <ScalarProperty Name="PromedioSecundaria" ColumnName="PromedioSecundaria" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ObtenerCandidatos" FunctionName="GVarelaProgramacionNCapasModel.Store.ObtenerCandidatos">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GVarelaProgramacionNCapasModel.ObtenerCandidatos_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Curriculum" ColumnName="Curriculum" />
+                <ScalarProperty Name="IdUniversidad" ColumnName="IdUniversidad" />
+                <ScalarProperty Name="NombreUniversidad" ColumnName="NombreUniversidad" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="NombreCarrera" ColumnName="NombreCarrera" />
+                <ScalarProperty Name="IdBolsaTrabajo" ColumnName="IdBolsaTrabajo" />
+                <ScalarProperty Name="NombreBolsaTrabajo" ColumnName="NombreBolsaTrabajo" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="IdPromedio" ColumnName="IdPromedio" />
+                <ScalarProperty Name="PromedioUniversidad" ColumnName="PromedioUniversidad" />
+                <ScalarProperty Name="PromedioPreparatoria" ColumnName="PromedioPreparatoria" />
+                <ScalarProperty Name="PromedioSecundaria" ColumnName="PromedioSecundaria" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

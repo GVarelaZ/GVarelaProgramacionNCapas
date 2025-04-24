@@ -1,0 +1,91 @@
+﻿@model ML.Candidato
+@{
+    ViewBag.Title = "Inicio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<h2>Busqueda de Candidatos</h2>
+<div class="container">
+    @if (Model.vacante.Vacantes != null)
+    {
+        using (Html.BeginForm("Inicio", "Candidato", FormMethod.Post))
+        {
+            <div class="row g-1">
+                <div class="col-3">
+                    @Html.DropDownListFor(Model => Model.vacante.IdVacante, new SelectList(Model.vacante.Vacantes, "IdVacante", "Nombre"),
+                   "Selecciona una opcion", new { @class = "form-select rounded-pill border border-success border border-2", @id = "Vacante" })
+                </div>
+                <div class="col-3 text-lg-center">
+                    <button class="btn btn-success fw-bold btn-lg text-center" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <div class="col-6 text-lg-end">
+                    <a href="@Url.Action("Formulario","Candidato")"
+                       class="btn btn-primary btn-lg text-lg-center" role="button">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </a>
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <div>
+            <h2> No se han podido encontrar vacantes </h2>
+        </div>
+    }
+
+    @if (Model.Candidatos != null)
+    {
+
+        <div class="row">
+            <div class="col">
+                <table class="table table-responsive table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Candidato</th>
+                            <th scope="col">Datos de contacto</th>
+                            <th scope="col">Estudios</th>
+                            <th scope="col">Vacante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int contador = 1; }
+                        @foreach (ML.Candidato candidato in Model.Candidatos)
+                        {
+                            <tr>
+                                <td>@contador</td>
+                                <td>@candidato.Nombre @candidato.ApellidoPaterno @candidato.ApellidoMaterno @candidato.Edad</td>
+                                <td>@candidato.Correo @candidato.Telefono @candidato.Direccion</td>
+                                <td>@candidato.carrera.Nombre @candidato.universidad.Nombre, promedio universidad: @candidato.promedio.PromedioUniversidad</td>
+                                <td>@candidato.vacante.Nombre @candidato.bolsaTrabajo.Nombre</td>
+                                <td>
+                                    <a href="@Url.Action("EliminarCandidato","Candidato", new {IdCandidato = candidato.IdCandidato})"
+                                       class="btn btn-danger" onclick="return confirm('Seguro que deseas eliminar el registro?')" role="button">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                    <a href="@Url.Action("Formulario","Candidato", new {IdCandidato = candidato.IdCandidato, IdPromedio = candidato.promedio.IdPromedio})"
+                                       class="btn btn-warning text-lg-center" role="button">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            contador++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div>
+            <h2> Seleccione la vacante que desea mostrar </h2>
+        </div>
+    }
+</div>
