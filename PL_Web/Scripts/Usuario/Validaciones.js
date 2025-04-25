@@ -42,6 +42,47 @@ function ValidarImagen() { //validacion para saber si el usuario ingreso una ima
     }
 }
 
+function ValidarArchivo() { //validacion para saber si el usuario ingreso una imagen exclusivamente
+    let archivo = $('#archivoInput')
+    let nombreArchivo = archivo[0].files[0].name //accede a la propiedad para el nombre del archivo
+    let ArchivoSize = archivo[0].files[0].size
+    var sizeKileByte = parseInt(ArchivoSize / 1024)
+    console.log(sizeKileByte)
+
+    //let extensionImg = nombreImagen.split(".")
+    let extension = nombreArchivo.split(".").pop() //elimina el primer arreglo
+
+    //var extension = extensionImg[1]
+    const validArchivoExtension = ['pdf']; //arreglo para la validacion con el tipo de dato seleccionado
+    banderaImg = false;
+
+    for (var i = 0; i <= validArchivoExtension.length; i++) {
+        if (extension == validArchivoExtension[i]) {
+            banderaImg = true
+        }
+    }
+
+    if (!banderaImg) {
+        console.log("es otro archivo")
+        alert(`Archivo no valido, solo formato ${validArchivoExtension}`)
+        $('#archivoInput').val('')
+        $('#archivoCV').attr('src', 'https://cdn.iconscout.com/icon/premium/png-512-thumb/clear-file-594302.png?f=webp&w=256');
+    } else if (sizeKileByte > 4000) {
+        alert("El archivo es muy pesado, debe ser de menos de 4MB")
+        $('#archivoInput').val('')
+        $('#archivoCV').attr('src', 'https://cdn.iconscout.com/icon/premium/png-512-thumb/clear-file-594302.png?f=webp&w=256');
+        return false;
+    } else {
+        console.log("es una imagen")
+        var archivoCV = $('#archivoCV')
+        //console.log(`es una imagen, solo formatos ${validImagenExtension}`)
+        const [file] = archivo[0].files
+        if (file) {
+            archivoCV[0].src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/250px-PDF_file_icon.svg.png'
+            //VisualizarImagen(imagenVisual)
+        }
+    }
+}
 function validarCampo(eventoPress) {  //Recibe el evento del onkeypress
     var keypress = String.fromCharCode(eventoPress.which) //conversion del codigo de la tecla presionada para ser string
     var inputField = eventoPress.target //prop target para conocer en donde se encuentra mi input o cual es
@@ -157,7 +198,7 @@ function userNameValid(eventoPress) {
     var errorMessage = inputError.parentNode.querySelector('.notificacion')
     errorMessage.textContent = ''
 
-    if (!(/^[a-zA-Z0-9]+$/.test(letra))) {
+    if (!(/^[A-Za-z0-9\s]+/.test(letra))) {
         eventoPress.preventDefault()
         inputError.style.borderWidth = "3px";
         inputError.style.borderColor = 'red'

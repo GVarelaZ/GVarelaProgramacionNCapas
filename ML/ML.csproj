@@ -45,12 +45,15 @@
     <Compile Include="BolsaTrabajo.cs" />
     <Compile Include="Candidato.cs" />
     <Compile Include="Carrera.cs" />
+    <Compile Include="Cita.cs" />
     <Compile Include="Colonia.cs" />
     <Compile Include="Direccion.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="EstatusCita.cs" />
     <Compile Include="EstatusVacante.cs" />
     <Compile Include="ExcelResult.cs" />
     <Compile Include="Municipio.cs" />
+    <Compile Include="Piso.cs" />
     <Compile Include="Promedio.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Rol.cs" />

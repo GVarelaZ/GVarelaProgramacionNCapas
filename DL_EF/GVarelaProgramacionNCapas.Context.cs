@@ -41,6 +41,9 @@ namespace DL_EF
         public virtual DbSet<Promedio> Promedios { get; set; }
         public virtual DbSet<Universidad> Universidads { get; set; }
         public virtual DbSet<Vacante> Vacantes { get; set; }
+        public virtual DbSet<Cita> Citas { get; set; }
+        public virtual DbSet<EstatusCita> EstatusCitas { get; set; }
+        public virtual DbSet<Piso> Pisoes { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {
@@ -655,6 +658,74 @@ namespace DL_EF
                 new ObjectParameter("IdVacante", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ObtenerCandidatos_Result>("ObtenerCandidatos", idVacanteParameter);
+        }
+    
+        public virtual int insertarCita(Nullable<System.DateTime> fechaHora, Nullable<int> idPiso, Nullable<int> idCandidato, Nullable<int> idEstatusCita)
+        {
+            var fechaHoraParameter = fechaHora.HasValue ?
+                new ObjectParameter("FechaHora", fechaHora) :
+                new ObjectParameter("FechaHora", typeof(System.DateTime));
+    
+            var idPisoParameter = idPiso.HasValue ?
+                new ObjectParameter("IdPiso", idPiso) :
+                new ObjectParameter("IdPiso", typeof(int));
+    
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            var idEstatusCitaParameter = idEstatusCita.HasValue ?
+                new ObjectParameter("IdEstatusCita", idEstatusCita) :
+                new ObjectParameter("IdEstatusCita", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("insertarCita", fechaHoraParameter, idPisoParameter, idCandidatoParameter, idEstatusCitaParameter);
+        }
+    
+        public virtual ObjectResult<obtenerCitas_Result> obtenerCitas(Nullable<int> idVacante)
+        {
+            var idVacanteParameter = idVacante.HasValue ?
+                new ObjectParameter("IdVacante", idVacante) :
+                new ObjectParameter("IdVacante", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<obtenerCitas_Result>("obtenerCitas", idVacanteParameter);
+        }
+    
+        public virtual int updateCita(Nullable<int> idCita, Nullable<System.DateTime> fechaHora, Nullable<int> idPiso, Nullable<int> idCandidato, Nullable<int> idEstatusCita)
+        {
+            var idCitaParameter = idCita.HasValue ?
+                new ObjectParameter("IdCita", idCita) :
+                new ObjectParameter("IdCita", typeof(int));
+    
+            var fechaHoraParameter = fechaHora.HasValue ?
+                new ObjectParameter("FechaHora", fechaHora) :
+                new ObjectParameter("FechaHora", typeof(System.DateTime));
+    
+            var idPisoParameter = idPiso.HasValue ?
+                new ObjectParameter("IdPiso", idPiso) :
+                new ObjectParameter("IdPiso", typeof(int));
+    
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            var idEstatusCitaParameter = idEstatusCita.HasValue ?
+                new ObjectParameter("IdEstatusCita", idEstatusCita) :
+                new ObjectParameter("IdEstatusCita", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("updateCita", idCitaParameter, fechaHoraParameter, idPisoParameter, idCandidatoParameter, idEstatusCitaParameter);
+        }
+    
+        public virtual ObjectResult<CitasGetById_Result> CitasGetById(Nullable<int> idCandidato, Nullable<int> idCita)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            var idCitaParameter = idCita.HasValue ?
+                new ObjectParameter("IdCita", idCita) :
+                new ObjectParameter("IdCita", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CitasGetById_Result>("CitasGetById", idCandidatoParameter, idCitaParameter);
         }
     }
 }

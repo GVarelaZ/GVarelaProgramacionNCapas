@@ -38,6 +38,16 @@
           <Property Name="IdCarrera" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
+        <EntityType Name="Cita">
+          <Key>
+            <PropertyRef Name="IdCita" />
+          </Key>
+          <Property Name="IdCita" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FechaHora" Type="datetime" Nullable="false" />
+          <Property Name="IdPiso" Type="tinyint" />
+          <Property Name="IdCandidato" Type="int" />
+          <Property Name="IdEstatusCita" Type="tinyint" />
+        </EntityType>
         <EntityType Name="Colonia">
           <Key>
             <PropertyRef Name="IdColonia" />
@@ -65,6 +75,13 @@
           <Property Name="IdEstado" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="EstatusCita">
+          <Key>
+            <PropertyRef Name="IdEstatusCita" />
+          </Key>
+          <Property Name="IdEstatusCita" Type="tinyint" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="EstatusVacante">
           <Key>
             <PropertyRef Name="IdEstatusVacante" />
@@ -79,6 +96,13 @@
           <Property Name="IdMunicipio" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="IdEstado" Type="int" />
+        </EntityType>
+        <EntityType Name="Piso">
+          <Key>
+            <PropertyRef Name="IdPiso" />
+          </Key>
+          <Property Name="IdPiso" Type="tinyint" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Promedio">
           <Key>
@@ -190,6 +214,42 @@
             </Principal>
             <Dependent Role="Candidato">
               <PropertyRef Name="IdVacante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cita__IdCandidat__09A971A2">
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="0..1" />
+          <End Role="Cita" Type="Self.Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidato">
+              <PropertyRef Name="IdCandidato" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdCandidato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cita__IdEstatusC__0B91BA14">
+          <End Role="EstatusCita" Type="Self.EstatusCita" Multiplicity="0..1" />
+          <End Role="Cita" Type="Self.Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstatusCita">
+              <PropertyRef Name="IdEstatusCita" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdEstatusCita" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cita__IdPiso__0A9D95DB">
+          <End Role="Piso" Type="Self.Piso" Multiplicity="0..1" />
+          <End Role="Cita" Type="Self.Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Piso">
+              <PropertyRef Name="IdPiso" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdPiso" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -315,6 +375,10 @@
           <Parameter Name="PromedioPreparatoria" Type="varchar" Mode="In" />
           <Parameter Name="PromedioSecundaria" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="CitasGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+          <Parameter Name="IdCita" Type="int" Mode="In" />
+        </Function>
         <Function Name="ColoniaGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdMunicipio" Type="int" Mode="In" />
         </Function>
@@ -326,10 +390,19 @@
         <Function Name="getByIdCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdCandidato" Type="int" Mode="In" />
         </Function>
+        <Function Name="insertarCita" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FechaHora" Type="datetime" Mode="In" />
+          <Parameter Name="IdPiso" Type="int" Mode="In" />
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+          <Parameter Name="IdEstatusCita" Type="int" Mode="In" />
+        </Function>
         <Function Name="MunicipioGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdEstado" Type="int" Mode="In" />
         </Function>
         <Function Name="ObtenerCandidatos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+        </Function>
+        <Function Name="obtenerCitas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdVacante" Type="int" Mode="In" />
         </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -362,6 +435,13 @@
           <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="updateCita" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCita" Type="int" Mode="In" />
+          <Parameter Name="FechaHora" Type="datetime" Mode="In" />
+          <Parameter Name="IdPiso" Type="int" Mode="In" />
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+          <Parameter Name="IdEstatusCita" Type="int" Mode="In" />
+        </Function>
         <Function Name="UsuarioAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Nombre" Type="varchar" Mode="In" />
           <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
@@ -451,11 +531,14 @@
           <EntitySet Name="BolsaTrabajo" EntityType="Self.BolsaTrabajo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Candidato" EntityType="Self.Candidato" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Carrera" EntityType="Self.Carrera" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cita" EntityType="Self.Cita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Colonia" EntityType="Self.Colonia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Direccion" EntityType="Self.Direccion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EstatusCita" EntityType="Self.EstatusCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstatusVacante" EntityType="Self.EstatusVacante" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Municipio" EntityType="Self.Municipio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Piso" EntityType="Self.Piso" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Promedio" EntityType="Self.Promedio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rol" EntityType="Self.Rol" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -477,6 +560,18 @@
           <AssociationSet Name="FK__Candidato__IdVac__6C190EBB" Association="Self.FK__Candidato__IdVac__6C190EBB">
             <End Role="Vacante" EntitySet="Vacante" />
             <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cita__IdCandidat__09A971A2" Association="Self.FK__Cita__IdCandidat__09A971A2">
+            <End Role="Candidato" EntitySet="Candidato" />
+            <End Role="Cita" EntitySet="Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cita__IdEstatusC__0B91BA14" Association="Self.FK__Cita__IdEstatusC__0B91BA14">
+            <End Role="EstatusCita" EntitySet="EstatusCita" />
+            <End Role="Cita" EntitySet="Cita" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cita__IdPiso__0A9D95DB" Association="Self.FK__Cita__IdPiso__0A9D95DB">
+            <End Role="Piso" EntitySet="Piso" />
+            <End Role="Cita" EntitySet="Cita" />
           </AssociationSet>
           <AssociationSet Name="FK__Colonia__IdMunic__3F466844" Association="Self.FK__Colonia__IdMunic__3F466844">
             <End Role="Municipio" EntitySet="Municipio" />
@@ -759,7 +854,42 @@
           <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="ObtenerCandidatos" ReturnType="Collection(GVarelaProgramacionNCapasModel.ObtenerCandidatos_Result)">
-            <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+          <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Citas" EntityType="GVarelaProgramacionNCapasModel.Cita" />
+          <EntitySet Name="EstatusCitas" EntityType="GVarelaProgramacionNCapasModel.EstatusCita" />
+          <EntitySet Name="Pisoes" EntityType="GVarelaProgramacionNCapasModel.Piso" />
+          <AssociationSet Name="FK__Cita__IdCandidat__09A971A2" Association="GVarelaProgramacionNCapasModel.FK__Cita__IdCandidat__09A971A2">
+            <End Role="Candidato" EntitySet="Candidatoes" />
+            <End Role="Cita" EntitySet="Citas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cita__IdEstatusC__0B91BA14" Association="GVarelaProgramacionNCapasModel.FK__Cita__IdEstatusC__0B91BA14">
+            <End Role="EstatusCita" EntitySet="EstatusCitas" />
+            <End Role="Cita" EntitySet="Citas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Cita__IdPiso__0A9D95DB" Association="GVarelaProgramacionNCapasModel.FK__Cita__IdPiso__0A9D95DB">
+            <End Role="Piso" EntitySet="Pisoes" />
+            <End Role="Cita" EntitySet="Citas" />
+          </AssociationSet>
+          <FunctionImport Name="insertarCita">
+            <Parameter Name="FechaHora" Mode="In" Type="DateTime" />
+            <Parameter Name="IdPiso" Mode="In" Type="Int32" />
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+            <Parameter Name="IdEstatusCita" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="obtenerCitas" ReturnType="Collection(GVarelaProgramacionNCapasModel.obtenerCitas_Result)">
+          <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="updateCita">
+            <Parameter Name="IdCita" Mode="In" Type="Int32" />
+            <Parameter Name="FechaHora" Mode="In" Type="DateTime" />
+            <Parameter Name="IdPiso" Mode="In" Type="Int32" />
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+            <Parameter Name="IdEstatusCita" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CitasGetById" ReturnType="Collection(GVarelaProgramacionNCapasModel.CitasGetById_Result)">
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+            <Parameter Name="IdCita" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Rol">
@@ -1010,6 +1140,7 @@
           <NavigationProperty Name="Universidad" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdUni__693CA210" FromRole="Candidato" ToRole="Universidad" />
           <NavigationProperty Name="Vacante" Relationship="GVarelaProgramacionNCapasModel.FK__Candidato__IdVac__6C190EBB" FromRole="Candidato" ToRole="Vacante" />
           <NavigationProperty Name="Promedios" Relationship="GVarelaProgramacionNCapasModel.FK__Promedio__IdCand__6EF57B66" FromRole="Candidato" ToRole="Promedio" />
+          <NavigationProperty Name="Citas" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdCandidat__09A971A2" FromRole="Candidato" ToRole="Cita" />
         </EntityType>
         <EntityType Name="Carrera">
           <Key>
@@ -1174,6 +1305,111 @@
           <Property Type="String" Name="PromedioUniversidad" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="PromedioPreparatoria" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="PromedioSecundaria" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <EntityType Name="Cita">
+          <Key>
+            <PropertyRef Name="IdCita" />
+          </Key>
+          <Property Name="IdCita" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FechaHora" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IdPiso" Type="Byte" />
+          <Property Name="IdCandidato" Type="Int32" />
+          <Property Name="IdEstatusCita" Type="Byte" />
+          <NavigationProperty Name="Candidato" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdCandidat__09A971A2" FromRole="Cita" ToRole="Candidato" />
+          <NavigationProperty Name="EstatusCita" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdEstatusC__0B91BA14" FromRole="Cita" ToRole="EstatusCita" />
+          <NavigationProperty Name="Piso" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdPiso__0A9D95DB" FromRole="Cita" ToRole="Piso" />
+        </EntityType>
+        <EntityType Name="EstatusCita">
+          <Key>
+            <PropertyRef Name="IdEstatusCita" />
+          </Key>
+          <Property Name="IdEstatusCita" Type="Byte" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Citas" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdEstatusC__0B91BA14" FromRole="EstatusCita" ToRole="Cita" />
+        </EntityType>
+        <EntityType Name="Piso">
+          <Key>
+            <PropertyRef Name="IdPiso" />
+          </Key>
+          <Property Name="IdPiso" Type="Byte" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Citas" Relationship="GVarelaProgramacionNCapasModel.FK__Cita__IdPiso__0A9D95DB" FromRole="Piso" ToRole="Cita" />
+        </EntityType>
+        <Association Name="FK__Cita__IdCandidat__09A971A2">
+          <End Type="GVarelaProgramacionNCapasModel.Candidato" Role="Candidato" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Cita" Role="Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidato">
+              <PropertyRef Name="IdCandidato" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdCandidato" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cita__IdEstatusC__0B91BA14">
+          <End Type="GVarelaProgramacionNCapasModel.EstatusCita" Role="EstatusCita" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Cita" Role="Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EstatusCita">
+              <PropertyRef Name="IdEstatusCita" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdEstatusCita" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Cita__IdPiso__0A9D95DB">
+          <End Type="GVarelaProgramacionNCapasModel.Piso" Role="Piso" Multiplicity="0..1" />
+          <End Type="GVarelaProgramacionNCapasModel.Cita" Role="Cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Piso">
+              <PropertyRef Name="IdPiso" />
+            </Principal>
+            <Dependent Role="Cita">
+              <PropertyRef Name="IdPiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="obtenerCitas_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Edad" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Correo" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Direccion" Nullable="false" MaxLength="500" />
+          <Property Type="Binary" Name="Foto" Nullable="true" />
+          <Property Type="Binary" Name="Curriculum" Nullable="true" />
+          <Property Type="Int32" Name="IdUniversidad" Nullable="false" />
+          <Property Type="String" Name="NombreUniversidad" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdCarrera" Nullable="false" />
+          <Property Type="String" Name="NombreCarrera" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdBolsaTrabajo" Nullable="false" />
+          <Property Type="String" Name="NombreBolsaTrabajo" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdPromedio" Nullable="true" />
+          <Property Type="String" Name="PromedioUniversidad" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="PromedioPreparatoria" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="PromedioSecundaria" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="IdCita" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CitasGetById_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="true" />
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Correo" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+          <Property Type="Binary" Name="Foto" Nullable="true" />
+          <Property Type="String" Name="Carrera" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="IdVacante" Nullable="true" />
+          <Property Type="Int32" Name="IdCita" Nullable="false" />
+          <Property Type="DateTime" Name="FechaHora" Nullable="false" Precision="23" />
+          <Property Type="Byte" Name="IdPiso" Nullable="true" />
+          <Property Type="Byte" Name="IdEstatusCita" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1526,6 +1762,83 @@
                 <ScalarProperty Name="PromedioUniversidad" ColumnName="PromedioUniversidad" />
                 <ScalarProperty Name="PromedioPreparatoria" ColumnName="PromedioPreparatoria" />
                 <ScalarProperty Name="PromedioSecundaria" ColumnName="PromedioSecundaria" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Citas">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Cita">
+              <MappingFragment StoreEntitySet="Cita">
+                <ScalarProperty Name="IdEstatusCita" ColumnName="IdEstatusCita" />
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="IdPiso" ColumnName="IdPiso" />
+                <ScalarProperty Name="FechaHora" ColumnName="FechaHora" />
+                <ScalarProperty Name="IdCita" ColumnName="IdCita" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EstatusCitas">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.EstatusCita">
+              <MappingFragment StoreEntitySet="EstatusCita">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdEstatusCita" ColumnName="IdEstatusCita" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pisoes">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Piso">
+              <MappingFragment StoreEntitySet="Piso">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdPiso" ColumnName="IdPiso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="insertarCita" FunctionName="GVarelaProgramacionNCapasModel.Store.insertarCita" />
+          <FunctionImportMapping FunctionImportName="obtenerCitas" FunctionName="GVarelaProgramacionNCapasModel.Store.obtenerCitas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GVarelaProgramacionNCapasModel.obtenerCitas_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Curriculum" ColumnName="Curriculum" />
+                <ScalarProperty Name="IdUniversidad" ColumnName="IdUniversidad" />
+                <ScalarProperty Name="NombreUniversidad" ColumnName="NombreUniversidad" />
+                <ScalarProperty Name="IdCarrera" ColumnName="IdCarrera" />
+                <ScalarProperty Name="NombreCarrera" ColumnName="NombreCarrera" />
+                <ScalarProperty Name="IdBolsaTrabajo" ColumnName="IdBolsaTrabajo" />
+                <ScalarProperty Name="NombreBolsaTrabajo" ColumnName="NombreBolsaTrabajo" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="IdPromedio" ColumnName="IdPromedio" />
+                <ScalarProperty Name="PromedioUniversidad" ColumnName="PromedioUniversidad" />
+                <ScalarProperty Name="PromedioPreparatoria" ColumnName="PromedioPreparatoria" />
+                <ScalarProperty Name="PromedioSecundaria" ColumnName="PromedioSecundaria" />
+                <ScalarProperty Name="IdCita" ColumnName="IdCita" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="updateCita" FunctionName="GVarelaProgramacionNCapasModel.Store.updateCita" />
+          <FunctionImportMapping FunctionImportName="CitasGetById" FunctionName="GVarelaProgramacionNCapasModel.Store.CitasGetById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GVarelaProgramacionNCapasModel.CitasGetById_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Carrera" ColumnName="Carrera" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="IdCita" ColumnName="IdCita" />
+                <ScalarProperty Name="FechaHora" ColumnName="FechaHora" />
+                <ScalarProperty Name="IdPiso" ColumnName="IdPiso" />
+                <ScalarProperty Name="IdEstatusCita" ColumnName="IdEstatusCita" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

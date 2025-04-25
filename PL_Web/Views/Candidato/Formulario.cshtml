@@ -3,64 +3,145 @@
     ViewBag.Title = "Formulario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<script src="~/Scripts/Usuario/Validaciones.js"></script>
 <h2>Formulario</h2>
 
 <div class="col-12">
-    <div class="card">
+    <div class="card shadow-lg">
         <div class="px-4 py-3 border-bottom">
             <h4 class="card-title mb-0">Registro de candidatos</h4>
         </div>
-        @using (Html.BeginForm("Formulario", "Candidato", FormMethod.Post))
+        @using (Html.BeginForm("Formulario", "Candidato", FormMethod.Post, new { @enctype = "multipart/form-data", @onSubmit = "validarFormulario(event)" }))
         {
             @Html.HiddenFor(Model => Model.IdCandidato)
             @Html.HiddenFor(Model => Model.promedio.IdPromedio)
+            @Html.HiddenFor(Model => Model.Foto)
+            @Html.HiddenFor(Model => Model.Curriculum)
+
             <div class="card-body p-4">
                 <h5 class="fs-4 fw-semibold mb-4">Info personal</h5>
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="mb-4">
                             <label class="form-label fw-bold">Nombre(s)</label>
-                            @Html.TextBoxFor(Model => Model.Nombre, new { @class = "form-control", @id = "nombre" })
+                            @Html.TextBoxFor(Model => Model.Nombre, new
+                            {
+                                @class = "form-control",
+                                @id = "nombre",
+                           @style = "border-width:3px",
+                           @onKeypress = "validarCampo(event)",
+                           @onBlur = "campoVacio(event)"
+                       })
+                            @Html.ValidationMessageFor(Model => Model.Nombre, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Edad</label>
-                            @Html.TextBoxFor(Model => Model.Edad, new { @class = "form-control", @type = "number", @value = "18", @min = "18", @max = "70" })
+                            @Html.TextBoxFor(Model => Model.Edad, new
+                            {
+                                @class = "form-control",
+                                @maxlength = "2",
+                                @type = "number",
+                                @value = "18",
+                                @min = "18",
+                                @max = "70",
+                                @style = "border-width:3px",
+                                @onKeypress = "validarNumeros(event)",
+                                @onBlur = "campoVacio(event)"
+})
+                            @Html.ValidationMessageFor(Model => Model.Edad, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Direccion</label>
-                            @Html.TextAreaFor(Model => Model.Direccion, new { @class = "form-control", @id = "direccion" })
+                            @Html.TextAreaFor(Model => Model.Direccion, new
+                            {
+                                @class = "form-control",
+                                @id = "direccion",
+                                @style = "border-width:3px",
+                                @onKeypress = "userNameValid(event)",
+                                @onBlur = "campoVacio(event)"
+})
+                            <span class="notificacion"></span>
+                            @Html.ValidationMessageFor(Model => Model.Direccion, "", new { @class = "text-danger" })
+
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="mb-4">
                             <label class="form-label fw-bold">Apellido paterno</label>
-                            @Html.TextBoxFor(Model => Model.ApellidoPaterno, new { @class = "form-control", @id = "apellidoPaterno" })
+                            @Html.TextBoxFor(Model => Model.ApellidoPaterno, new
+                            {
+                                @class = "form-control",
+                                @id = "apellidoPaterno",
+                           @style = "border-width:3px",
+                           @onKeypress = "validarCampo(event)",
+                           @onBlur = "campoVacio(event)"
+                       })
+                            @Html.ValidationMessageFor(Model => Model.ApellidoPaterno, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Correo</label>
-                            <div class="input-group">
-                                @Html.TextBoxFor(Model => Model.Correo, new { @class = "form-control", @type = "text", @id = "correo" })
-                                <span class="input-group-text px-6" id="basic-addon1">@@example.com</span>
+                            <div>
+
+                                @Html.TextBoxFor(Model => Model.Correo, new
+                                {
+                                    @class = "form-control",
+                                    @type = "text",
+                                    @id = "emailInput",
+                                    @style = "border-width:3px",
+                                    @onBlur = "validarEmail(event), campoVacio(event)"
+                                })
+                                <span class="notificacion"></span>
+                                @Html.ValidationMessageFor(Model => Model.Correo, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Foto perfil</label>
-                            <input name="imagenCargada" id="imagenInput" type="file" class="form-control" style="border-width:3px" />
+                            <input name="imagenCargada" id="imagenInput" type="file" class="form-control" style="border-width:3px"
+                                   onChange="ValidarImagen()" />
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="mb-4">
                             <label class="form-label fw-bold">Apellido materno</label>
-                            @Html.TextBoxFor(Model => Model.ApellidoMaterno, new { @class = "form-control", @id = "apellidoMaterno" })
+                            @Html.TextBoxFor(Model => Model.ApellidoMaterno, new
+                            {
+                                @class = "form-control",
+                                @id = "apellidoMaterno",
+                           @style = "border-width:3px",
+                           @onKeypress = "validarCampo(event)",
+                           @onBlur = "campoVacio(event)"
+                       })
+                            @Html.ValidationMessageFor(Model => Model.ApellidoMaterno, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Telefono</label>
-                            @Html.TextBoxFor(Model => Model.Telefono, new { @class = "form-control", @id = "telefono" })
+                            @Html.TextBoxFor(Model => Model.Telefono, new
+                            {
+                                @class = "form-control",
+                                @id = "telefono",
+                                @maxlength = "10",
+                                @style = "border-width:3px",
+                                @onKeypress = "validarNumeros(event)",
+                                @onBlur = "campoVacio(event)"
+                            })
+                            @Html.ValidationMessageFor(Model => Model.Telefono, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4 text-md-center">
-                            <img id="fotoPerfil" class="avatar rounded-2" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
-                                 width="100" height="100">
+                            @if (Model.Foto == null)
+                            {
+                                <img id="fotoPerfil" class="avatar" src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740"
+                                     width="100" height="100">
+                            }
+                            else
+                            {
+                                <img id="fotoPerfil" src="data:image/*;base64,@Convert.ToBase64String(Model.Foto)" class="avatar" alt="Sin foto"
+                                     width="100" height="100">
+                            }
                         </div>
                     </div>
                 </div>
@@ -71,56 +152,125 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Pomedio Universidad</label>
-                            @Html.TextBoxFor(Model => Model.promedio.PromedioUniversidad, new { @class = "form-control", @id = "proUniversidad" })
+                            <label class="form-label fw-bold">Pomedio Universidad (ejem. 100)</label>
+                            @Html.TextBoxFor(Model => Model.promedio.PromedioUniversidad, new
+                            {
+                                @class = "form-control",
+                                @id = "proUniversidad",
+                                @maxlength = "3",
+                                @style = "border-width:3px",
+                                @onKeypress = "validarNumeros(event)",
+                                @onBlur = "campoVacio(event)"
+                            })
+                            @Html.ValidationMessageFor(Model => Model.promedio.PromedioUniversidad, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Carrera</label>
                             @Html.DropDownListFor(Model => Model.carrera.IdCarrera, new SelectList(Model.carrera.Carreras, "IdCarrera", "Nombre"),
-                            "Selecciona una opcion", new { @class = "form-select", @id = "Carrera" })
+                            "Selecciona una opcion", new
+                                 {
+                                     @class = "form-select",
+                                     @id = "Carrera",
+                                     @style = "border-width:3px",
+                                     @onChange = "cambiarColor(event)"
+                                  })
+                            @Html.ValidationMessageFor(Model => Model.carrera.IdCarrera, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Vacante</label>
                             @Html.DropDownListFor(Model => Model.vacante.IdVacante, new SelectList(Model.vacante.Vacantes, "IdVacante", "Nombre"),
-                            "Selecciona una opcion", new { @class = "form-select", @id = "vacante" })
+                            "Selecciona una opcion", new
+                                 {
+                                     @class = "form-select",
+                                     @id = "vacante",
+                                     @style = "border-width:3px",
+                                     @onChange = "cambiarColor(event)"
+                                  })
+                            @Html.ValidationMessageFor(Model => Model.vacante.IdVacante, "", new { @class = "text-danger" })
+
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Pomedio Preparatoria</label>
-                            @Html.TextBoxFor(Model => Model.promedio.PromedioPreparatoria, new { @class = "form-control", @id = "proPreparatoria" })
+                            <label class="form-label fw-bold">Pomedio Preparatoria (ejem. 100)</label>
+                            @Html.TextBoxFor(Model => Model.promedio.PromedioPreparatoria, new
+                            {
+                                @class = "form-control",
+                                @id = "proPreparatoria",
+                                @maxlength = "3",
+                                @style = "border-width:3px",
+                                @onKeypress = "validarNumeros(event)",
+                                @onBlur = "campoVacio(event)"
+                            })
+                            @Html.ValidationMessageFor(Model => Model.promedio.PromedioPreparatoria, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Universidad</label>
                             @Html.DropDownListFor(Model => Model.universidad.IdUniveridad, new SelectList(Model.universidad.Universidades, "IdUniveridad", "Nombre"),
-                            "Selecciona una opcion", new { @class = "form-select", @id = "Universidad" })
+                            "Selecciona una opcion", new
+                            {
+                                @class = "form-select",
+                                @id = "Universidad",
+                                @style = "border-width:3px",
+                                @onChange = "cambiarColor(event)"
+                            })
+                            @Html.ValidationMessageFor(Model => Model.universidad.IdUniveridad, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Bolsa de trabajo</label>
                             @Html.DropDownListFor(Model => Model.bolsaTrabajo.IdBolsaTrabajo, new SelectList(Model.bolsaTrabajo.BolsasTrabajo, "IdbolsaTrabajo", "Nombre"),
-                            "Selecciona una opcion", new { @class = "form-select", @id = "bolsaTrabajo" })
+                            "Selecciona una opcion", new
+                                 {
+                                     @class = "form-select",
+                                     @id = "bolsaTrabajo",
+                                     @style = "border-width:3px",
+                                     @onChange = "cambiarColor(event)"
+                                  })
+                            @Html.ValidationMessageFor(Model => Model.bolsaTrabajo.IdBolsaTrabajo, "", new { @class = "text-danger" })
+
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Pomedio Secundaria</label>
-                            @Html.TextBoxFor(Model => Model.promedio.PromedioSecundaria, new { @class = "form-control", @id = "proSecundaria" })
+                            <label class="form-label fw-bold">Pomedio Secundaria (ejem. 100)</label>
+                            @Html.TextBoxFor(Model => Model.promedio.PromedioSecundaria, new
+                            {
+                                @class = "form-control",
+                                @id = "proSecundaria",
+                                @maxlength = "3",
+                                @style = "border-width:3px",
+                                @onKeypress = "validarNumeros(event)",
+                                @onBlur = "campoVacio(event)"
+                            })
+                            @Html.ValidationMessageFor(Model => Model.promedio.PromedioSecundaria, "", new { @class = "text-danger" })
+                            <span class="notificacion"></span>
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-bold">Curriculum</label>
-                            <input name="cvCargada" id="archivoInput" type="file" class="form-control" style="border-width:3px" />
+                            <input name="cvCargado" id="archivoInput" type="file" class="form-control" style="border-width:3px"
+                                   onchange="ValidarArchivo()" />
                         </div>
                         <div class="mb-4 text-md-center">
-                            <img id="fotoPerfil" class="avatar rounded-1" src="https://cdn.iconscout.com/icon/premium/png-512-thumb/clear-file-594302.png?f=webp&w=256"
-                                 width="100" height="100">
+                            @if (Model.Curriculum == null)
+                            {
+                                <img id="archivoCV" class="avatar rounded-1" src="https://cdn.iconscout.com/icon/premium/png-512-thumb/clear-file-594302.png?f=webp&w=256"
+                                     width="100" height="100">
+                            }
+                            else
+                            {
+                                <img id="archivoCV" class="avatar rounded-1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/250px-PDF_file_icon.svg.png"
+                                     width="100" height="100">
+                            }
                         </div>
                     </div>
                 </div>
                 <br />
                 <div class="col-12">
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn btn-primary">Submit</button>
-                        <button class="btn bg-danger-subtle text-danger">Cancel</button>
+                        <button class="btn btn-primary">Enviar</button>
+                        @Html.ActionLink("Cancelar", "Inicio", "Candidato", new { area = "" }, htmlAttributes: new { @class = "btn btn-danger" })
                     </div>
                 </div>
             </div>

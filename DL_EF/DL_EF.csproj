@@ -59,6 +59,12 @@
     <Compile Include="Carrera.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Cita.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CitasGetById_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="Colonia.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
@@ -73,6 +79,9 @@
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="EstadoGetAll_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstatusCita.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="EstatusVacante.cs">
@@ -103,6 +112,12 @@
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="ObtenerCandidatos_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="obtenerCitas_Result.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Piso.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
     <Compile Include="Promedio.cs">

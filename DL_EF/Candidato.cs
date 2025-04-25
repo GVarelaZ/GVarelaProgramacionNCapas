@@ -18,6 +18,7 @@ namespace DL_EF
         public Candidato()
         {
             this.Promedios = new HashSet<Promedio>();
+            this.Citas = new HashSet<Cita>();
         }
     
         public int IdCandidato { get; set; }
@@ -41,5 +42,7 @@ namespace DL_EF
         public virtual Vacante Vacante { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Promedio> Promedios { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cita> Citas { get; set; }
     }
 }

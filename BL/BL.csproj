@@ -54,6 +54,7 @@
     <Compile Include="BolsaTrabajo.cs" />
     <Compile Include="Candidato.cs" />
     <Compile Include="Carrera.cs" />
+    <Compile Include="Cita.cs" />
     <Compile Include="Colonia.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Excel.cs" />
