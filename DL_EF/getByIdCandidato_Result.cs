@@ -25,6 +25,7 @@ namespace DL_EF
         public byte[] Curriculum { get; set; }
         public Nullable<int> IdUniversidad { get; set; }
         public Nullable<int> IdCarrera { get; set; }
+        public string CarreraNombre { get; set; }
         public Nullable<int> IdBolsaTrabajo { get; set; }
         public Nullable<int> IdVacante { get; set; }
         public int IdPromedio { get; set; }

@@ -99,7 +99,7 @@
                                 {
 
                                     <td class="text-center fs-5">
-                                        <a href="@Url.Action("EliminarCandidato","Candidato", new {IdCandidato = candidato.IdCandidato})"
+                                        <a href="@Url.Action("formCita","AgendarCita", new {IdCandidato = candidato.IdCandidato})"
                                            class="btn btn-dark btn-sm badge text-white"role="button">
                                             <i class="bi bi-pencil-square"></i> Agendar
                                         </a>
@@ -114,7 +114,7 @@
                                 else
                                 {
                                     <td class="text-center fs-5">
-                                        <a href="@Url.Action("EliminarCandidato","Candidato", new {IdCandidato = candidato.IdCandidato})"
+                                        <a href="@Url.Action("formCita","AgendarCita", new { IdCandidato = candidato.IdCandidato })"
                                            class="btn btn-warning btn-sm badge text-black" role="button">
                                             <i class="bi bi-pen-fill"></i> Editar
                                         </a>

@@ -10,6 +10,7 @@ namespace ML
     {
         public int IdCita { get; set; }
         public string FechaHora { get; set; }
+        public string Url { get; set; }
         public Piso piso { get; set; }
         public EstatusCita estatusCita { get; set; }
     }

@@ -136,6 +136,7 @@ namespace BL
                         candidatoML.Curriculum = candidatoBD.Curriculum;
                         candidatoML.universidad.IdUniveridad = candidatoBD.IdUniversidad == null ? 0 : candidatoBD.IdUniversidad.Value;
                         candidatoML.carrera.IdCarrera = candidatoBD.IdCarrera == null ? 0 : candidatoBD.IdCarrera.Value;
+                        candidatoML.carrera.Nombre = candidatoBD.CarreraNombre;
                         candidatoML.bolsaTrabajo.IdBolsaTrabajo = candidatoBD.IdBolsaTrabajo == null ? 0 : candidatoBD.IdBolsaTrabajo.Value;
                         candidatoML.vacante.IdVacante = candidatoBD.IdVacante == null ? 0 : candidatoBD.IdVacante.Value;
                         candidatoML.promedio.IdPromedio = candidatoBD.IdPromedio;

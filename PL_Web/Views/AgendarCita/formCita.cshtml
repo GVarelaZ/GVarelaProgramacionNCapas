@@ -1,0 +1,72 @@
+﻿@model ML.Candidato
+@{
+    ViewBag.Title = "formCita";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            @if (Model.cita.IdCita != 0)
+            {
+                <h2>EDITAR CITA </h2>
+            }
+            else
+            {
+                <h2>AGENDAR CITA </h2>
+                <h5>Selecciona el tipo de entrevista a realizar</h5>
+                <button class="btn btn-success" onclick="formPresencial()">Entrevista presencial</button>
+                <button class="btn btn-success" onclick="formRemoto()">Entrevista remota</button>
+            }
+        </div>
+        <br />
+        <br />
+        <hr />
+        <div class="col mb-2 d-flex gap-3 justify-content-center">
+            <div class="card card-margin">
+                <div class="card-header no-border">
+                    <h5 class="card-title">Aspirante</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="widget-49">
+                        <div class="widget-49-title-wrapper">
+                            <div class="widget-49-date-primary text-center">
+                                @if (Model.Foto == null)
+                                {
+                                    <img src="https://img.freepik.com/vector-gratis/avatar-personaje-empresario-aislado_24877-60111.jpg?t=st=1740679301~exp=1740682901~hmac=8d0df42d89f7a73d080b188cd7449336b9e10547b4c3751fa72055ae09087bf3&w=740" class="rounded-circle img-fluid" style="width: 75px;" />
+                                }
+                                else
+                                {
+                                    <img src="data:image/*;base64,@Convert.ToBase64String(Model.Foto)" class="rounded-circle img-fluid" style="width: 75px; height:75px" />
+                                }
+                                <span class="widget-49-pro-title">  @Model.Nombre @Model.ApellidoPaterno @Model.ApellidoMaterno</span>
+                            </div>
+                            <div class="widget-49-meeting-info">
+                            </div>
+                        </div>
+                        <div class="widget-49-date-primary text-center">
+                            <p> Correo: @Model.Correo</p>
+                            <p> Telefono: @Model.Telefono</p>
+                        </div>
+                        <div class="widget-49-date-primary text-center">
+                            <span class="badge text-bg-dark">@Model.carrera.Nombre</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="card card-margin">
+                    <p>formulario</p>
+                    @using (Html.BeginForm("formCita", "AgendarCita", FormMethod.Post))
+                    {
+                        <div class="formulario">
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Cita/formulario.js"></script>

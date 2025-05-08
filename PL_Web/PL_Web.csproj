@@ -236,6 +236,7 @@
     <Compile Include="Controllers\AgendarCitaController.cs" />
     <Compile Include="Controllers\CandidatoController.cs" />
     <Compile Include="Controllers\CrudJSController.cs" />
+    <Compile Include="Controllers\EnvioCorreoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -275,6 +276,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Imagen\fondo.jpg" />
+    <Content Include="Content\Plantilla\Correo.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -301,6 +304,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\Cita\formulario.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -356,10 +360,12 @@
     <Content Include="Views\Candidato\Formulario.cshtml" />
     <Content Include="Views\Candidato\_notificacion.cshtml" />
     <Content Include="Views\AgendarCita\Principal.cshtml" />
+    <Content Include="Views\AgendarCita\formCita.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CargaMasiva\" />
+    <Folder Include="Views\EnvioCorreo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PL_Web.Controllers
 {
@@ -46,21 +47,22 @@ namespace PL_Web.Controllers
             return View(candidato);
         }
 
-        public ActionResult formCita(int? IdCandidato, int? IdCita) { 
-        
+        [HttpGet]
+        public ActionResult formCita(int IdCandidato)
+        {
             Result result = new Result();
             Candidato candidato = new Candidato();
 
-            if (IdCandidato == 0 && IdCita == 0)
-            {
-                
-            }
-            else
+            result = BL.Cita.ObtenerCandidato(IdCandidato);
+            candidato = (Candidato)result.Object;
+
+            if (result.Correct)
             {
 
+                return View(candidato);
             }
+            return View();
 
-            return View(candidato);
         }
     }
 }

@@ -2,6 +2,8 @@
 using ML;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,8 +89,17 @@ namespace BL
             {
                 using (GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
                 {
-                    int filasAfectadas = context.insertarCita(Convert.ToDateTime(candidato.cita.FechaHora), candidato.cita.piso.IdPiso, candidato.IdCandidato, candidato.cita.estatusCita.IdEstatusCita);
+                    //int filasAfectadas = context.insertarCita(Convert.ToDateTime(candidato.cita.FechaHora), candidato.cita.piso.IdPiso, candidato.IdCandidato, candidato.cita.estatusCita.IdEstatusCita);
 
+                    DL_EF.Cita cita = new DL_EF.Cita();
+                    cita.FechaHora = DateTime.Parse(candidato.cita.FechaHora);
+                    cita.IdPiso = ((byte?)candidato.cita.piso.IdPiso);
+                    cita.IdCandidato = candidato.IdCandidato;
+                    cita.IdEstatusCita = (byte?)candidato.cita.estatusCita.IdEstatusCita;
+
+                    context.Citas.Add(cita);
+
+                    int filasAfectadas = context.SaveChanges();
                     if (filasAfectadas > 0)
                     {
                         result.Correct = true;
@@ -137,7 +148,7 @@ namespace BL
             return result;
         }
 
-        public static Result obtenerCita(ML.Candidato candidato)
+        public static Result ObtenerCita(int IdCandidato)
         {
             Result result = new Result();
 
@@ -145,18 +156,21 @@ namespace BL
             {
                 using (GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
                 {
-                    var citaBD = context.CitasGetById(candidato.IdCandidato, candidato.cita.IdCita).SingleOrDefault();
+                    var citaBD = context.CitasGetById(IdCandidato).SingleOrDefault();
 
                     if (citaBD != null)
                     {
                         ML.Candidato candidatoML = new ML.Candidato();
-                        candidato.cita = new ML.Cita();
+                        candidatoML.cita = new ML.Cita();
+                        candidatoML.cita.piso = new ML.Piso();
+                        candidatoML.cita.estatusCita = new ML.EstatusCita();
+                        candidatoML.carrera = new ML.Carrera();
 
-                        candidatoML.cita.IdCita = citaBD.IdCita;
+                        candidatoML.cita.IdCita = citaBD.IdCita == null ? 0 : citaBD.IdCita.Value;
                         candidatoML.cita.FechaHora = Convert.ToString(citaBD.FechaHora);
                         candidatoML.cita.piso.IdPiso = citaBD.IdPiso == null ? 0 : citaBD.IdPiso.Value;
                         candidatoML.cita.estatusCita.IdEstatusCita = citaBD.IdEstatusCita == null ? 0 : citaBD.IdEstatusCita.Value;
-                        candidatoML.IdCandidato = citaBD.IdCandidato == null ? 0 : citaBD.IdCandidato.Value;
+                        candidatoML.IdCandidato = citaBD.IdCandidato;
                         candidatoML.Nombre = citaBD.Nombre;
                         candidatoML.ApellidoPaterno = citaBD.ApellidoPaterno;
                         candidatoML.ApellidoMaterno = citaBD.ApellidoMaterno;
@@ -165,7 +179,7 @@ namespace BL
                         candidatoML.Foto = citaBD.Foto;
                         candidatoML.carrera.Nombre = citaBD.Carrera;
                         result.Object = candidatoML;
-                        
+
                         result.Correct = true;
                     }
                     else
@@ -180,6 +194,68 @@ namespace BL
                 result.ErrorMessage = e.Message;
                 result.ex = e;
             }
+            return result;
+        }
+
+        public static Result ObtenerCandidato(int IdCandidato)
+        {
+            Result result = new Result();
+
+            try
+            {
+                using (DL_EF.GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
+                {
+                    var candidatoBD = (from candidato in context.Candidatoes
+                                       where candidato.IdCandidato == IdCandidato
+                                       join cita in context.Citas
+                                       on candidato.IdCandidato equals cita.IdCandidato into CitaCandidato
+                                       from cita in CitaCandidato.DefaultIfEmpty()
+                                       select new
+                                       {
+                                           Id = candidato.IdCandidato,
+                                           Nombre = candidato.Nombre,
+                                           ApellidoPaterno = candidato.ApellidoPaterno,
+                                           ApellidoMaterno = candidato.ApellidoMaterno,
+                                           Correo = candidato.Correo,
+                                           Telefono = candidato.Telefono,
+                                           Foto = candidato.Foto,
+                                           CarreraNombre = candidato.Carrera.Nombre,
+                                           idCita = cita.IdCita == cita.IdCita ? cita.IdCandidato : 0,
+                                       }).SingleOrDefault();
+
+                    if (candidatoBD != null)
+                    {
+                        ML.Candidato candidatoML = new ML.Candidato();
+                        candidatoML.carrera = new ML.Carrera();
+                        candidatoML.cita = new ML.Cita();
+
+                        candidatoML.IdCandidato = candidatoBD.Id;
+                        candidatoML.Nombre = candidatoBD.Nombre;
+                        candidatoML.ApellidoPaterno = candidatoBD.ApellidoPaterno;
+                        candidatoML.ApellidoMaterno = candidatoBD.ApellidoMaterno;
+                        candidatoML.Correo = candidatoBD.Correo;
+                        candidatoML.Telefono = candidatoBD.Telefono;
+                        candidatoML.Foto = candidatoBD.Foto;
+                        candidatoML.carrera.Nombre = candidatoBD.CarreraNombre;
+                        candidatoML.cita.IdCita = (int)(candidatoBD.idCita == null ? 0 : candidatoBD.idCita);
+
+                        result.Object = candidatoML;
+
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                result.Correct = false;
+                result.ErrorMessage = e.Message;
+                result.ex = e;
+            }
+
             return result;
         }
     }

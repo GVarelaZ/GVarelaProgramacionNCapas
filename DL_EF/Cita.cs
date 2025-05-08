@@ -19,6 +19,7 @@ namespace DL_EF
         public Nullable<byte> IdPiso { get; set; }
         public Nullable<int> IdCandidato { get; set; }
         public Nullable<byte> IdEstatusCita { get; set; }
+        public string Url { get; set; }
     
         public virtual Candidato Candidato { get; set; }
         public virtual EstatusCita EstatusCita { get; set; }

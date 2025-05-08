@@ -196,5 +196,6 @@ namespace PL_Web.Controllers
             string fileName = candidato.Nombre + candidato.ApellidoPaterno + candidato.Telefono + ".pdf";
             return File(candidato.Curriculum, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
+
     }
 }

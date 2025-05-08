@@ -13,7 +13,7 @@ namespace DL_EF
     
     public partial class CitasGetById_Result
     {
-        public Nullable<int> IdCandidato { get; set; }
+        public int IdCandidato { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
@@ -22,8 +22,8 @@ namespace DL_EF
         public byte[] Foto { get; set; }
         public string Carrera { get; set; }
         public Nullable<int> IdVacante { get; set; }
-        public int IdCita { get; set; }
-        public System.DateTime FechaHora { get; set; }
+        public Nullable<int> IdCita { get; set; }
+        public Nullable<System.DateTime> FechaHora { get; set; }
         public Nullable<byte> IdPiso { get; set; }
         public Nullable<byte> IdEstatusCita { get; set; }
     }

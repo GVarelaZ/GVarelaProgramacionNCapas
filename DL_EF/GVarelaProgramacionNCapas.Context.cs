@@ -642,15 +642,6 @@ namespace DL_EF
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCandidato", idCandidatoParameter);
         }
     
-        public virtual ObjectResult<getByIdCandidato_Result> getByIdCandidato(Nullable<int> idCandidato)
-        {
-            var idCandidatoParameter = idCandidato.HasValue ?
-                new ObjectParameter("IdCandidato", idCandidato) :
-                new ObjectParameter("IdCandidato", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getByIdCandidato_Result>("getByIdCandidato", idCandidatoParameter);
-        }
-    
         public virtual ObjectResult<ObtenerCandidatos_Result> ObtenerCandidatos(Nullable<int> idVacante)
         {
             var idVacanteParameter = idVacante.HasValue ?
@@ -715,17 +706,22 @@ namespace DL_EF
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("updateCita", idCitaParameter, fechaHoraParameter, idPisoParameter, idCandidatoParameter, idEstatusCitaParameter);
         }
     
-        public virtual ObjectResult<CitasGetById_Result> CitasGetById(Nullable<int> idCandidato, Nullable<int> idCita)
+        public virtual ObjectResult<getByIdCandidato_Result> getByIdCandidato(Nullable<int> idCandidato)
         {
             var idCandidatoParameter = idCandidato.HasValue ?
                 new ObjectParameter("IdCandidato", idCandidato) :
                 new ObjectParameter("IdCandidato", typeof(int));
     
-            var idCitaParameter = idCita.HasValue ?
-                new ObjectParameter("IdCita", idCita) :
-                new ObjectParameter("IdCita", typeof(int));
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getByIdCandidato_Result>("getByIdCandidato", idCandidatoParameter);
+        }
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CitasGetById_Result>("CitasGetById", idCandidatoParameter, idCitaParameter);
+        public virtual ObjectResult<CitasGetById_Result> CitasGetById(Nullable<int> idCandidato)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CitasGetById_Result>("CitasGetById", idCandidatoParameter);
         }
     }
 }

@@ -131,7 +131,7 @@ namespace BL  // BL = bussiness Layout  (reglas del negocio)
                 using (GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
                 {
 
-                    var registros = context.UsuarioGetAll(usuario.Nombre,usuario.ApellidoPaterno, usuario.ApellidoMaterno,
+                    var registros = context.UsuarioGetAll(usuario.Nombre, usuario.ApellidoPaterno, usuario.ApellidoMaterno,
                                                           usuario.Rol.IdRol).ToList(); //Retorna una lista con los valores obtenidos
 
                     //var registros = context.UsuarioGetAllViewSP(usuario.Nombre, usuario.ApellidoPaterno, usuario.ApellidoMaterno,
