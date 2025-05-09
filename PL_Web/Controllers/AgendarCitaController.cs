@@ -11,6 +11,7 @@ namespace PL_Web.Controllers
     public class AgendarCitaController : Controller
     {
         // GET: AgendarCita
+        [HttpGet]
         public ActionResult Principal()
         {
             ML.Result result = new ML.Result();
@@ -52,17 +53,40 @@ namespace PL_Web.Controllers
         {
             Result result = new Result();
             Candidato candidato = new Candidato();
+            candidato.cita = new Cita();
+            candidato.cita.estatusCita = new EstatusCita();
+            candidato.cita.piso = new Piso();
 
             result = BL.Cita.ObtenerCandidato(IdCandidato);
             candidato = (Candidato)result.Object;
 
-            if (result.Correct)
+            result = BL.EstatusCita.obtenerEstatusCita();
+            candidato.cita.estatusCita.estatusCitas = result.Objects;
+            result = BL.Piso.obtenerPisos();
+            candidato.cita.piso.Pisos = result.Objects;
+
+            return View(candidato);
+
+        }
+
+        [HttpPost]
+        public ActionResult FormCita(Candidato candidato)
+        {
+            ML.Result result = new ML.Result();
+
+            if (candidato.cita.IdCita == 0)
             {
+                //agregar
+                result = BL.Cita.agregarCita(candidato);
+                return RedirectToAction("Principal");
 
-                return View(candidato);
             }
-            return View();
-
+            else
+            {
+                //editar
+                result = BL.Cita.actualizarCita(candidato);
+                return RedirectToAction("Principal");
+            }
         }
     }
 }

@@ -57,8 +57,10 @@
     <Compile Include="Cita.cs" />
     <Compile Include="Colonia.cs" />
     <Compile Include="Estado.cs" />
+    <Compile Include="EstatusCita.cs" />
     <Compile Include="Excel.cs" />
     <Compile Include="Municipio.cs" />
+    <Compile Include="Piso.cs" />
     <Compile Include="Rol.cs" />
     <Compile Include="Universidad.cs" />
     <Compile Include="Usuario.cs" />

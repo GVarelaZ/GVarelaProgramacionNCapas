@@ -15,12 +15,12 @@
             {
                 <h2>AGENDAR CITA </h2>
                 <h5>Selecciona el tipo de entrevista a realizar</h5>
-                <button class="btn btn-success" onclick="formPresencial()">Entrevista presencial</button>
-                <button class="btn btn-success" onclick="formRemoto()">Entrevista remota</button>
+                <button id="btnPresencial" class="btn btn-outline-success fw-bold text-center" onclick="toggleView('formPresencial'), bloquearSelect()">Entrevista presencial</button>
+                <button id="btnRemoto" class="btn btn-outline-success fw-bold text-center" onclick="toggleView('formRemoto'), bloquearSelect()">Entrevista remota</button>
+                <br />
+                <br />
             }
         </div>
-        <br />
-        <br />
         <hr />
         <div class="col mb-2 d-flex gap-3 justify-content-center">
             <div class="card card-margin">
@@ -54,19 +54,108 @@
                     </div>
                 </div>
             </div>
-            <div class="col-8">
-                <div class="card card-margin">
-                    <p>formulario</p>
-                    @using (Html.BeginForm("formCita", "AgendarCita", FormMethod.Post))
-                    {
-                        <div class="formulario">
+            <div class="col-8 p-3">
 
+                @if (Model.cita.IdCita == 0)
+                {
+                    <div id="formularioPresencial" style="display:none;">
+                        <div class="card card-margin text-center p-3">
+                            <h2>AGENDAR ENTREVISTA PRESENCIAL</h2>
+                            @using (Html.BeginForm("FormCita", "AgendarCita", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(Model => Model.cita.IdCita)
+                                @Html.HiddenFor(Model => Model.IdCandidato)
+                                <div class="row text-center">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Fecha y hora</label>
+                                        @Html.TextBoxFor(Model => Model.cita.FechaHora, new { @class = "form-control", @name = "idCalendario", @id = "idCalendario" })
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Piso</label>
+                                        @Html.DropDownListFor(Model => Model.cita.piso.IdPiso, new SelectList(Model.cita.piso.Pisos, "IdPiso", "Nombre"), new { @class = "form-select" })
+                                    </div>
+                                    <div class="col-6 mb-3 text-center">
+                                        <label class="form-label">Estatus cita</label>
+                                        @Html.DropDownListFor(Model => Model.cita.estatusCita.IdEstatusCita, new SelectList(Model.cita.estatusCita.estatusCitas, "IdEstatusCita", "Nombre"), new { @class = "form-select", @id = "DLLCita" })
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <br />
+                                        <button class="btn btn-outline-success fw-bold text-center" type="submit">AGENDAR</button>
+                                        <a class="btn btn-outline-danger border-5 fw-bold text-center" href="@Url.Action("Principal","AgendarCita")">Cancelar</a>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
-                </div>
+                    </div>
+                    <div id="formularioRemoto" style="display:none;">
+                        <div class="card card-margin text-center p-3">
+                            <h2>AGENDAR ENTREVISTA REMOTA</h2>
+                            @using (Html.BeginForm("FormCita", "AgendarCita", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(Model => Model.cita.IdCita)
+                                @Html.HiddenFor(Model => Model.IdCandidato)
+                                <div class="row text-center">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Fecha y hora</label>
+                                        @Html.TextBoxFor(Model => Model.cita.FechaHora, new { @class = "form-control", @name = "idCalendario", @id = "idCalendario" })
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Url</label>
+                                        @Html.TextBoxFor(Model => Model.cita.Url, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-6 mb-3 text-center">
+                                        <label class="form-label">Estatus cita</label>
+                                        @Html.DropDownListFor(Model => Model.cita.estatusCita.IdEstatusCita, new SelectList(Model.cita.estatusCita.estatusCitas, "IdEstatusCita", "Nombre"), new { @class = "form-select", @id = "DLLCita" })
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <br />
+                                        <button class="btn btn-outline-success fw-bold text-center" type="submit">AGENDAR</button>
+                                        <a class="btn btn-outline-danger fw-bold text-center" href="@Url.Action("Principal","AgendarCita")">Cancelar</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card card-margin text-center p-3">
+                        <h2>EDITAR ENTREVISTA</h2>
+                        @using (Html.BeginForm("FormCita", "AgendarCita", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(Model => Model.IdCandidato)
+                            @Html.HiddenFor(Model => Model.cita.IdCita)
+                            <div class="row text-center">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Fecha y hora</label>
+                                    @Html.TextBoxFor(Model => Model.cita.FechaHora, new { @class = "form-control", @name = "FechaHora", @id = "idCalendario" })
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Piso</label>
+                                    @Html.DropDownListFor(Model => Model.cita.piso.IdPiso, new SelectList(Model.cita.piso.Pisos, "IdPiso", "Nombre"), new { @class = "form-select" })
+                                </div>
+                                <div class="col-6 mb-3 text-center">
+                                    <label class="form-label">Estatus cita</label>
+                                    @Html.DropDownListFor(Model => Model.cita.estatusCita.IdEstatusCita, new SelectList(Model.cita.estatusCita.estatusCitas, "IdEstatusCita", "Nombre"), new { @class = "form-select" })
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <br />
+                                    <button class="btn btn-outline-success fw-bold text-center" type="submit">GUARDAR</button>
+                                    <a class="btn btn-outline-danger fw-bold text-center" href="@Url.Action("Principal","AgendarCita")">Cancelar</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
 <script src="~/Scripts/jquery-3.7.0.js"></script>
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="~/Scripts/Cita/formulario.js"></script>
+
