@@ -1,21 +1,30 @@
 ﻿flatpickr("#idCalendario", {
-        enableTime: true,
-        dateFormat: "d/m/Y H:i",
-        time_24hr: true
+    enableTime: true,
+    dateFormat: "d/m/Y H:i",
+    time_24hr: true,
+    minDate: "today",
+    "disable": [
+        function (date) {
+            // return true to disable
+            return (date.getDay() === 0 || date.getDay() === 6);
+
+        }
+    ],
+    "locale": {
+        "firstDayOfWeek": 1 // start week on Monday
+    },
+    minTime: "10:00",
+    maxTime: "16:00"
 });
 
 // Función para alternar entre las vistas
 function toggleView(view) {
     if (view === 'formPresencial') {
-        document.getElementById('formularioPresencial').style.display = 'block';
-        document.getElementById('formularioRemoto').style.display = 'none';
-        document.getElementById('btnPresencial').classList.add('btn-active');
-        document.getElementById('btnRemoto').classList.remove('btn-active');
+        $('#formularioPresencial')[0].style.display = 'block';
+        $('#formularioRemoto')[0].style.display = 'none';
     } else {
-        document.getElementById('formularioPresencial').style.display = 'none';
-        document.getElementById('formularioRemoto').style.display = 'block';
-        document.getElementById('btnPresencial').classList.add('btn-active');
-        document.getElementById('btnRemoto').classList.remove('btn-active');
+        $('#formularioPresencial')[0].style.display = 'none';
+        $('#formularioRemoto')[0].style.display = 'block';
     }
 }
 

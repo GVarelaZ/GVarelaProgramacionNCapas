@@ -136,7 +136,7 @@ namespace PL_Web.Controllers
                     result = BL.Candidato.agregarCandidato(candidato);
                     if (result.Correct)
                     {
-                        ViewBag.mensajeError = "Se ha registrado correctamente al usuario ingresado.";
+                        ViewBag.mensajeError = "Se ha registrado correctamente al candidato ingresado.";
                         return PartialView("_notificacion");
                     }
                     else
@@ -151,13 +151,13 @@ namespace PL_Web.Controllers
 
                     if (result.Correct)
                     {
-                        ViewBag.mensajeError = "Se ha actualizado correctamente al usuario seleccionado.";
+                        ViewBag.mensajeError = "Se ha actualizado correctamente al candidato seleccionado.";
                         return PartialView("_notificacion");
 
                     }
                     else
                     {
-                        ViewBag.mensajeError = "No se ha podido actualizado correctamente al usuario seleccionado.";
+                        ViewBag.mensajeError = "No se ha podido actualizado correctamente al candidato seleccionado.";
                         return PartialView("_notificacion");
                     }
                 }

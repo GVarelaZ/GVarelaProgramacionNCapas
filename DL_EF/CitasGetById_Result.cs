@@ -17,14 +17,10 @@ namespace DL_EF
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
-        public string Correo { get; set; }
-        public string Telefono { get; set; }
-        public byte[] Foto { get; set; }
-        public string Carrera { get; set; }
-        public Nullable<int> IdVacante { get; set; }
-        public Nullable<int> IdCita { get; set; }
-        public Nullable<System.DateTime> FechaHora { get; set; }
+        public int IdCita { get; set; }
+        public System.DateTime FechaHora { get; set; }
         public Nullable<byte> IdPiso { get; set; }
         public Nullable<byte> IdEstatusCita { get; set; }
+        public string Piso { get; set; }
     }
 }

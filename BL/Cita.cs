@@ -146,7 +146,7 @@ namespace BL
                         candidatoBD.IdPiso = byte.Parse(candidato.cita.piso.IdPiso.ToString());
                         candidatoBD.IdCandidato = candidato.IdCandidato;
                         candidatoBD.IdEstatusCita = byte.Parse(candidato.cita.estatusCita.IdEstatusCita.ToString());
-                        candidatoBD.Url = candidato.cita.Url;
+                        //candidatoBD.Url = candidato.cita.Url;
 
                         int rowsAffected = context.SaveChanges();
                         if (rowsAffected > 0)
@@ -170,55 +170,7 @@ namespace BL
             return result;
         }
 
-        public static Result ObtenerCita(int IdCandidato)
-        {
-            Result result = new Result();
-
-            try
-            {
-                using (GVarelaProgramacionNCapasEntities context = new GVarelaProgramacionNCapasEntities())
-                {
-                    var citaBD = context.CitasGetById(IdCandidato).SingleOrDefault();
-
-                    if (citaBD != null)
-                    {
-                        ML.Candidato candidatoML = new ML.Candidato();
-                        candidatoML.cita = new ML.Cita();
-                        candidatoML.cita.piso = new ML.Piso();
-                        candidatoML.cita.estatusCita = new ML.EstatusCita();
-                        candidatoML.carrera = new ML.Carrera();
-
-                        candidatoML.cita.IdCita = citaBD.IdCita == null ? 0 : citaBD.IdCita.Value;
-                        candidatoML.cita.FechaHora = Convert.ToString(citaBD.FechaHora);
-                        candidatoML.cita.piso.IdPiso = citaBD.IdPiso == null ? 0 : citaBD.IdPiso.Value;
-                        candidatoML.cita.estatusCita.IdEstatusCita = citaBD.IdEstatusCita == null ? 0 : citaBD.IdEstatusCita.Value;
-                        candidatoML.IdCandidato = citaBD.IdCandidato;
-                        candidatoML.Nombre = citaBD.Nombre;
-                        candidatoML.ApellidoPaterno = citaBD.ApellidoPaterno;
-                        candidatoML.ApellidoMaterno = citaBD.ApellidoMaterno;
-                        candidatoML.Correo = citaBD.Correo;
-                        candidatoML.Telefono = citaBD.Telefono;
-                        candidatoML.Foto = citaBD.Foto;
-                        candidatoML.carrera.Nombre = citaBD.Carrera;
-                        result.Object = candidatoML;
-
-                        result.Correct = true;
-                    }
-                    else
-                    {
-                        result.Correct = false;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                result.Correct = false;
-                result.ErrorMessage = e.Message;
-                result.ex = e;
-            }
-            return result;
-        }
-
+        
         public static Result ObtenerCandidato(int IdCandidato)
         {
             Result result = new Result();
@@ -246,6 +198,7 @@ namespace BL
                                            url = cita.Url,
                                            fechaHora = cita != null ? cita.FechaHora : (DateTime?)null,
                                            idPiso = cita != null ? cita.IdPiso : 0,
+                                           pisoNombre = cita.Piso.Nombre,
                                            idEstatusCita = cita != null ? cita.IdEstatusCita : 0
                                        }).AsEnumerable() // Aquí forzamos ejecución en memoria
                         .Select(c => new
@@ -264,6 +217,7 @@ namespace BL
                                         ? c.fechaHora.Value.ToString("dd/MM/yyyy HH:mm")
                                         : null,
                             c.idPiso,
+                            c.pisoNombre,
                             c.idEstatusCita
                         })
                         .SingleOrDefault();
@@ -287,6 +241,7 @@ namespace BL
                         candidatoML.Foto = candidatoBD.Foto;
                         candidatoML.carrera.Nombre = candidatoBD.CarreraNombre;
                         candidatoML.cita.IdCita = candidatoBD.idCita;
+                        candidatoML.cita.piso.Nombre = candidatoBD.pisoNombre;
                         candidatoML.cita.FechaHora = candidatoBD.fechaHora;
                         candidatoML.cita.Url = candidatoBD.url;
                         candidatoML.cita.piso.IdPiso = (int)(candidatoBD.idPiso == null ? 0 : candidatoBD.idPiso);

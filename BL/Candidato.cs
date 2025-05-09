@@ -86,7 +86,7 @@ namespace BL
                 {
                     int rowsEffected = context.deleteCandidato(IdCandidato);
 
-                    if (rowsEffected == 2)
+                    if (rowsEffected == 3)
                     {
                         result.Correct = true;
                     }

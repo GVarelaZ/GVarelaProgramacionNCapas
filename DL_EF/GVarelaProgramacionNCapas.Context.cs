@@ -633,15 +633,6 @@ namespace DL_EF
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CandidatoUpdate", idCandidatoParameter, nombreParameter, apellidoPaternoParameter, apellidoMaternoParameter, edadParameter, correoParameter, telefonoParameter, direccionParameter, fotoParameter, curriculumParameter, idUniversidadParameter, idCarreraParameter, idBolsaTrabajoParameter, idVacanteParameter, idPromedioParameter, promedioUniversidadParameter, promedioPreparatoriaParameter, promedioSecundariaParameter);
         }
     
-        public virtual int deleteCandidato(Nullable<int> idCandidato)
-        {
-            var idCandidatoParameter = idCandidato.HasValue ?
-                new ObjectParameter("IdCandidato", idCandidato) :
-                new ObjectParameter("IdCandidato", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCandidato", idCandidatoParameter);
-        }
-    
         public virtual ObjectResult<ObtenerCandidatos_Result> ObtenerCandidatos(Nullable<int> idVacante)
         {
             var idVacanteParameter = idVacante.HasValue ?
@@ -722,6 +713,15 @@ namespace DL_EF
                 new ObjectParameter("IdCandidato", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CitasGetById_Result>("CitasGetById", idCandidatoParameter);
+        }
+    
+        public virtual int deleteCandidato(Nullable<int> idCandidato)
+        {
+            var idCandidatoParameter = idCandidato.HasValue ?
+                new ObjectParameter("IdCandidato", idCandidato) :
+                new ObjectParameter("IdCandidato", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCandidato", idCandidatoParameter);
         }
     }
 }

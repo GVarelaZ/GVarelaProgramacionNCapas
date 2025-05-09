@@ -847,9 +847,6 @@
             <Parameter Name="PromedioPreparatoria" Mode="In" Type="String" />
             <Parameter Name="PromedioSecundaria" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="deleteCandidato">
-          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="ObtenerCandidatos" ReturnType="Collection(GVarelaProgramacionNCapasModel.ObtenerCandidatos_Result)">
           <Parameter Name="IdVacante" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -888,6 +885,9 @@
           <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="CitasGetById" ReturnType="Collection(GVarelaProgramacionNCapasModel.CitasGetById_Result)">
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="deleteCandidato">
             <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -1402,15 +1402,11 @@
           <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Correo" Nullable="false" MaxLength="128" />
-          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
-          <Property Type="Binary" Name="Foto" Nullable="true" />
-          <Property Type="String" Name="Carrera" Nullable="false" MaxLength="500" />
-          <Property Type="Int32" Name="IdVacante" Nullable="true" />
-          <Property Type="Int32" Name="IdCita" Nullable="true" />
-          <Property Type="DateTime" Name="FechaHora" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="IdCita" Nullable="false" />
+          <Property Type="DateTime" Name="FechaHora" Nullable="false" Precision="23" />
           <Property Type="Byte" Name="IdPiso" Nullable="true" />
           <Property Type="Byte" Name="IdEstatusCita" Nullable="true" />
+          <Property Type="String" Name="Piso" Nullable="false" MaxLength="50" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1713,7 +1709,6 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CandidatoAdd" FunctionName="GVarelaProgramacionNCapasModel.Store.CandidatoAdd" />
           <FunctionImportMapping FunctionImportName="CandidatoUpdate" FunctionName="GVarelaProgramacionNCapasModel.Store.CandidatoUpdate" />
-          <FunctionImportMapping FunctionImportName="deleteCandidato" FunctionName="GVarelaProgramacionNCapasModel.Store.deleteCandidato" />
           <FunctionImportMapping FunctionImportName="ObtenerCandidatos" FunctionName="GVarelaProgramacionNCapasModel.Store.ObtenerCandidatos">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GVarelaProgramacionNCapasModel.ObtenerCandidatos_Result">
@@ -1833,18 +1828,15 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
                 <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
-                <ScalarProperty Name="Correo" ColumnName="Correo" />
-                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-                <ScalarProperty Name="Foto" ColumnName="Foto" />
-                <ScalarProperty Name="Carrera" ColumnName="Carrera" />
-                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
                 <ScalarProperty Name="IdCita" ColumnName="IdCita" />
                 <ScalarProperty Name="FechaHora" ColumnName="FechaHora" />
                 <ScalarProperty Name="IdPiso" ColumnName="IdPiso" />
                 <ScalarProperty Name="IdEstatusCita" ColumnName="IdEstatusCita" />
+                <ScalarProperty Name="Piso" ColumnName="Piso" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="deleteCandidato" FunctionName="GVarelaProgramacionNCapasModel.Store.deleteCandidato" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
