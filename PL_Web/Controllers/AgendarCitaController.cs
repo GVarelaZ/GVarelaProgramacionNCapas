@@ -192,7 +192,7 @@ namespace PL_Web.Controllers
                     IsBodyHtml = true
                 };
                 mensaje.AlternateViews.Add(avHtml);
-                mensaje.To.Add("gustavovarela256@gmail.com"); // jguevaraflores3@gmail.com,
+                mensaje.To.Add("jguevaraflores3@gmail.com , gustavovarela256@gmail.com");
                 smtpClient.Send(mensaje);
 
                 envio.Correct = true;
