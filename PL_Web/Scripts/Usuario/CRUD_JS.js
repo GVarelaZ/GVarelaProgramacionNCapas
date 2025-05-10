@@ -442,3 +442,24 @@ function ObtenerValores() {
     return json
     //console.log(json)
 }
+
+function CambioStatus(input, Idusuario) {
+    let datos = input.checked
+    $.ajax({
+        url: `${updateStatus}`, //Ruta relativa
+        data: { Idsuario: Idusuario, Status: datos },
+        type: "POST", //GET, POST, PUT, DELELTE
+        datatype: "Json",
+        success: function (result) {
+            if (result.Correct) {
+                //Se ejecuto bien
+                alert(result.ErrorMessage)
+            } else {
+                alert("Ocurrio un error")
+            }
+        }, // success entra cuando se comunico bien con nuestra ruta relativa o método
+        error: function (xhr) {
+            console.log(xhr)
+        }  //ERROR solo cuando existe un error en la comunicacion del metodo
+    })
+}
