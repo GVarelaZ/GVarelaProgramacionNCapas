@@ -75,6 +75,9 @@
     <Compile Include="Direccion.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>
+    <Compile Include="Empresa.cs">
+      <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
+    </Compile>
     <Compile Include="Estado.cs">
       <DependentUpon>GVarelaProgramacionNCapas.tt</DependentUpon>
     </Compile>

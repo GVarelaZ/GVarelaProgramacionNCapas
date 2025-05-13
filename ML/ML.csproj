@@ -48,6 +48,7 @@
     <Compile Include="Cita.cs" />
     <Compile Include="Colonia.cs" />
     <Compile Include="Direccion.cs" />
+    <Compile Include="Empresa.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="EstatusCita.cs" />
     <Compile Include="EstatusVacante.cs" />

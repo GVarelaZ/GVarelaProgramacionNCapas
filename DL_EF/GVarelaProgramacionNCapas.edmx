@@ -69,6 +69,15 @@
           <Property Name="IdColonia" Type="int" />
           <Property Name="IdUsuario" Type="int" />
         </EntityType>
+        <EntityType Name="Empresa">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Latitud" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Longitud" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Estado">
           <Key>
             <PropertyRef Name="IdEstado" />
@@ -534,6 +543,7 @@
           <EntitySet Name="Cita" EntityType="Self.Cita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Colonia" EntityType="Self.Colonia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Direccion" EntityType="Self.Direccion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empresa" EntityType="Self.Empresa" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstatusCita" EntityType="Self.EstatusCita" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstatusVacante" EntityType="Self.EstatusVacante" Schema="dbo" store:Type="Tables" />
@@ -885,11 +895,12 @@
           <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="CitasGetById" ReturnType="Collection(GVarelaProgramacionNCapasModel.CitasGetById_Result)">
-            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="deleteCandidato">
-            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Empresas" EntityType="GVarelaProgramacionNCapasModel.Empresa" />
         </EntityContainer>
         <EntityType Name="Rol">
           <Key>
@@ -1408,6 +1419,15 @@
           <Property Type="Byte" Name="IdEstatusCita" Nullable="true" />
           <Property Type="String" Name="Piso" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="Empresa">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Latitud" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Longitud" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1837,6 +1857,16 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="deleteCandidato" FunctionName="GVarelaProgramacionNCapasModel.Store.deleteCandidato" />
+          <EntitySetMapping Name="Empresas">
+            <EntityTypeMapping TypeName="GVarelaProgramacionNCapasModel.Empresa">
+              <MappingFragment StoreEntitySet="Empresa">
+                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
+                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

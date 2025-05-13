@@ -199,11 +199,11 @@ namespace PL_Web.Controllers
             usuarioView.ApellidoMaterno = usuarioView.ApellidoMaterno == null ? "" : usuarioView.ApellidoMaterno;
 
             //ESTE RESULT CONSUME DIRECTAMENTE AL BL
-            //Result result = BL.Usuario.GetAllEF(usuarioView);
+            Result result = BL.Usuario.GetAllEF(usuarioView);
 
             //ESTE OBJETO CONSUME EL WEB SERVICES DE TIPO SOAP
-            UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient();
-            var result = ObjetoWCF.GetAllWebService(usuarioView);
+            //UsuarioReference.UsuarioClient ObjetoWCF = new UsuarioReference.UsuarioClient();
+            //var result = ObjetoWCF.GetAllWebService(usuarioView);
 
             Result resultBL = new Result();
             Usuario usuario = new Usuario();

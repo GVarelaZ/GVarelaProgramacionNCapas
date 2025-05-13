@@ -236,6 +236,7 @@
     <Compile Include="Controllers\AgendarCitaController.cs" />
     <Compile Include="Controllers\CandidatoController.cs" />
     <Compile Include="Controllers\CrudJSController.cs" />
+    <Compile Include="Controllers\EmpresasApiController.cs" />
     <Compile Include="Controllers\EnvioCorreoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -362,6 +363,7 @@
     <Content Include="Views\AgendarCita\Principal.cshtml" />
     <Content Include="Views\AgendarCita\formCita.cshtml" />
     <Content Include="Views\AgendarCita\_Notificacion.cshtml" />
+    <Content Include="Views\EmpresasApi\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

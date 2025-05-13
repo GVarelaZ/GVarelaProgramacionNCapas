@@ -76,7 +76,8 @@
                     <div class="col-md-1 text-lg-center">
                         <br>
                         <button class="btn btn-success fw-bold btn-lg text-center" type="submit">
-                            <i class="bi bi-search"></i></button>
+                            <i class="bi bi-search"></i>
+                        </button>
                     </div>
                 </div>
             }
@@ -98,7 +99,7 @@
                         </div>
                     }
                     else
-                    { 
+                    {
                         <div class="col-6">
                             <i style=" font-size: 4em;" class="bi bi-filetype-xlsx"></i>
                             <h4>@Session["nombreArchivo"]</h4>
@@ -107,7 +108,7 @@
                             <br>
                             <button class="btn btn-success fw-bold btn-lg text-center" type="submit">Insertar archivo</button>
                         </div>
-                        
+
                     }
                 </div>
             }
@@ -162,7 +163,7 @@
                                                 <img src="data:image/*;base64,@Convert.ToBase64String(usuario.Imagen)" class="avatar" alt="Sin foto"
                                                      width="60px" height="60px">
                                             }
-                                            
+
                                             <span class="badge text-bg-info">
                                                 @usuario.Rol.Nombre
                                             </span>
@@ -264,13 +265,13 @@ else
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
 <script>
 
-    $(document).ready(
-        $('#usuarios').dataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json'
-            }
-        })
-    )
+    //$(document).ready(
+    //    $('#usuarios').dataTable({
+    //        language: {
+    //            url: '//cdn.datatables.net/plug-ins/2.2.2/i18n/es-ES.json'
+    //        }
+    //    })
+    //)
 
     $("#desplegar").click(function () {
         $('#Nombre').val("");
