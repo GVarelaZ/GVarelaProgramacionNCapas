@@ -77,11 +77,9 @@ function GetAll() {
                                                        onchange="CambioStatus(this,${usuario.idUsuario} )">
                                             </div>
                                         <button class="btn btn-warning text-lg-center" onclick="formulario(${usuario.idUsuario})" role="button">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </a>
+                                            <i class="bi bi-pencil-fill"></i></button>
                                         <button class="btn btn-danger" onclick="verificarConfirm(event,${usuario.idUsuario})" role="button">
-                                            <i class="bi bi-trash3-fill"></i>
-                                        </button>
+                                            <i class="bi bi-trash3-fill"></i></button>
                                     </td>
                                 </tr>`
                     contador++

@@ -1,0 +1,64 @@
+﻿@model ML.Empresa
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script type="module" src="~/Scripts/ApiGoogleMaps/FormularioApi.js"></script>
+
+
+<h2>REGISTRAR/ACTUALIZAR EMPRESA</h2>
+<div class="container">
+    @using (Html.BeginForm("Form", "EmpresasApi", FormMethod.Post))
+    {
+        <div class="row-cols-2 p-3 mb-3">
+            <div class="col-12 mb-3">
+                <div class="card p-3">
+                    <div class="row">
+                        @Html.HiddenFor(Model => Model.IdEmpresa, new { @id = "IdEmpresa" })
+                        <div class="col-md-4">
+                            <label class="col-form-label-lg">Nombre</label>
+                            @Html.TextBoxFor(Model => Model.Nombre, new { @id = "Nombre", @name = "Nombre", @class = "form-control" })
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-form-label-lg">Latitud</label>
+                            @Html.TextBoxFor(Model => Model.Latitud, new { @class = "form-control", @id = "Latitud", @name = "Latitud", @readOnly= true })
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-form-label-lg">Longitud</label>
+                            @Html.TextBoxFor(Model => Model.Longitud, new { @class = "form-control", @id = "Longitud", @name = "Longitud", @readOnly = "true" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4>Seleccione la ubicacion en el mapa</h4>
+            <div class="col-12 mb-3">
+                <div class="card p-1">
+                    <div id="mapa" style="width:100%;height:350px;"></div>
+                </div>
+            </div>
+            <div class="d-flex mb-3 p-2">
+                <div class="col-3">
+                    @if (Model.IdEmpresa == 0)
+                    {
+                        <button class="btn btn-success" type="submit">Guardar <i class="bi bi-floppy"></i></button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-success" type="submit">Actualizar <i class="bi bi-floppy"></i></button>
+                    }
+                </div>
+                <div class="col-3">
+                    <a class="btn btn-danger" href="@Url.Action("Index","EmpresasApi")">Cancelar <i class="bi bi-x-circle"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+        ({ key: "AIzaSyDCt5qUAX_luLPwkcfUOJutLLavQwVFgcA", v: "weekly" });
+</script>

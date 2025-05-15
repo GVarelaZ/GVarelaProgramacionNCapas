@@ -4,32 +4,46 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<html>
-<head>
-    <title>Add a Map with Markers using HTML</title>
+<script>
+    var obtenerEmpresas = "@Url.Action("GetAllEmpresas", "EmpresasApi")"
+    var formuActualizar = "@Url.Action("Form", "EmpresasApi")?IdEmpresa="
+    var eliminarEmpresa = "@Url.Action("Delete", "EmpresasApi")?IdEmpresa="
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script type="module" src="~/Scripts/ApiGoogleMaps/empresas.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script type="module" src="./index.js"></script>
-</head>
-<body>
-    <gmp-map center="43.4142989,-124.2301242"
-             zoom="4"
-             map-id="DEMO_MAP_ID"
-             style="height: 400px">
-        <gmp-advanced-marker position="37.4220656,-122.0840897"
-                             title="Mountain View, CA"></gmp-advanced-marker>
-        <gmp-advanced-marker position="47.648994,-122.3503845"
-                             title="Seattle, WA"></gmp-advanced-marker>
-    </gmp-map>
+<div class="container">
+    <h1 class="text-center">Empresas Registradas</h1>
+    <div class="row">
+        <div class="text-end p-3">
+            <a class="btn btn-primary text-white" href="@Url.Action("Form","EmpresasApi")">Registrar empresa <i class="bi bi-plus-square"></i></a>
+        </div>
+        <hr />
+        <div class="col-8">
+            <div class="card p-2 shadow-lg">
+                <div id="map" style="width:100%;height:350px;"></div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card p-2 shadow-lg">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr class="text-center">
+                            <th>#</th>
+                            <th>Nombre empresa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaEmpresa" class="text-center">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!--
-      The `defer` attribute causes the script to execute after the full HTML
-      document has been parsed. For non-blocking uses, avoiding race conditions,
-      and consistent behavior across browsers, consider loading using Promises. See
-      https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-      for more information.
-      -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=maps,marker&v=beta"
-            defer></script>
-</body>
-</html>>
+<script>
+    (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+    ({ key: "AIzaSyDCt5qUAX_luLPwkcfUOJutLLavQwVFgcA", v: "weekly" });
+</script>
