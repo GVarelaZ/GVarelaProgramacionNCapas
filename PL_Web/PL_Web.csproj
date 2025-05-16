@@ -278,6 +278,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Imagen\fondo.jpg" />
+    <Content Include="Content\Imagen\palomita_verde.jpg" />
     <Content Include="Content\Plantilla\Correo.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -367,6 +368,7 @@
     <Content Include="Views\AgendarCita\_Notificacion.cshtml" />
     <Content Include="Views\EmpresasApi\Index.cshtml" />
     <Content Include="Views\EmpresasApi\Form.cshtml" />
+    <Content Include="Views\EmpresasApi\_avisos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

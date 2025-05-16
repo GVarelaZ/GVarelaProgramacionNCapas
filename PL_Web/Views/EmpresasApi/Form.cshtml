@@ -12,20 +12,20 @@
 <div class="container">
     @using (Html.BeginForm("Form", "EmpresasApi", FormMethod.Post))
     {
-        <div class="row-cols-2 p-3 mb-3">
-            <div class="col-12 mb-3">
-                <div class="card p-3">
+        <div class="row-2 p-3 mb-3">
+            <div class=" col-sm-12 ">
+                <div class="card col-sm-12 p-3">
                     <div class="row">
                         @Html.HiddenFor(Model => Model.IdEmpresa, new { @id = "IdEmpresa" })
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             <label class="col-form-label-lg">Nombre</label>
                             @Html.TextBoxFor(Model => Model.Nombre, new { @id = "Nombre", @name = "Nombre", @class = "form-control" })
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             <label class="col-form-label-lg">Latitud</label>
                             @Html.TextBoxFor(Model => Model.Latitud, new { @class = "form-control", @id = "Latitud", @name = "Latitud", @readOnly= true })
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-12">
                             <label class="col-form-label-lg">Longitud</label>
                             @Html.TextBoxFor(Model => Model.Longitud, new { @class = "form-control", @id = "Longitud", @name = "Longitud", @readOnly = "true" })
                         </div>
@@ -33,13 +33,13 @@
                 </div>
             </div>
             <h4>Seleccione la ubicacion en el mapa</h4>
-            <div class="col-12 mb-3">
-                <div class="card p-1">
+            <div class="col-sm-12 mb-3">
+                <div class="card col-sm-12 p-1">
                     <div id="mapa" style="width:100%;height:350px;"></div>
                 </div>
             </div>
-            <div class="d-flex mb-3 p-2">
-                <div class="col-3">
+            <div class="mb-3 p-2 d-sm-flex text-center">
+                <div class="col-sm-6 col-md-6">
                     @if (Model.IdEmpresa == 0)
                     {
                         <button class="btn btn-success" type="submit">Guardar <i class="bi bi-floppy"></i></button>
@@ -49,7 +49,7 @@
                         <button class="btn btn-success" type="submit">Actualizar <i class="bi bi-floppy"></i></button>
                     }
                 </div>
-                <div class="col-3">
+                <div class="col-sm-6  col-md-6">
                     <a class="btn btn-danger" href="@Url.Action("Index","EmpresasApi")">Cancelar <i class="bi bi-x-circle"></i></a>
                 </div>
             </div>

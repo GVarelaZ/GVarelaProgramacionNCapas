@@ -1,6 +1,11 @@
 ﻿
 var marker = null;
 var markerEmpresa = null;
+var IdEmpresa = $('#IdEmpresa').val()
+var latitud = $('#Latitud').val()
+var longitud = $('#Longitud').val()
+var Inptlatitud = $('#Latitud')
+var Inptlongitud = $('#Longitud')
 $(document).ready(function () {
     iniciarMap()
     //obtenerValores()
@@ -8,13 +13,7 @@ $(document).ready(function () {
 
 async function iniciarMap() {
     const center = { lat: 19.4324709, lng: -99.1329094 };
-
-    var IdEmpresa = $('#IdEmpresa').val()
-    var latitud = $('#Latitud').val()
-    var longitud = $('#Longitud').val()
-    var Inptlatitud = $('#Latitud')
-    var Inptlongitud = $('#Longitud')
-    console.log(IdEmpresa)
+    //console.log(IdEmpresa)
     //@ts-ignore
     var { Map } = await google.maps.importLibrary("maps");
     var { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
@@ -45,18 +44,17 @@ async function iniciarMap() {
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
 
+
         if (marker) {
             marker.setMap(null);
         }
-
         marker = new google.maps.marker.AdvancedMarkerElement({
             position: { lat: lat, lng: lng },
             map: map,
             title: 'Selected Location'
         });
 
-        // Display the coordinates (or use them for other purposes)
-        console.log('Latitude: ' + lat + ', Longitude: ' + lng);
+        //console.log('Latitude: ' + lat + ', Longitude: ' + lng);
         Inptlatitud.val(lat)
         Inptlongitud.val(lng) 
     });
