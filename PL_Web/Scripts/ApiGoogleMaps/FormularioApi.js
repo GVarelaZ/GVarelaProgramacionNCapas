@@ -5,6 +5,8 @@ var IdEmpresa = $('#IdEmpresa').val()
 var latitud = $('#Latitud').val()
 var longitud = $('#Longitud').val()
 var Inptlatitud = $('#Latitud')
+var InptlatitudHiden = $('#LatitudHiden')
+var InptlongitudHiden = $('#LongitudHiden')
 var Inptlongitud = $('#Longitud')
 $(document).ready(function () {
     iniciarMap()
@@ -56,6 +58,8 @@ async function iniciarMap() {
 
         //console.log('Latitude: ' + lat + ', Longitude: ' + lng);
         Inptlatitud.val(lat)
+        InptlatitudHiden.val(lat)
         Inptlongitud.val(lng) 
+        InptlongitudHiden.val(lng)
     });
 }
